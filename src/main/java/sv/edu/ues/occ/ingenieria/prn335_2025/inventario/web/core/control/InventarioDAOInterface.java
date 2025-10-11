@@ -1,33 +1,19 @@
-package sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control;
+    package sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control;
 
-import java.util.List;
+    import java.util.List;
 
-public interface InventarioDAOInterface<T> {
-    public void crear(T registro) throws IllegalArgumentException, IllegalAccessException;
+    public interface InventarioDAOInterface<T> {
 
-    /*
-    public void leer(T registro) throws IllegalArgumentException, IllegalAccessException;
-    */
-    /*
-     * @param id Identificador de la entidad a eliminar
-     * @throws IllegalArgumentException Si la entidad es nula
-     * @throws IllegalStateException
 
-    public void eliminar(Object id)  throws IllegalArgumentException, IllegalStateException;
-     */
+        void create(T entity);
 
-    //public T buscarPorId(Object id) throws IllegalArgumentException;
+        T update(T entity);
 
-    // ✅ IMPLEMENTACIONES DEFAULT PARA TODOS LOS DAOs
-    void create(T entity);
+        void delete(T entity);
 
-    T update(T entity);
+        T findById(Object id);
 
-    void delete(T entity);
+        public List<T> findRange(int first, int max) throws IllegalArgumentException;
 
-    T findById(Object id);
-
-    public List<T> findRange(int first, int max) throws IllegalArgumentException;
-
-    public int count() throws IllegalArgumentException;
-}
+        public int count() throws IllegalArgumentException;
+    }

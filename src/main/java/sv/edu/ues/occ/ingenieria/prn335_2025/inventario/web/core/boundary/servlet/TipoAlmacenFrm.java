@@ -27,7 +27,7 @@ public class TipoAlmacenFrm implements Serializable {
     private TipoAlmacen registro = new TipoAlmacen();
     private boolean mostrarFormulario = false;
     private Integer proximoId; // Calculado dinámicamente
-
+    private boolean editionMode=false;
     @PostConstruct
     public void inicializar() {
         try {// Carga inicial de registros y cálculo del próximo ID disponible
@@ -39,9 +39,24 @@ public class TipoAlmacenFrm implements Serializable {
         }
     }
 
+    public void btnEditarHandler(TipoAlmacen r) {
+        if (r == null || r.getId() == null) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Registro inválido"));
+            return;
+        }
+        this.registro = taDao.findById(r.getId()); // refresca desde BD
+        this.mostrarFormulario = true;
+        this.editionMode = true;
+    }
+    public void btnCancelarHandler(ActionEvent event) {
+        this.registro = new TipoAlmacen();
+        this.mostrarFormulario = false;
+        this.editionMode = false;
+    }
+
     private void calcularProximoId() {
         try {
-            // Consulta el próximo ID sugerido desde la base de datos
             Integer id = taDao.obtenerProximoId();
             proximoId = (id != null && id > 0) ? id : 1;
         } catch (Exception e) {
@@ -49,12 +64,9 @@ public class TipoAlmacenFrm implements Serializable {
             proximoId = 1;
         }
     }
-
     public void btnGuardarHandler(ActionEvent event) {
         try {
-            // Guarda el nuevo registro en la base de datos
-            taDao.crear(registro);
-
+            taDao.create(  registro);
             // Reinicia el formulario y actualiza la lista
             registro = new TipoAlmacen();
             listaTipoAlmacen = taDao.findRange(0, Integer.MAX_VALUE);
@@ -165,4 +177,11 @@ public class TipoAlmacenFrm implements Serializable {
         return proximoId;
     }
 
+    public boolean isEditionMode() {
+        return editionMode;
+    }
+
+    public void setEditionMode(boolean editionMode) {
+        this.editionMode = editionMode;
+    }
 }

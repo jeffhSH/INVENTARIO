@@ -36,7 +36,7 @@ public abstract class InventarioDefaultDataAccess<T> implements InventarioDAOInt
     @Override
     public void create(T entity) {
         validarEntidad(entity);
-        EntityManager em =getEntityManager();
+        EntityManager em =requireEm();
         em.persist(entity);
 
     }

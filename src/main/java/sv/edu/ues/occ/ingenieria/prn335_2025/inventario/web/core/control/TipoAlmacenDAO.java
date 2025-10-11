@@ -31,10 +31,7 @@ public class TipoAlmacenDAO extends InventarioDefaultDataAccess<TipoAlmacen> imp
         return em;
     }
 
-    @Override
-    public void crear(TipoAlmacen registro) throws IllegalArgumentException, IllegalAccessException {
-     this.create(registro);
-    }
+
     public Integer obtenerProximoId() {
         try {
             EntityManager em = getEntityManager();

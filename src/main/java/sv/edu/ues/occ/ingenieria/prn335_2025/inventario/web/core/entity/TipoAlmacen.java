@@ -6,8 +6,9 @@ import jakarta.validation.constraints.Size;
 @Entity
 @Table(name = "tipo_almacen", schema = "public")
 public class TipoAlmacen {
-    @Id
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_tipo_almacen", nullable = false)
     private Integer id;
 
@@ -20,7 +21,11 @@ public class TipoAlmacen {
 
     @Lob
     @Column(name = "obsevaciones")
-    private String obsevaciones;
+    private String observaciones;
+
+    public TipoAlmacen() {
+        this.activo = true;
+    }
 
     public Integer getId() {
         return id;
@@ -47,11 +52,11 @@ public class TipoAlmacen {
     }
 
     public String getObservaciones() {
-        return obsevaciones;
+        return observaciones;
     }
 
     public void setObservaciones(String obsevaciones) {
-        this.obsevaciones = obsevaciones;
+        this.observaciones = obsevaciones;
     }
 
 }

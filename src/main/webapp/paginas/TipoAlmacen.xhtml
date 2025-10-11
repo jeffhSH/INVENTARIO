@@ -48,54 +48,94 @@
                                          onclick="return confirm('¿Está seguro que desea eliminar este registro?');">
                             <f:ajax execute="@this" render="panelCompleto" />
                         </h:commandButton>
+                        <h:commandButton value="Modificar"
+                                         actionListener="#{tipoAlmacenFrm.btnEditarHandler(r)}"
+                                         styleClass="btn-modificar">
+                            <!-- Evita validar otros campos al hacer clic -->
+                            <f:ajax execute="@this" render="panelCompleto"/>
+                        </h:commandButton>
                     </h:column>
                 </h:dataTable>
+
+
 
                 <!-- Botón para mostrar el formulario de creación -->
                 <h:commandButton value="Nuevo" actionListener="#{tipoAlmacenFrm.btnNuevoHandler}"
                                  styleClass="btn-submit btn-nuevo">
                     <f:ajax execute="@this" render="panelCompleto" />
                 </h:commandButton>
-
-                <!-- Sección del formulario para crear un nuevo registro -->
-                <h:panelGroup rendered="#{tipoAlmacenFrm.mostrarFormulario}">
+<!--//////////////////////////////////////-->
+                <!-- Sección del formulario para crear/editar -->
+                <h:panelGroup id="formWrapper"
+                              rendered="#{tipoAlmacenFrm.mostrarFormulario}"
+                              layout="block">
                     <div class="form-section">
-                        <h2>Nuevo Tipo de Almacén</h2>
 
-                        <!-- Muestra mensajes de validación o éxito -->
+                        <h2>
+                            #{tipoAlmacenFrm.editionMode ? 'Editar Tipo de Almacén' : 'Nuevo Tipo de Almacén'}
+                        </h2>
+
                         <h:messages styleClass="error-message" />
 
-                        <div class="form-grid">
-                            <!-- Campo informativo del próximo ID sugerido -->
+                        <!-- conserva el id en el postback -->
+                        <h:inputHidden id="hidId" value="#{tipoAlmacenFrm.registro.id}" />
+
+                        <!-- ID sugerido solo en modo crear -->
+                        <h:panelGroup id="pgIdSugerido"
+                                      rendered="#{!tipoAlmacenFrm.editionMode}"
+                                      layout="block">
                             <div class="form-group">
                                 <h:outputLabel for="lblProximoId" value="ID (Asignado automáticamente):" />
                                 <h:outputText id="lblProximoId" value="#{tipoAlmacenFrm.proximoId}"
                                               styleClass="form-control-readonly" />
                             </div>
+                        </h:panelGroup>
 
-                            <!-- Campo obligatorio para el nombre del tipo de almacén -->
-                            <div class="form-group">
-                                <h:outputLabel for="txtNombre" value="Nombre:" />
-                                <h:inputText id="txtNombre" value="#{tipoAlmacenFrm.registro.nombre}"
-                                             size="75" styleClass="form-control" required="true"
-                                             requiredMessage="El nombre es obligatorio"/>
-                            </div>
-
-                            <!-- Campo opcional para observaciones -->
-                            <div class="form-group">
-                                <h:outputLabel for="txtObservaciones" value="Observaciones:" />
-                                <h:inputText id="txtObservaciones" value="#{tipoAlmacenFrm.registro.observaciones}"
-                                             size="75" styleClass="form-control" required="false"/>
-                            </div>
+                        <!-- Campos -->
+                        <div class="form-group">
+                            <h:outputLabel for="txtNombre" value="Nombre:" />
+                            <h:inputText id="txtNombre" value="#{tipoAlmacenFrm.registro.nombre}"
+                                         size="75" styleClass="form-control" required="true"
+                                         requiredMessage="El nombre es obligatorio"/>
                         </div>
 
-                        <!-- Botón para guardar el nuevo registro -->
-                        <h:commandButton value="Crear" actionListener="#{tipoAlmacenFrm.btnGuardarHandler}"
-                                         styleClass="btn-submit">
-                            <f:ajax execute="@form" render="panelCompleto" />
-                        </h:commandButton>
+                        <div class="form-group">
+                            <h:outputLabel for="txtObservaciones" value="Observaciones:" />
+                            <h:inputText id="txtObservaciones" value="#{tipoAlmacenFrm.registro.observaciones}"
+                                         size="75" styleClass="form-control"/>
+                        </div>
+
+                        <!-- Botón CREAR -->
+                        <h:panelGroup id="pgCrear"
+                                      rendered="#{!tipoAlmacenFrm.editionMode}"
+                                      layout="block">
+                            <h:commandButton value="Crear" styleClass="btn-submit"
+                                             actionListener="#{tipoAlmacenFrm.btnGuardarHandler}">
+                                <f:ajax execute="@form" render="panelCompleto"/>
+                            </h:commandButton>
+                        </h:panelGroup>
+
+                        <!-- Botón GUARDAR CAMBIOS -->
+                        <h:panelGroup id="pgGuardar"
+                                      rendered="#{tipoAlmacenFrm.editionMode}"
+                                      layout="block">
+                            <h:commandButton value="Guardar cambios" styleClass="btn-submit"
+                                             actionListener="#{tipoAlmacenFrm.btnModificarHandler}">
+                                <f:ajax execute="@form" render="panelCompleto"/>
+                            </h:commandButton>
+                        </h:panelGroup>
+
+                        <!-- Cancelar -->
+                        <h:panelGroup id="pgCancelar" layout="block">
+                            <h:commandButton value="Cancelar" styleClass="btn-cancelar"
+                                             actionListener="#{tipoAlmacenFrm.btnCancelarHandler}">
+                                <f:ajax execute="@this" render="panelCompleto"/>
+                            </h:commandButton>
+                        </h:panelGroup>
+
                     </div>
                 </h:panelGroup>
+
             </h:panelGroup>
         </h:form>
     </div>
