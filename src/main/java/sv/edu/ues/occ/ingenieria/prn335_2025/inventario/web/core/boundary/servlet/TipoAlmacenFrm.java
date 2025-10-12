@@ -1,58 +1,47 @@
 package sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.boundary.servlet;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
-import jakarta.faces.component.UIComponent;
 import jakarta.faces.context.FacesContext;
-import jakarta.faces.event.ActionEvent;
-import jakarta.faces.validator.ValidatorException;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import java.io.Serializable;
+import java.util.List;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control.TipoAlmacenDAO;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.TipoAlmacen;
 
-import java.io.Serializable;
-import java.util.List;
-
 @Named
 @ViewScoped
-public class TipoAlmacenFrm implements Serializable {
+public class TipoAlmacenFrm extends DefaultFrm<TipoAlmacen, Integer> implements Serializable {
 
     @Inject
     TipoAlmacenDAO taDao;
 
     private List<TipoAlmacen> listaTipoAlmacen;
-    private String nombreBean = "Tipo de Almacén";
-    private TipoAlmacen registro = new TipoAlmacen();
-    private boolean mostrarFormulario = false;
-    private Integer proximoId; // Calculado dinámicamente
-    private boolean editionMode=false;
-    @PostConstruct
-    public void inicializar() {
-        try {// Carga inicial de registros y cálculo del próximo ID disponible
+    private Integer proximoId;
+
+    @Override
+    protected Object getDao() {
+        return taDao;
+    }
+
+    @Override
+    protected String getNombreBeanConfig() {
+        return "Tipo de Almacén";
+    }
+
+    @Override
+    protected void inicializar() {
+        try {
             listaTipoAlmacen = taDao.findRange(0, Integer.MAX_VALUE);
             calcularProximoId();
         } catch (Exception e) {
             e.printStackTrace();
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al cargar datos", e.getMessage()));
+            FacesContext.getCurrentInstance().addMessage(
+                    null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al cargar datos", e.getMessage())
+            );
         }
-    }
-
-    public void btnEditarHandler(TipoAlmacen r) {
-        if (r == null || r.getId() == null) {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Registro inválido"));
-            return;
-        }
-        this.registro = taDao.findById(r.getId()); // refresca desde BD
-        this.mostrarFormulario = true;
-        this.editionMode = true;
-    }
-    public void btnCancelarHandler(ActionEvent event) {
-        this.registro = new TipoAlmacen();
-        this.mostrarFormulario = false;
-        this.editionMode = false;
     }
 
     private void calcularProximoId() {
@@ -64,91 +53,44 @@ public class TipoAlmacenFrm implements Serializable {
             proximoId = 1;
         }
     }
-    public void btnGuardarHandler(ActionEvent event) {
-        try {
-            taDao.create(  registro);
-            // Reinicia el formulario y actualiza la lista
-            registro = new TipoAlmacen();
-            listaTipoAlmacen = taDao.findRange(0, Integer.MAX_VALUE);
-            calcularProximoId();
-            mostrarFormulario = false;
 
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Registro guardado correctamente"));
-        } catch (Exception e) {
-            e.printStackTrace();
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al guardar", e.getMessage()));
-        }
+    // ===== Implementaciones CRUD =====
+    @Override
+    protected TipoAlmacen crearInstanciaVacia() {
+        return new TipoAlmacen();
     }
 
-    public void btnModificarHandler(ActionEvent event) {
-        if (this.registro == null || this.registro.getId() == null) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No hay registro seleccionado para modificar"));
-            return;
-        }
-        try {
-            // Actualiza el registro existente
-            taDao.update(registro);
-
-            // Limpieza y actualización de estado
-            registro = new TipoAlmacen();
-            listaTipoAlmacen = taDao.findRange(0, Integer.MAX_VALUE);
-            calcularProximoId();
-            mostrarFormulario = false;
-
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Registro modificado correctamente"));
-        } catch (Exception e) {
-            e.printStackTrace();
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al modificar", e.getMessage()));
-        }
+    @Override
+    protected Integer getId(TipoAlmacen entidad) {
+        return entidad.getId();
     }
 
-    public void btnNuevoHandler(ActionEvent event) {
-        // Prepara el formulario para crear un nuevo registro
-        this.registro = new TipoAlmacen();
-        this.mostrarFormulario = true;
+    @Override
+    protected void crear(TipoAlmacen entidad) {
+        taDao.create(entidad);
     }
 
-    public void btnEliminarHandler(TipoAlmacen registro) {
-        if (registro == null) {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No hay registro seleccionado"));
-            return;
-        }
-
-        try {
-            taDao.delete(registro);
-            listaTipoAlmacen = taDao.findRange(0, Integer.MAX_VALUE);
-            calcularProximoId();
-
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Éxito", "Registro eliminado"));
-
-        } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pudo eliminar: " + e.getMessage()));
-        }
+    @Override
+    protected void modificar(TipoAlmacen entidad) {
+        taDao.update(entidad);
     }
 
-    public void validarNombre(FacesContext facesContext, UIComponent uiComponent, Object nombre) {
-        // Validación de longitud y contenido del campo nombre
-        if (nombre == null || nombre.toString().isEmpty()) {
-            throw new ValidatorException(new FacesMessage("El nombre no puede estar vacío"));
-        }
-        String nom = nombre.toString().trim();
-        if (nom.length() < 1 || nom.length() > 155) {
-            throw new ValidatorException(new FacesMessage("El nombre debe tener entre 1 y 155 caracteres"));
-        }
+    @Override
+    protected void eliminar(TipoAlmacen entidad) {
+        taDao.delete(entidad);
     }
 
-    // Getters y Setters
-    public String getNombreBean() {
-        return nombreBean;
+    @Override
+    protected TipoAlmacen findById(Integer id) {
+        return taDao.findById(id);
     }
 
-    public void setNombreBean(String nombreBean) {
-        this.nombreBean = nombreBean;
+    @Override
+    protected List<TipoAlmacen> findRange(int first, int pageSize) {
+        return taDao.findRange(first, pageSize);
     }
 
+    // ===== GETTERS / SETTERS ESPECÍFICOS =====
     public List<TipoAlmacen> getListaTipoAlmacen() {
         return listaTipoAlmacen;
     }
@@ -157,31 +99,7 @@ public class TipoAlmacenFrm implements Serializable {
         this.listaTipoAlmacen = listaTipoAlmacen;
     }
 
-    public TipoAlmacen getRegistro() {
-        return registro;
-    }
-
-    public void setRegistro(TipoAlmacen registro) {
-        this.registro = registro;
-    }
-
-    public boolean isMostrarFormulario() {
-        return mostrarFormulario;
-    }
-
-    public void setMostrarFormulario(boolean mostrarFormulario) {
-        this.mostrarFormulario = mostrarFormulario;
-    }
-
     public Integer getProximoId() {
         return proximoId;
-    }
-
-    public boolean isEditionMode() {
-        return editionMode;
-    }
-
-    public void setEditionMode(boolean editionMode) {
-        this.editionMode = editionMode;
     }
 }

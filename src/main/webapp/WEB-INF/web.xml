@@ -23,6 +23,14 @@
         <param-name>jakarta.faces.PROJECT_STAGE</param-name>
         <param-value>Development</param-value>
     </context-param>
+    <context-param>
+        <param-name>primefaces.THEME</param-name>
+        <param-value>lara-light-indigo</param-value> <!-- o lara-dark-indigo -->
+    </context-param>
+    <context-param>
+        <param-name>primefaces.RIPPLE</param-name>
+        <param-value>true</param-value>
+    </context-param>
 
     <!-- Página de inicio opcional -->
     <welcome-file-list>

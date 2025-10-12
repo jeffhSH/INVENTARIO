@@ -1,144 +1,125 @@
-<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
-<head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Tipo de Almacén</title>
-    <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/estilos/disenoAlmacen.css" />
-</head>
-<body>
-<div class="container">
-    <div class="header">
-        <h1>#{tipoAlmacenFrm.nombreBean}</h1>
-    </div>
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>#{tipoAlmacenFrm.nombreBean}</title>
+    <h:outputStylesheet library="estilos" name="disenoAlmacen.css"/>
 
-    <div class="content">
-        <!-- Formulario principal con AJAX para evitar recarga completa -->
-        <h:form id="frmPrincipal">
-            <h:panelGroup id="panelCompleto">
+</h:head>
+<h:body>
+    <h:form id="frmPrincipal">
 
-                <!-- Tabla que muestra todos los registros existentes -->
-                <h:dataTable value="#{tipoAlmacenFrm.listaTipoAlmacen}" var="r" styleClass="data-table">
-                    <h:column>
-                        <f:facet name="header">ID</f:facet>
-                        #{r.id}
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">Nombre</f:facet>
-                        #{r.nombre}
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">Estado</f:facet>
-                        <span class="badge #{r.activo ? 'badge-activo' : 'badge-inactivo'}">
-                            #{r.activo ? 'Activo' : 'Inactivo'}
-                        </span>
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">Observaciones</f:facet>
-                        #{r.observaciones != null ? r.observaciones.toUpperCase() : ''}
-                    </h:column>
-                    <h:column>
-                        <f:facet name="header">Acciones</f:facet>
-                        <!-- Botón para eliminar un registro con confirmación -->
-                        <h:commandButton value="Eliminar"
-                                         actionListener="#{tipoAlmacenFrm.btnEliminarHandler(r)}"
-                                         styleClass="btn-eliminar"
-                                         onclick="return confirm('¿Está seguro que desea eliminar este registro?');">
-                            <f:ajax execute="@this" render="panelCompleto" />
-                        </h:commandButton>
-                        <h:commandButton value="Modificar"
-                                         actionListener="#{tipoAlmacenFrm.btnEditarHandler(r)}"
-                                         styleClass="btn-modificar">
-                            <!-- Evita validar otros campos al hacer clic -->
-                            <f:ajax execute="@this" render="panelCompleto"/>
-                        </h:commandButton>
-                    </h:column>
-                </h:dataTable>
+        <p:growl id="growl" showDetail="true" life="3000" />
 
+        <!-- Toolbar superior -->
+        <p:toolbar class="surface-card shadow-2 border-round toolbar-gap">
+            <p:toolbarGroup>
+                <span class="text-2xl font-bold mr-2">#{tipoAlmacenFrm.nombreBean}</span>
+                <span class="text-500">Gestión y mantenimiento</span>
+            </p:toolbarGroup>
+            <p:toolbarGroup align="right">
+                <p:inputText placeholder="Buscar por nombre…" value="#{tipoAlmacenFrm.registro.nombre}" styleClass="mr-2" />
+                <p:commandButton value="Nuevo" icon="pi pi-plus"
+                                 action="#{tipoAlmacenFrm.btnNuevoHandler}"
+                                 update=":frmPrincipal:panelCompleto,:frmPrincipal:dlg"
+                                 styleClass="p-button-rounded p-button-primary"/>
+            </p:toolbarGroup>
+        </p:toolbar>
 
+        <h:panelGroup id="panelCompleto" layout="block" styleClass="surface-card shadow-2 border-round p-3 mt-3">
 
-                <!-- Botón para mostrar el formulario de creación -->
-                <h:commandButton value="Nuevo" actionListener="#{tipoAlmacenFrm.btnNuevoHandler}"
-                                 styleClass="btn-submit btn-nuevo">
-                    <f:ajax execute="@this" render="panelCompleto" />
-                </h:commandButton>
-<!--//////////////////////////////////////-->
-                <!-- Sección del formulario para crear/editar -->
-                <h:panelGroup id="formWrapper"
-                              rendered="#{tipoAlmacenFrm.mostrarFormulario}"
-                              layout="block">
-                    <div class="form-section">
+            <!-- DataTable bonita y responsive -->
+            <p:dataTable id="tbl"
+                         value="#{tipoAlmacenFrm.model}" var="r"
+                         lazy="true" paginator="true" rows="10"
+                         rowsPerPageTemplate="10,20,50"
+                         currentPageReportTemplate="Mostrando {startRecord}-{endRecord} de {totalRecords}"
+                         paginatorPosition="bottom"
+                         responsiveLayout="scroll"
+                         rowHover="true"
+                         emptyMessage="No hay registros"
+                         styleClass="table-clean">
 
-                        <h2>
-                            #{tipoAlmacenFrm.editionMode ? 'Editar Tipo de Almacén' : 'Nuevo Tipo de Almacén'}
-                        </h2>
+                <p:column headerText="ID" style="width:90px" sortBy="#{r.id}">
+                    <h:outputText value="#{r.id}" />
+                </p:column>
 
-                        <h:messages styleClass="error-message" />
+                <p:column headerText="Nombre" sortBy="#{r.nombre}" filterBy="#{r.nombre}" filterMatchMode="contains">
+                    <h:outputText value="#{r.nombre}" />
+                </p:column>
 
-                        <!-- conserva el id en el postback -->
-                        <h:inputHidden id="hidId" value="#{tipoAlmacenFrm.registro.id}" />
+                <p:column headerText="Estado" style="width:140px" sortBy="#{r.activo}">
+                    <p:tag value="#{r.activo ? 'Activo' : 'Inactivo'}"
+                           severity="#{r.activo ? 'success' : 'danger'}"
+                           rounded="true"/>
+                </p:column>
 
-                        <!-- ID sugerido solo en modo crear -->
-                        <h:panelGroup id="pgIdSugerido"
-                                      rendered="#{!tipoAlmacenFrm.editionMode}"
-                                      layout="block">
-                            <div class="form-group">
-                                <h:outputLabel for="lblProximoId" value="ID (Asignado automáticamente):" />
-                                <h:outputText id="lblProximoId" value="#{tipoAlmacenFrm.proximoId}"
-                                              styleClass="form-control-readonly" />
-                            </div>
-                        </h:panelGroup>
+                <p:column headerText="Observaciones">
+                    <h:outputText value="#{r.observaciones}" />
+                </p:column>
 
-                        <!-- Campos -->
-                        <div class="form-group">
-                            <h:outputLabel for="txtNombre" value="Nombre:" />
-                            <h:inputText id="txtNombre" value="#{tipoAlmacenFrm.registro.nombre}"
-                                         size="75" styleClass="form-control" required="true"
-                                         requiredMessage="El nombre es obligatorio"/>
-                        </div>
+                <p:column headerText="Acciones" style="width:220px; white-space:nowrap;">
+                    <p:commandButton icon="pi pi-pencil" value="Modificar"
+                                     action="#{tipoAlmacenFrm.btnEditarHandler(r)}"
+                                     process="@this" update=":frmPrincipal:dlg"
+                                     styleClass="p-button-rounded p-button-info mr-2" />
 
-                        <div class="form-group">
-                            <h:outputLabel for="txtObservaciones" value="Observaciones:" />
-                            <h:inputText id="txtObservaciones" value="#{tipoAlmacenFrm.registro.observaciones}"
-                                         size="75" styleClass="form-control"/>
-                        </div>
+                    <p:commandButton icon="pi pi-trash" value="Eliminar"
+                                     oncomplete="PF('confirmDel').show()"
+                                     process="@this"
+                                     styleClass="p-button-rounded p-button-danger">
+                        <f:setPropertyActionListener value="#{r}" target="#{tipoAlmacenFrm.registro}" />
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+        </h:panelGroup>
 
-                        <!-- Botón CREAR -->
-                        <h:panelGroup id="pgCrear"
-                                      rendered="#{!tipoAlmacenFrm.editionMode}"
-                                      layout="block">
-                            <h:commandButton value="Crear" styleClass="btn-submit"
-                                             actionListener="#{tipoAlmacenFrm.btnGuardarHandler}">
-                                <f:ajax execute="@form" render="panelCompleto"/>
-                            </h:commandButton>
-                        </h:panelGroup>
-
-                        <!-- Botón GUARDAR CAMBIOS -->
-                        <h:panelGroup id="pgGuardar"
-                                      rendered="#{tipoAlmacenFrm.editionMode}"
-                                      layout="block">
-                            <h:commandButton value="Guardar cambios" styleClass="btn-submit"
-                                             actionListener="#{tipoAlmacenFrm.btnModificarHandler}">
-                                <f:ajax execute="@form" render="panelCompleto"/>
-                            </h:commandButton>
-                        </h:panelGroup>
-
-                        <!-- Cancelar -->
-                        <h:panelGroup id="pgCancelar" layout="block">
-                            <h:commandButton value="Cancelar" styleClass="btn-cancelar"
-                                             actionListener="#{tipoAlmacenFrm.btnCancelarHandler}">
-                                <f:ajax execute="@this" render="panelCompleto"/>
-                            </h:commandButton>
-                        </h:panelGroup>
-
-                    </div>
+        <!-- Diálogo Crear/Editar -->
+        <p:dialog id="dlg" header="#{tipoAlmacenFrm.editionMode ? 'Editar' : 'Nuevo'} Tipo de Almacén"
+                  widgetVar="dlgVar" modal="true" resizable="false" closable="true" width="520"
+                  visible="#{tipoAlmacenFrm.mostrarFormulario}">
+            <h:panelGrid columns="1" columnClasses="w-full" styleClass="gap-2 w-full">
+                <p:messages />
+                <h:panelGroup rendered="#{!tipoAlmacenFrm.editionMode}">
+                    <small class="text-500">Siguiente ID: #{tipoAlmacenFrm.proximoId}</small>
                 </h:panelGroup>
 
-            </h:panelGroup>
-        </h:form>
-    </div>
-</div>
-</body>
+                <p:inputText value="#{tipoAlmacenFrm.registro.nombre}" placeholder="Nombre" required="true"
+                             requiredMessage="El nombre es obligatorio"/>
+
+                <p:inputTextarea value="#{tipoAlmacenFrm.registro.observaciones}" rows="3" autoResize="true"
+                                 placeholder="Observaciones (opcional)"/>
+
+                <div class="flex justify-end gap-2 mt-3">
+                    <p:commandButton value="Cancelar" icon="pi pi-times"
+                                     actionListener="#{tipoAlmacenFrm.btnCancelarHandler}"
+                                     process="@this"
+                                     update=":frmPrincipal:panelCompleto,:frmPrincipal:dlg"
+                                     styleClass="p-button-text"/>
+                    <p:commandButton value="#{tipoAlmacenFrm.editionMode ? 'Guardar cambios' : 'Crear'}"
+                                     icon="pi pi-check"
+                                     action="#{tipoAlmacenFrm.btnGuardarHandler}"
+                                     process=":frmPrincipal:dlg"
+                                     update=":frmPrincipal:panelCompleto,:frmPrincipal:growl,:frmPrincipal:dlg"
+                                     oncomplete="if (!args.validationFailed) PF('dlgVar').hide();"/>
+                </div>
+            </h:panelGrid>
+        </p:dialog>
+
+        <!-- Confirmación elegante de borrado -->
+        <p:confirmDialog widgetVar="confirmDel" header="Confirmar eliminación" message="¿Eliminar este registro?"
+                         icon="pi pi-exclamation-triangle" closable="false">
+            <div class="flex justify-end gap-2">
+                <p:commandButton value="Cancelar" type="button" styleClass="p-button-text"
+                                 onclick="PF('confirmDel').hide()"/>
+                <p:commandButton value="Sí, eliminar" icon="pi pi-trash"
+                                 action="#{tipoAlmacenFrm.btnEliminarHandler(tipoAlmacenFrm.registro)}"
+                                 update=":frmPrincipal:panelCompleto,:frmPrincipal:growl"
+                                 oncomplete="PF('confirmDel').hide()"/>
+            </div>
+        </p:confirmDialog>
+
+    </h:form>
+</h:body>
 </html>
