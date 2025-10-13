@@ -25,7 +25,7 @@
     </context-param>
     <context-param>
         <param-name>primefaces.THEME</param-name>
-        <param-value>lara-light-indigo</param-value> <!-- o lara-dark-indigo -->
+        <param-value>lara-light-blue</param-value> <!-- o lara-dark-indigo -->
     </context-param>
     <context-param>
         <param-name>primefaces.RIPPLE</param-name>

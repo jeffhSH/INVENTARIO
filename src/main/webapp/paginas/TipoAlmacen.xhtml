@@ -5,7 +5,6 @@
 <h:head>
     <title>#{tipoAlmacenFrm.nombreBean}</title>
     <h:outputStylesheet library="estilos" name="disenoAlmacen.css"/>
-
 </h:head>
 <h:body>
     <h:form id="frmPrincipal">
@@ -21,7 +20,7 @@
             <p:toolbarGroup align="right">
                 <p:inputText placeholder="Buscar por nombre…" value="#{tipoAlmacenFrm.registro.nombre}" styleClass="mr-2" />
                 <p:commandButton value="Nuevo" icon="pi pi-plus"
-                                 action="#{tipoAlmacenFrm.btnNuevoHandler}"
+                                 actionListener="#{tipoAlmacenFrm.btnNuevoHandler}"
                                  update=":frmPrincipal:panelCompleto,:frmPrincipal:dlg"
                                  styleClass="p-button-rounded p-button-primary"/>
             </p:toolbarGroup>
@@ -29,7 +28,6 @@
 
         <h:panelGroup id="panelCompleto" layout="block" styleClass="surface-card shadow-2 border-round p-3 mt-3">
 
-            <!-- DataTable bonita y responsive -->
             <p:dataTable id="tbl"
                          value="#{tipoAlmacenFrm.model}" var="r"
                          lazy="true" paginator="true" rows="10"
@@ -79,6 +77,7 @@
         <p:dialog id="dlg" header="#{tipoAlmacenFrm.editionMode ? 'Editar' : 'Nuevo'} Tipo de Almacén"
                   widgetVar="dlgVar" modal="true" resizable="false" closable="true" width="520"
                   visible="#{tipoAlmacenFrm.mostrarFormulario}">
+
             <h:panelGrid columns="1" columnClasses="w-full" styleClass="gap-2 w-full">
                 <p:messages />
                 <h:panelGroup rendered="#{!tipoAlmacenFrm.editionMode}">
@@ -99,7 +98,7 @@
                                      styleClass="p-button-text"/>
                     <p:commandButton value="#{tipoAlmacenFrm.editionMode ? 'Guardar cambios' : 'Crear'}"
                                      icon="pi pi-check"
-                                     action="#{tipoAlmacenFrm.btnGuardarHandler}"
+                                     actionListener="#{tipoAlmacenFrm.btnGuardarHandler}"
                                      process=":frmPrincipal:dlg"
                                      update=":frmPrincipal:panelCompleto,:frmPrincipal:growl,:frmPrincipal:dlg"
                                      oncomplete="if (!args.validationFailed) PF('dlgVar').hide();"/>
@@ -114,7 +113,7 @@
                 <p:commandButton value="Cancelar" type="button" styleClass="p-button-text"
                                  onclick="PF('confirmDel').hide()"/>
                 <p:commandButton value="Sí, eliminar" icon="pi pi-trash"
-                                 action="#{tipoAlmacenFrm.btnEliminarHandler(tipoAlmacenFrm.registro)}"
+                                 actionListener="#{tipoAlmacenFrm.btnEliminarHandler(tipoAlmacenFrm.registro)}"
                                  update=":frmPrincipal:panelCompleto,:frmPrincipal:growl"
                                  oncomplete="PF('confirmDel').hide()"/>
             </div>

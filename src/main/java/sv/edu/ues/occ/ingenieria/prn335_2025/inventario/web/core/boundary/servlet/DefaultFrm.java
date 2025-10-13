@@ -89,6 +89,7 @@ public abstract class DefaultFrm<T, K extends Serializable> implements Serializa
         this.registro = crearInstanciaVacia();
         this.editionMode = false;
         this.mostrarFormulario = true;
+
     }
 
     public void btnEditarHandler(T fila) {
