@@ -23,7 +23,7 @@ public abstract class DefaultFrm<T, K extends Serializable> implements Serializa
     protected int pageSize = 10;
     protected boolean mostrarFormulario = false;
     protected boolean editionMode = false;
-
+    protected T selectedRow;
 
     /** Cada subclase debe entregar su DAO concreto */
     protected abstract Object getDao(); // mantiene flexibilidad en jerarquías de DAO
@@ -44,6 +44,9 @@ public abstract class DefaultFrm<T, K extends Serializable> implements Serializa
         }
     }
 
+    public T getSelectRow(){
+return selectedRow;
+    }
     /** Gancho opcional para la subclase (carga inicial, combos, etc.) */
     protected void inicializar() { /* opcional */ }
 
