@@ -14,7 +14,7 @@ import java.io.Serializable;
 public class TipoAlmacenDAO extends InventarioDefaultDataAccess<TipoAlmacen> implements Serializable {
 
     @PersistenceContext(unitName = "inventarioPU")
-    private EntityManager em;  // <-- solo este campo, sin duplicar en la base
+    private EntityManager em;
 
     public TipoAlmacenDAO() {
         super(TipoAlmacen.class);

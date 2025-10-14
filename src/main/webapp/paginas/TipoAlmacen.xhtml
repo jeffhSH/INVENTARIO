@@ -5,6 +5,7 @@
 <h:head>
     <title>#{tipoAlmacenFrm.nombreBean}</title>
     <h:outputStylesheet library="estilos" name="disenoAlmacen.css"/>
+
 </h:head>
 <h:body>
     <h:form id="frmPrincipal">
@@ -20,9 +21,11 @@
             <p:toolbarGroup align="right">
                 <p:inputText placeholder="Buscar por nombre…" value="#{tipoAlmacenFrm.registro.nombre}" styleClass="mr-2" />
                 <p:commandButton value="Nuevo" icon="pi pi-plus"
-                                 actionListener="#{tipoAlmacenFrm.btnNuevoHandler}"
-                                 update=":frmPrincipal:panelCompleto,:frmPrincipal:dlg"
-                                 styleClass="p-button-rounded p-button-primary"/>
+                                 action="#{tipoAlmacenFrm.btnNuevoHandler(r)}"
+                                 update=":frmPrincipal:dlg"
+                                 styleClass="p-button-rounded p-button-primary"
+                                 process="@this" immediate="true"/>
+
             </p:toolbarGroup>
         </p:toolbar>
 
@@ -37,7 +40,9 @@
                          responsiveLayout="scroll"
                          rowHover="true"
                          emptyMessage="No hay registros"
-                         styleClass="table-clean">
+                         styleClass="table-clean"
+                         selectionMode="single"
+                         selection="#{tipoAlmacenFrm.selectedRow}">
 
                 <p:column headerText="ID" style="width:90px" sortBy="#{r.id}">
                     <h:outputText value="#{r.id}" />
@@ -75,8 +80,9 @@
 
         <!-- Diálogo Crear/Editar -->
         <p:dialog id="dlg" header="#{tipoAlmacenFrm.editionMode ? 'Editar' : 'Nuevo'} Tipo de Almacén"
-                  widgetVar="dlgVar" modal="true" resizable="false" closable="true" width="520"
-                  visible="#{tipoAlmacenFrm.mostrarFormulario}">
+                  widgetVar="dlgVar" modal="true" resizable="true" closable="true" width="520"
+                  visible="#{tipoAlmacenFrm.mostrarFormulario}"
+                  styleClass="dialog-solid">
 
             <h:panelGrid columns="1" columnClasses="w-full" styleClass="gap-2 w-full">
                 <p:messages />
@@ -84,11 +90,14 @@
                     <small class="text-500">Siguiente ID: #{tipoAlmacenFrm.proximoId}</small>
                 </h:panelGroup>
 
-                <p:inputText value="#{tipoAlmacenFrm.registro.nombre}" placeholder="Nombre" required="true"
-                             requiredMessage="El nombre es obligatorio"/>
+                <p:inputText value="#{tipoAlmacenFrm.registro.nombre}" placeholder="Nombre" required="false"
+                                 requiredMessage="El nombre es obligatorio"/>
 
                 <p:inputTextarea value="#{tipoAlmacenFrm.registro.observaciones}" rows="3" autoResize="true"
                                  placeholder="Observaciones (opcional)"/>
+
+                    <h:selectBooleanCheckbox id="chkActivo" value="#{tipoAlmacenFrm.registro.activo}"/>
+                <h:outputLabel for="chkActivo" value="¿Activo?" />
 
                 <div class="flex justify-end gap-2 mt-3">
                     <p:commandButton value="Cancelar" icon="pi pi-times"

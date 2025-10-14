@@ -24,6 +24,7 @@ public abstract class DefaultFrm<T, K extends Serializable> implements Serializa
     protected boolean mostrarFormulario = false;
     protected boolean editionMode = false;
 
+
     /** Cada subclase debe entregar su DAO concreto */
     protected abstract Object getDao(); // mantiene flexibilidad en jerarquías de DAO
 
@@ -89,6 +90,8 @@ public abstract class DefaultFrm<T, K extends Serializable> implements Serializa
         this.registro = crearInstanciaVacia();
         this.editionMode = false;
         this.mostrarFormulario = true;
+        FacesContext.getCurrentInstance().addMessage(null,
+                new FacesMessage(FacesMessage.SEVERITY_INFO, "Nuevo", "Formulario listo"));
 
     }
 
