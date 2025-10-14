@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.FilterMeta;
 import org.primefaces.model.SortMeta;
@@ -23,7 +26,12 @@ public abstract class DefaultFrm<T, K extends Serializable> implements Serializa
     protected int pageSize = 10;
     protected boolean mostrarFormulario = false;
     protected boolean editionMode = false;
-    protected T selectedRow;
+    abstract protected String getIdAsText(T r);
+    abstract protected T getIdByText(String id);
+    //protected T selectedRow;
+
+
+
 
     /** Cada subclase debe entregar su DAO concreto */
     protected abstract Object getDao(); // mantiene flexibilidad en jerarquías de DAO
@@ -44,15 +52,46 @@ public abstract class DefaultFrm<T, K extends Serializable> implements Serializa
         }
     }
 
-    public T getSelectRow(){
-return selectedRow;
+    public void selectionHandler(SelectEvent<T> r) {
+        if (r != null) {
+            this.registro = r.getObject();
+            this.editionMode = true;
+            System.out.println("✅ Registro seleccionado: " + this.registro);
+        } else {
+            System.out.println("⚠ Evento de selección nulo");
+        }
     }
     /** Gancho opcional para la subclase (carga inicial, combos, etc.) */
     protected void inicializar() { /* opcional */ }
 
     // ===== LazyDataModel =====
     private void configurarModeloLazy() {
+
         this.model = new LazyDataModel<>() {
+            @Override
+            public String getRowKey(T object) {
+                if (object != null) {
+                    try {
+                        return getIdAsText(object);
+                    } catch (Exception e) {
+                        Logger.getLogger(DefaultFrm.class.getName()).log(Level.SEVERE, null, e);
+                    }
+                }
+                return null;
+            }
+
+
+            @Override
+            public T getRowData(String rowKey) {
+                if (rowKey != null) {
+                    try {
+                        return getIdByText(rowKey);
+                    } catch (Exception e) {
+                        Logger.getLogger(DefaultFrm.class.getName()).log(Level.SEVERE, null, e);
+                    }
+                }
+                return null;
+            }
             @Override
             public int count(Map<String, FilterMeta> filterBy) {
                 return DefaultFrm.this.count(filterBy);
@@ -96,6 +135,11 @@ return selectedRow;
         FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Nuevo", "Formulario listo"));
 
+    }
+    public void rowUnselectHandler(UnselectEvent event) {
+        // Restablece la propiedad editionMode cuando se deselecciona la fila
+        this.editionMode = false;  // Ya no hay una fila seleccionada
+        this.registro = null;      // Limpia el registro seleccionado
     }
 
     public void btnEditarHandler(T fila) {
@@ -142,6 +186,7 @@ return selectedRow;
                 return;
             }
             eliminar(fila);
+            this.editionMode = false;
             addMsg(FacesMessage.SEVERITY_INFO, "Éxito", "Registro eliminado");
             recargar();
         } catch (Exception ex) {

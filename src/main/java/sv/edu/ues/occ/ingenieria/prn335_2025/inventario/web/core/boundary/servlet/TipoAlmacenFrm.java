@@ -59,6 +59,30 @@ public class TipoAlmacenFrm extends DefaultFrm<TipoAlmacen, Integer> implements 
     protected TipoAlmacen crearInstanciaVacia() {
         return new TipoAlmacen();
     }
+    @Override
+    protected String getIdAsText(TipoAlmacen r) {
+        if (r != null && r.getId() != null) {
+            return r.getId().toString();
+        }
+        return null;
+    }
+
+    @Override
+    protected TipoAlmacen getIdByText(String id) {
+        if (id != null && this.model != null && !this.model.getWrappedData().isEmpty()) {
+            try {
+                Integer buscado = Integer.parseInt(id);
+                return this.model.getWrappedData().stream()
+                        .filter(r -> r.getId() != null && r.getId().equals(buscado))
+                        .findFirst()
+                        .orElse(null);
+            } catch (NumberFormatException e) {
+                System.err.println("ID no es un número válido: " + id);
+                return null;
+            }
+        }
+        return null;
+    }
 
     @Override
     protected Integer getId(TipoAlmacen entidad) {
