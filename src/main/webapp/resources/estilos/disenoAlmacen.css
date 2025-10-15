@@ -43,7 +43,7 @@
     }
 
     .table-clean thead th {
-        background: var(--surface-ground, #7677);
+        background: var(--surface-ground, #ddd);
         color: var(--text-color, #333);
         font-weight: 600;
         text-align: left;
@@ -240,7 +240,7 @@
     }
     /* Estilos para el panel de detalle */
     .detalle-panel {
-        background-color: #f9f9f9; /* Fondo suave */
+        background-color: #43ff98; /* Fondo suave */
         border-radius: 8px; /* Bordes redondeados */
         padding: 20px; /* Espaciado interno */
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
