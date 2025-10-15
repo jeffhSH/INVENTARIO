@@ -238,4 +238,37 @@
         background-color: #f14444 !important;
         cursor: pointer;
     }
+    /* Estilos para el panel de detalle */
+    .detalle-panel {
+        background-color: #f9f9f9; /* Fondo suave */
+        border-radius: 8px; /* Bordes redondeados */
+        padding: 20px; /* Espaciado interno */
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+        margin-top: 20px; /* Margen superior */
+        max-width: 600px; /* Ancho máximo */
+        margin-left: auto;
+        margin-right: auto; /* Centrado */
+    }
+
+    /* Estilo para el título del panel */
+    .detalle-titulo {
+        font-size: 1.6rem;
+        font-weight: bold;
+        color: #333; /* Color oscuro para el título */
+        border-bottom: 2px solid #4CAF50; /* Línea debajo del título */
+        padding-bottom: 10px;
+        margin-bottom: 15px;
+    }
+
+    /* Estilo para los párrafos dentro del panel */
+    .detalle-panel p {
+        font-size: 1rem;
+        color: #555; /* Color gris para el texto */
+        line-height: 1.6; /* Mejor lectura */
+    }
+
+    /* Estilo para las etiquetas fuertes (labels) dentro del panel */
+    .detalle-panel strong {
+        color: #4CAF50; /* Color verde para resaltar etiquetas */
+    }
 

@@ -26,6 +26,7 @@ public abstract class DefaultFrm<T, K extends Serializable> implements Serializa
     protected int pageSize = 10;
     protected boolean mostrarFormulario = false;
     protected boolean editionMode = false;
+    protected boolean pnlDetalle = false;
     abstract protected String getIdAsText(T r);
     abstract protected T getIdByText(String id);
     //protected T selectedRow;
@@ -56,6 +57,7 @@ public abstract class DefaultFrm<T, K extends Serializable> implements Serializa
         if (r != null) {
             this.registro = r.getObject();
             this.editionMode = true;
+            this.pnlDetalle = true;
             System.out.println("✅ Registro seleccionado: " + this.registro);
         } else {
             System.out.println("⚠ Evento de selección nulo");
@@ -138,6 +140,7 @@ public abstract class DefaultFrm<T, K extends Serializable> implements Serializa
     }
     public void rowUnselectHandler(UnselectEvent event) {
         // Restablece la propiedad editionMode cuando se deselecciona la fila
+
         this.editionMode = false;  // Ya no hay una fila seleccionada
         this.registro = null;      // Limpia el registro seleccionado
     }
@@ -187,6 +190,7 @@ public abstract class DefaultFrm<T, K extends Serializable> implements Serializa
             }
             eliminar(fila);
             this.editionMode = false;
+            this.pnlDetalle=false;
             addMsg(FacesMessage.SEVERITY_INFO, "Éxito", "Registro eliminado");
             recargar();
         } catch (Exception ex) {
@@ -198,11 +202,14 @@ public abstract class DefaultFrm<T, K extends Serializable> implements Serializa
     public void btnCancelarHandler(ActionEvent e) {
         cancelarEdicion();
     }
-
+public void volver(){
+        pnlDetalle=false;
+}
     protected void cancelarEdicion() {
         this.registro = crearInstanciaVacia();
         this.editionMode = false;
         this.mostrarFormulario = false;
+
     }
 
     protected FacesContext getFacesContext() {
@@ -266,6 +273,12 @@ public abstract class DefaultFrm<T, K extends Serializable> implements Serializa
 
     public boolean isEditionMode() {
         return editionMode;
+    }
+    public boolean isPnlDetalle() {
+        return pnlDetalle;
+    }
+    public void setPnlDetalle(boolean pnlDetalle) {
+        this.pnlDetalle = pnlDetalle;
     }
 
     public void setEditionMode(boolean editionMode) {

@@ -8,7 +8,7 @@
 
 </h:head>
 <h:body>
-    <h:form id="frmPrincipal">
+    <h:form id="frmPrincipal" update=":frmPrincipal:toolbar">
 
         <p:growl id="growl" showDetail="true" life="3000" />
 
@@ -16,58 +16,66 @@
         <p:toolbar toolbar="" id="toolbar" class="surface-card shadow-2 border-round toolbar-gap">
             <p:toolbarGroup>
                 <span class="text-2xl font-bold mr-2">#{tipoAlmacenFrm.nombreBean}</span>
-                <span class="text-500">Gestión y mantenimiento</span>
+                <span class="text-500"></span>
             </p:toolbarGroup>
             <p:toolbarGroup align="right">
-                <p:inputText placeholder="Buscar por nombre…" value="#{tipoAlmacenFrm.registro.nombre}" styleClass="mr-2" />
+                <p:inputText placeholder="Buscar por nombre…" value="#{tipoAlmacenFrm.registro.nombre}" styleClass="" />
                 <p:commandButton value="Nuevo" icon="pi pi-plus"
                                  action="#{tipoAlmacenFrm.btnNuevoHandler(r)}"
                                  update=":frmPrincipal:dlg"
                                  styleClass="p-button-rounded p-button-primary"
+                                 rendered="#{!tipoAlmacenFrm.pnlDetalle}"
                                  process="@this" immediate="true"/>
+                <p:commandButton
+                        id="btnVOLVER"
+                        value="VOLVER"
+                        rendered="#{tipoAlmacenFrm.pnlDetalle}"
+                        action="#{tipoAlmacenFrm.volver()}"
+                        update=":frmPrincipal, :frmPrincipal:toolbar" >
+                </p:commandButton>
 
             </p:toolbarGroup>
+
             <p:toolbarGroup>
                 <!-- Botón Modificar -->
-                <p:commandButton value="Modificar"
+                <p:commandButton id="btnModificar" value="Modificar"
                                  icon="pi pi-pencil"
                                  action="#{tipoAlmacenFrm.btnEditarHandler(tipoAlmacenFrm.registro)}"
-                                 rendered="#{tipoAlmacenFrm.editionMode}"
-                                 update=":frmPrincipal:dlg"
+                                 rendered="#{tipoAlmacenFrm.pnlDetalle}"
+                                 update=":frmPrincipal"
                                  oncomplete="PF('dlgVar').show()"
                                  styleClass="p-button-rounded p-button-warning"/>
 
                 <p:commandButton icon="pi pi-trash" value="Eliminar"
-                                 action="#{tipoAlmacenFrm.btnEliminarHandler(tipoAlmacenFrm.registro)}"
-                                 rendered="#{tipoAlmacenFrm.editionMode}"
-                                 update=":frmPrincipal:dlg, frmPrincipal:tbl"
+                                 rendered="#{tipoAlmacenFrm.pnlDetalle}"
                                  oncomplete="PF('confirmDel').show()"
                                  process="@this"
                                  styleClass="p-button-rounded p-button-danger">
 
                 </p:commandButton>
             </p:toolbarGroup>
+
         </p:toolbar>
 
-        <h:panelGroup id="panelCompleto" layout="block" styleClass="surface-card shadow-2 border-round p-3 mt-3"
-        >
 
             <p:dataTable id="tbl"
                          value="#{tipoAlmacenFrm.model}" var="r"
-                         lazy="true" paginator="true" rows="5"
+                         lazy="true" paginator="true" rows="10"
                          rowsPerPageTemplate="10,20,50"
                          currentPageReportTemplate="Mostrando {startRecord}-{endRecord} de {totalRecords}"
                          paginatorPosition="bottom"
                          responsiveLayout="scroll"
                          rowHover="true"
-                         rendered="#{!tipoAlmacenFrm.editionMode}"
+                         rendered="#{!tipoAlmacenFrm.pnlDetalle}"
                          emptyMessage="No hay registros"
                          styleClass="table-clean"
                          selectionMode="single"
                          selection="#{tipoAlmacenFrm.registro}" rowKey="#{r.id}" >
                 <p:ajax event="rowSelect"
                         listener="#{tipoAlmacenFrm.selectionHandler}"
-                        update=":frmPrincipal:toolbar :frmPrincipal:growl :frmPrincipal:tbl" />
+                        update="frmPrincipal"
+
+                        />
 
                 <p:ajax event="rowUnselect"
                         listener="#{tipoAlmacenFrm.rowUnselectHandler}"
@@ -81,19 +89,27 @@
                     <h:outputText value="#{r.nombre}" />
                 </p:column>
 
-                <p:column headerText="Estado" style="width:140px" sortBy="#{r.activo}">
-                    <p:tag value="#{r.activo ? 'Activo' : 'Inactivo'}"
-                           severity="#{r.activo ? 'success' : 'danger'}"
-                           rounded="true"/>
-                </p:column>
 
-                <p:column headerText="Observaciones">
-                    <h:outputText value="#{r.observaciones}" />
-                </p:column>
-
-
+                <!-- panel detalle -->
             </p:dataTable>
+<h:panelGroup id="pnlDetalle" styleClass=""
+rendered="#{tipoAlmacenFrm.pnlDetalle}">
+
+
+<h:panelGrid columns="2">
+    <p><strong>ID:</strong> #{tipoAlmacenFrm.registro.id}</p>
+    <p><strong>Nombre </strong>#{tipoAlmacenFrm.registro.nombre}</p>
+</h:panelGrid>
+    <h:panelGrid columns="2">
+    <p><strong>Observaciones</strong>
+    <p:inputTextarea value="#{tipoAlmacenFrm.registro.observaciones}"
+                         rows="2" cols="30" disabled="true" />
+</p>
+    </h:panelGrid>
+    <p><strong>Estado:</strong> #{tipoAlmacenFrm.registro.activo ? 'Activo' : 'Inactivo'}</p>
+
         </h:panelGroup>
+
 
         <!-- Diálogo Crear/Editar -->
         <p:dialog id="dlg" header="#{tipoAlmacenFrm.editionMode ? 'Editar' : 'Nuevo'} Tipo de Almacén"
@@ -126,8 +142,8 @@
                                      icon="pi pi-check"
                                      actionListener="#{tipoAlmacenFrm.btnGuardarHandler}"
                                      process=":frmPrincipal:dlg"
-                                     update=":frmPrincipal:panelCompleto,:frmPrincipal:growl,:frmPrincipal:dlg"
-                                     oncomplete="if (!args.validationFailed) PF('dlgVar').hide();"/>
+                                     update=":frmPrincipal"
+                                     oncomplete="if (!args.validationFailed) PF('dlgVar').hide(); var btn = document.getElementById('frmPrincipal:btnVOLVER'); if(btn) btn.click();"/>
                 </div>
             </h:panelGrid>
         </p:dialog>
@@ -140,8 +156,8 @@
                                  onclick="PF('confirmDel').hide()"/>
                 <p:commandButton value="Sí, eliminar" icon="pi pi-trash"
                                  actionListener="#{tipoAlmacenFrm.btnEliminarHandler(tipoAlmacenFrm.registro)}"
-                                 update=":frmPrincipal:panelCompleto,:frmPrincipal:growl, frmPrincipal:toolbar"
-                                 oncomplete="PF('confirmDel').hide()"/>
+                                 update="frmPrincipal"
+                                 oncomplete="PF('confirmDel').hide();"/>
             </div>
         </p:confirmDialog>
 
