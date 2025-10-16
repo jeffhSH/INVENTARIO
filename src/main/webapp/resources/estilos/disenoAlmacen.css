@@ -238,37 +238,287 @@
         background-color: #f14444 !important;
         cursor: pointer;
     }
-    /* Estilos para el panel de detalle */
-    .detalle-panel {
-        background-color: #43ff98; /* Fondo suave */
-        border-radius: 8px; /* Bordes redondeados */
-        padding: 20px; /* Espaciado interno */
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
-        margin-top: 20px; /* Margen superior */
-        max-width: 600px; /* Ancho máximo */
-        margin-left: auto;
-        margin-right: auto; /* Centrado */
+
+    /* === DataTable estilizada (nuevo diseño) === */
+    .table-modern .ui-datatable-tablewrapper {
+        border-radius: 0.75rem;
+        overflow: hidden;
+
+        border: 1px solid #22c55e;
+        background-color: rgba(0, 0, 0, 0.8);
     }
 
-    /* Estilo para el título del panel */
-    .detalle-titulo {
-        font-size: 1.6rem;
+    .table-modern table {
+        width: 100%;
+        border-collapse: collapse;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .table-modern thead th {
+        background: rgba(0, 0, 0, 0.05);
+        color: #e8e8e8;
         font-weight: bold;
-        color: #333; /* Color oscuro para el título */
-        border-bottom: 2px solid #4CAF50; /* Línea debajo del título */
-        padding-bottom: 10px;
-        margin-bottom: 15px;
+        text-align: left;
+        padding: 1rem 1.5rem;
+        border-bottom: 2px solid #444;
+    }
+
+    .table-modern tbody td {
+        padding: 1rem 1.5rem;
+        color: #ddd;
+        border-bottom: 1px solid #444;
+        background: rgba(0, 0, 0, 0.05);
+    }
+
+    /* Hover con transición suave */
+    .table-modern tbody tr:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transition: background 0.2s ease-in-out;
+    }
+
+    /* Alternar colores en filas (diseño oscuro) */
+    .table-modern tbody tr:nth-child(even) {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* Estilo para las filas seleccionadas */
+    .table-modern .ui-state-highlight {
+        background-color: #43ff98 !important;
+        color: #333 !important;
+        border-left: 4px solid #f14444 !important;
+    }
+
+    /* Encabezado de la tabla con borde y fondo destacado */
+    .table-modern .ui-datatable {
+        border: 1px solid #444;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Paginador con diseño moderno */
+    .table-modern .ui-paginator {
+        background: #333;
+        border-top: 1px solid #444;
+        color: #ddd;
+        text-align: center;
+    }
+
+    .table-modern .ui-paginator .ui-state-default {
+        background: #444;
+        border: 1px solid #555;
+        color: #ddd;
+    }
+
+    .table-modern .ui-paginator .ui-state-active,
+    .table-modern .ui-paginator .ui-state-hover {
+        background: #43ff98;
+        border-color: #43ff98;
+        color: #222;
+    }
+
+    /* === Toolbar centrado con título === */
+    .toolbar-gap {
+        padding: 0.75rem 1rem;
+        display: flex;
+        justify-content: space-between; /* Alinea los elementos a los extremos */
+        background: rgba(0, 0, 0, 0.70);
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    }
+
+    /* Centrar el título */
+    .toolbar-center {
+        display: flex;
+        justify-content: center;
+        flex-grow: 1; /* Asegura que el título ocupe el espacio central */
+    }
+
+    .toolbar-title {
+        font-size: 3rem;
+        font-weight: bold;
+        color: #22c55e; /* O cualquier color que prefieras */
+        text-align: center;
+    }
+
+    .toolbar-group-right {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    .toolbar-group-right p, .toolbar-group-right button {
+        margin-left: 1rem; /* Espaciado entre los elementos */
+
+    }
+    #frmPrincipal {
+        background-image: url("#{request.contextPath}/resources/Images/img_2.png"); /* Ruta a la imagen */
+        background-size: cover; /* Asegura que la imagen cubra todo el formulario */
+        background-position: center center; /* Centra la imagen */
+        background-repeat: no-repeat; /* Evita que la imagen se repita */
+        min-height: 100vh; /* Asegura que el formulario ocupe toda la altura de la pantalla */
+        color: white; /* Puedes ajustar el color del texto para que sea visible sobre el fondo */
+
+        /* Botones principales */
+        .p-button {
+            border-radius: 12px !important; /* Bordes más redondeados */
+            font-weight: 600 !important; /* Fuente más gruesa */
+            padding: 0.75rem 1.5rem; /* Relleno generoso */
+            font-size: 1rem; /* Tamaño de texto */
+            transition: all 0.3s ease-in-out; /* Transición suave */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Sombra suave */
+        }
+
+        /* Efecto hover en botones */
+        .p-button:hover {
+            background: rgba(67, 255, 152, 0.8) !important; /* Color de hover con opacidad */
+            transform: translateY(-3px); /* Efecto de desplazamiento */
+        }
+
+        /* Botón "Volver" */
+        .p-button-volver {
+            background-color: #43ff98 !important; /* Fondo rojo */
+            color: white !important; /* Texto blanco */
+            border: 1px solid #d13333; /* Borde más oscuro */
+        }
+
+        /* Botón "Modificar" */
+        .p-button-modificar {
+            background-color: #f4a261 !important; /* Fondo naranja */
+            color: white !important; /* Texto blanco */
+            border: 1px solid #e08c45; /* Borde oscuro */
+        }
+
+        /* Botón "Eliminar" */
+        .p-button-eliminar {
+            background-color: #d33f49 !important; /* Fondo rojo oscuro */
+            color: white !important; /* Texto blanco */
+            border: 1px solid #b8323b; /* Borde oscuro */
+        }
+
+        /* Botón "Nuevo" */
+        .p-button-nuevo {
+            background-color: #22c55e !important; /* Fondo verde */
+            color: white !important; /* Texto blanco */
+            border: 1px solid #18b24c; /* Borde más oscuro */
+        }
+
+        /* Botón "Buscar" */
+        .p-button-buscar {
+            background-color: #4e6e7d !important; /* Fondo azul */
+            color: white !important; /* Texto blanco */
+            border: 1px solid #3a5b6b; /* Borde más oscuro */
+        }
+
+    }
+    /* Estilo para el panel de detalle */
+    .detalle-panel {
+        background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro con mayor transparencia */
+        border-radius: 12px; /* Bordes redondeados */
+        padding: 40px 60px; /* Aumentamos el padding para un diseño más espacioso */
+        max-width: 900px; /* Aumentamos el ancho máximo */
+        width: 90%; /* Ocupa el 90% del ancho de la pantalla */
+        margin: 50px auto; /* Centrado en la pantalla */
+        box-shadow: 0 6px 30px rgba(0, 0, 0, 0.3); /* Sombra más marcada */
+        color: white; /* Texto en blanco */
+        font-family: 'Arial', sans-serif; /* Fuente limpia */
+        overflow: hidden; /* Evita que el contenido se desborde */
+    }
+
+    /* Estilo para el título dentro del panel de detalle */
+    .detalle-titulo {
+        font-size: 2.5rem; /* Título más grande */
+        font-weight: 800; /* Negrita para mayor énfasis */
+        color: #f39c12; /* Color anaranjado brillante para el título */
+        text-align: center; /* Centrado */
+        margin-bottom: 30px; /* Mayor espacio debajo del título */
+        text-transform: uppercase; /* Texto en mayúsculas */
+        letter-spacing: 2px; /* Espaciado entre letras */
     }
 
     /* Estilo para los párrafos dentro del panel */
     .detalle-panel p {
-        font-size: 1rem;
-        color: #555; /* Color gris para el texto */
-        line-height: 1.6; /* Mejor lectura */
+        font-size: 1.4rem; /* Texto más grande */
+        line-height: 1.8; /* Espaciado entre líneas */
+        color: #ddd; /* Color gris suave */
+        margin-bottom: 20px; /* Espaciado entre párrafos */
     }
 
-    /* Estilo para las etiquetas fuertes (labels) dentro del panel */
+    /* Estilo para las etiquetas de los campos (strong) */
     .detalle-panel strong {
-        color: #4CAF50; /* Color verde para resaltar etiquetas */
+        color: #f39c12; /* Color anaranjado para las etiquetas */
+        font-size: 1.6rem; /* Etiquetas más grandes */
     }
 
+    /* Estilo para los campos de texto dentro del panel */
+    .detalle-panel input, .detalle-panel textarea {
+        background-color: #333; /* Fondo oscuro para los campos */
+        color: white; /* Texto blanco */
+        padding: 15px; /* Relleno más grande */
+        border-radius: 8px; /* Bordes redondeados */
+        width: 100%; /* Asegura que los campos ocupen todo el espacio */
+        font-size: 1.2rem; /* Tamaño de texto más grande */
+        border: 1px solid #f39c12; /* Borde anaranjado */
+    }
+
+    /* Espaciado entre los elementos del formulario dentro del panel */
+    .detalle-panel .form-item {
+        margin-bottom: 25px; /* Espaciado entre los campos */
+    }
+    /* Estilo general para los diálogos */
+    .ui-dialog {
+        background-color: rgba(0, 0, 0, 0.8) !important; /* Fondo oscuro con transparencia */
+        border-radius: 12px; /* Bordes redondeados */
+        color: white; /* Texto blanco */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Sombra suave */
+    }
+
+    /* Estilo para el encabezado del diálogo */
+    .ui-dialog-title {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #f39c12; /* Naranja brillante para el título */
+    }
+
+    /* Estilo para los botones en los diálogos */
+    .ui-dialog .p-button {
+        border-radius: 10px !important; /* Bordes más redondeados */
+        padding: 0.75rem 1.5rem; /* Relleno cómodo */
+        font-size: 1rem; /* Tamaño de texto */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Sombra suave */
+        font-weight: 600; /* Mayor grosor en el texto */
+    }
+
+    /* Botón "Cancelar" */
+    .ui-dialog .p-button-text {
+        background-color: #f14444 !important; /* Rojo para "Cancelar" */
+        color: white !important; /* Texto blanco */
+    }
+
+    /* Botón "Guardar cambios" */
+    .ui-dialog .p-button-primary {
+        background-color: #43ff98 !important; /* Verde brillante para "Guardar" */
+        color: white !important; /* Texto blanco */
+    }
+
+    /* Estilo para el cuerpo del diálogo */
+    .ui-dialog-content {
+        font-size: 1.2rem;
+        line-height: 1.6;
+        color: #ddd; /* Color gris suave para el contenido */
+    }
+
+    /* Estilo para los campos del formulario dentro del diálogo */
+    .ui-dialog input, .ui-dialog textarea {
+        background-color: #333;
+        color: white;
+        border: 1px solid #f39c12;
+        padding: 12px;
+        border-radius: 8px;
+        width: 100%;
+        font-size: 1rem;
+    }
+
+    /* Estilo para los mensajes dentro de los diálogos */
+    .ui-dialog-message {
+        color: #f39c12; /* Color anaranjado para los mensajes */
+    }
