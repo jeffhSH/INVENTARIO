@@ -1,0 +1,176 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>#{clienteFrm.nombreBean}</title>
+    <h:outputStylesheet library="estilos" name="disenoAlmacen.css"/>
+</h:head>
+
+<h:body>
+    <h:form id="frmPrincipal" update=":frmPrincipal:toolbar">
+
+        <p:growl id="growl" showDetail="true" life="3000" />
+
+        <!-- Toolbar superior -->
+        <p:toolbar id="toolbar" class="toolbar-gap">
+            <p:toolbarGroup class="toolbar-center">
+                <span class="toolbar-title">#{clienteFrm.nombreBean}</span>
+            </p:toolbarGroup>
+
+            <p:toolbarGroup class="toolbar-group-right">
+                <p:inputText placeholder="Buscar por nombre…" value="#{clienteFrm.registro.nombre}" />
+                <p:commandButton value="Nuevo" icon="pi pi-plus"
+                                 action="#{clienteFrm.btnNuevoHandler(r)}"
+                                 update=":frmPrincipal:dlg"
+                                 styleClass="p-button p-button-nuevo"
+                                 rendered="#{!clienteFrm.pnlDetalle}"
+                                 process="@this" immediate="true"/>
+
+                <p:commandButton id="btnVOLVER" icon="pi pi-arrow-left"  value="VOLVER"
+                                 rendered="#{clienteFrm.pnlDetalle}"
+                                 styleClass="p-button p-button-volver"
+                                 action="#{clienteFrm.volver()}"
+                                 update=":frmPrincipal, :frmPrincipal:toolbar" />
+            </p:toolbarGroup>
+            <p:toolbarGroup>
+
+                <!-- Botón Modificar -->
+                <p:commandButton id="btnModificar" value="Modificar"
+                                 icon="pi pi-pencil"
+                                 action="#{clienteFrm.btnEditarHandler(clienteFrm.registro)}"
+                                 rendered="#{clienteFrm.pnlDetalle}"
+                                 update=":frmPrincipal"
+                                 oncomplete="PF('dlgVar').show()"
+                                 styleClass="p-button p-button-modificar" />
+
+                <p:commandButton icon="pi pi-trash" value="Eliminar"
+                                 rendered="#{clienteFrm.pnlDetalle}"
+                                 oncomplete="PF('confirmDel').show()"
+                                 process="@this"
+                                 styleClass="p-button p-button-eliminar">
+                </p:commandButton>
+            </p:toolbarGroup>
+        </p:toolbar>
+
+        <!-- Tabla de Clientes -->
+        <p:dataTable id="tbl"
+                     value="#{clienteFrm.model}" var="r"
+                     lazy="true" paginator="true" rows="10"
+                     rowsPerPageTemplate="10,20,50"
+                     currentPageReportTemplate="Mostrando {startRecord}-{endRecord} de {totalRecords}"
+                     paginatorPosition="bottom"
+                     responsiveLayout="scroll"
+                     rowHover="true"
+                     rendered="#{!clienteFrm.pnlDetalle}"
+                     emptyMessage="No hay registros"
+                     styleClass="table-modern"
+                     selectionMode="single"
+                     selection="#{clienteFrm.registro}" rowKey="#{r.id}" >
+
+            <p:ajax event="rowSelect"
+                    listener="#{clienteFrm.selectionHandler}"
+                    update="frmPrincipal"/>
+
+            <p:ajax event="rowUnselect"
+                    listener="#{clienteFrm.rowUnselectHandler}"
+                    update=":frmPrincipal:tbl :frmPrincipal:growl :frmPrincipal:toolbar"  />
+
+            <p:column headerText="ID" style="width:320px" sortBy="#{r.id}">
+                <h:outputText value="#{r.id}" />
+            </p:column>
+
+            <p:column headerText="Nombre" sortBy="#{r.nombre}" filterBy="#{r.nombre}" filterMatchMode="contains">
+                <h:outputText value="#{r.nombre}" />
+            </p:column>
+
+            <p:column headerText="DUI" sortBy="#{r.dui}" filterBy="#{r.dui}" filterMatchMode="contains">
+                <h:outputText value="#{r.dui}" />
+            </p:column>
+
+            <p:column headerText="NIT" sortBy="#{r.nit}" filterBy="#{r.nit}" filterMatchMode="contains">
+                <h:outputText value="#{r.nit}" />
+            </p:column>
+
+            <p:column headerText="Estado" style="width:100px">
+                <h:outputText value="#{r.activo ? 'Activo' : 'Inactivo'}" />
+            </p:column>
+        </p:dataTable>
+
+        <!-- Panel de Detalle -->
+        <h:panelGroup id="pnlDetalle" class="detalle-panel" rendered="#{clienteFrm.pnlDetalle}">
+            <!-- Título del panel -->
+            <h:outputText value="Detalle del Cliente" class="detalle-titulo"/>
+
+            <h:panelGrid columns="2" class="form-item">
+                <p><strong>ID:</strong> #{clienteFrm.registro.id}</p>
+                <p><strong>Nombre:</strong> #{clienteFrm.registro.nombre}</p>
+            </h:panelGrid>
+
+            <h:panelGrid columns="2" class="form-item">
+                <p><strong>DUI:</strong> #{clienteFrm.registro.dui}</p>
+                <p><strong>NIT:</strong> #{clienteFrm.registro.nit}</p>
+            </h:panelGrid>
+
+            <p><strong>Estado:</strong> #{clienteFrm.registro.activo ? 'Activo' : 'Inactivo'}</p>
+        </h:panelGroup>
+
+        <!-- Diálogo Crear/Editar -->
+        <p:dialog id="dlg" header="#{clienteFrm.editionMode ? 'Editar' : 'Nuevo'} Cliente"
+                  widgetVar="dlgVar" modal="true" resizable="true" closable="true" width="520"
+                  visible="#{clienteFrm.mostrarFormulario}"
+                  styleClass="ui-dialog">
+
+            <h:panelGrid columns="1" columnClasses="w-full" styleClass="gap-2 w-full">
+                <p:messages />
+
+                <p:inputText value="#{clienteFrm.registro.nombre}" placeholder="Nombre" required="true"
+                             requiredMessage="El nombre es obligatorio"/>
+
+                <p:inputText value="#{clienteFrm.registro.dui}" placeholder="DUI (00000000-0)"
+                             maxlength="10"
+                             required="true"
+                             requiredMessage="El DUI es obligatorio"/>
+
+                <p:inputText value="#{clienteFrm.registro.nit}" placeholder="NIT (0000-000000-000-0)"
+                             maxlength="17"/>
+
+                <h:panelGrid columns="2" styleClass="align-items-center">
+                    <h:selectBooleanCheckbox id="chkActivo" value="#{clienteFrm.registro.activo}"/>
+                    <h:outputLabel for="chkActivo" value="¿Activo?" />
+                </h:panelGrid>
+
+                <div class="flex justify-end gap-2 mt-3">
+                    <p:commandButton value="Cancelar" icon="pi pi-times"
+                                     actionListener="#{clienteFrm.btnCancelarHandler}"
+                                     process="@this"
+                                     update=":frmPrincipal:dlg"
+                                     styleClass="p-button-text"/>
+                    <p:commandButton value="#{clienteFrm.editionMode ? 'Guardar cambios' : 'Crear'}"
+                                     icon="pi pi-check"
+                                     actionListener="#{clienteFrm.btnGuardarHandler}"
+                                     process=":frmPrincipal:dlg"
+                                     update=":frmPrincipal"
+                                     oncomplete="if (!args.validationFailed) PF('dlgVar').hide();"/>
+                </div>
+            </h:panelGrid>
+        </p:dialog>
+
+        <!-- Confirmación elegante de borrado -->
+        <p:confirmDialog widgetVar="confirmDel" header="Confirmar eliminación" message="¿Eliminar este registro?"
+                         icon="pi pi-exclamation-triangle" closable="false"
+                         styleClass="ui-dialog">
+            <div class="flex justify-end gap-2">
+                <p:commandButton value="Cancelar" type="button" styleClass="p-button-text"
+                                 onclick="PF('confirmDel').hide()"/>
+                <p:commandButton value="Sí, eliminar" icon="pi pi-trash"
+                                 actionListener="#{clienteFrm.btnEliminarHandler(clienteFrm.registro)}"
+                                 update="frmPrincipal"
+                                 oncomplete="PF('confirmDel').hide();"/>
+            </div>
+        </p:confirmDialog>
+
+    </h:form>
+</h:body>
+</html>

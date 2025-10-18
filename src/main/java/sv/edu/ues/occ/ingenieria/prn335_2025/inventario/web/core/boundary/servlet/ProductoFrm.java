@@ -7,19 +7,21 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import java.io.Serializable;
 import java.util.List;
-import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control.TipoAlmacenDAO;
-import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.TipoAlmacen;
+import java.util.UUID;
+
+import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control.ProductoDAO;
+import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.Producto;
 
 @Named
 @ViewScoped
-public class TipoAlmacenFrm extends DefaultFrm<TipoAlmacen, Integer> implements Serializable {
-    @Inject
-    FacesContext facesContext;
-    @Inject
-    TipoAlmacenDAO taDao;
+public class ProductoFrm extends DefaultFrm<Producto, UUID> implements Serializable {
 
-    private List<TipoAlmacen> listaTipoAlmacen;
-    private Integer proximoId;
+
+    @Inject
+    ProductoDAO taDao;
+
+    private List<Producto> ListaProducto;
+
 
     @Override
     protected Object getDao() {
@@ -28,14 +30,14 @@ public class TipoAlmacenFrm extends DefaultFrm<TipoAlmacen, Integer> implements 
 
     @Override
     protected String getNombreBeanConfig() {
-        return "Tipo de Almacén";
+        return "Productos";
     }
 
     @Override
     protected void inicializar() {
         try {
-            listaTipoAlmacen = taDao.findRange(0, Integer.MAX_VALUE);
-            calcularProximoId();
+            ListaProducto = taDao.findRange(0, Integer.MAX_VALUE);
+
         } catch (Exception e) {
             e.printStackTrace();
             FacesContext.getCurrentInstance().addMessage(
@@ -45,23 +47,15 @@ public class TipoAlmacenFrm extends DefaultFrm<TipoAlmacen, Integer> implements 
         }
     }
 
-    private void calcularProximoId() {
-        try {
-            Integer id = taDao.obtenerProximoId();
-            proximoId = (id != null && id > 0) ? id : 1;
-        } catch (Exception e) {
-            e.printStackTrace();
-            proximoId = 1;
-        }
-    }
+
 
     // ===== Implementaciones CRUD =====
     @Override
-    protected TipoAlmacen crearInstanciaVacia() {
-        return new TipoAlmacen();
+    protected Producto crearInstanciaVacia() {
+        return new Producto();
     }
     @Override
-    protected String getIdAsText(TipoAlmacen r) {
+    protected String getIdAsText(Producto r) {
         if (r != null && r.getId() != null) {
             return r.getId().toString();
         }
@@ -69,10 +63,10 @@ public class TipoAlmacenFrm extends DefaultFrm<TipoAlmacen, Integer> implements 
     }
 
     @Override
-    protected TipoAlmacen getIdByText(String id) {
+    protected Producto getIdByText(String id) {
         if (id != null && this.model != null && !this.model.getWrappedData().isEmpty()) {
             try {
-                Integer buscado = Integer.parseInt(id);
+                UUID buscado = UUID.fromString(id);
                 return this.model.getWrappedData().stream()
                         .filter(r -> r.getId() != null && r.getId().equals(buscado))
                         .findFirst()
@@ -86,45 +80,43 @@ public class TipoAlmacenFrm extends DefaultFrm<TipoAlmacen, Integer> implements 
     }
 
     @Override
-    protected Integer getId(TipoAlmacen entidad) {
+    protected UUID getId(Producto entidad) {
         return entidad.getId();
     }
 
     @Override
-    protected void crear(TipoAlmacen entidad) {
+    protected void crear(Producto entidad) {
         taDao.create(entidad);
     }
 
     @Override
-    protected void modificar(TipoAlmacen entidad) {
+    protected void modificar(Producto entidad) {
         taDao.update(entidad);
     }
 
     @Override
-    protected void eliminar(TipoAlmacen entidad) {
+    protected void eliminar(Producto entidad) {
         taDao.delete(entidad);
     }
 
     @Override
-    protected TipoAlmacen findById(Integer id) {
+    protected Producto findById(UUID id) {
         return taDao.findById(id);
     }
 
     @Override
-    protected List<TipoAlmacen> findRange(int first, int pageSize) {
+    protected List<Producto> findRange(int first, int pageSize) {
         return taDao.findRange(first, pageSize);
     }
 
     // ===== GETTERS / SETTERS ESPECÍFICOS =====
-    public List<TipoAlmacen> getListaTipoAlmacen() {
-        return listaTipoAlmacen;
+    public List<Producto> getListaTProducton() {
+        return ListaProducto;
     }
 
-    public void setListaTipoAlmacen(List<TipoAlmacen> listaTipoAlmacen) {
-        this.listaTipoAlmacen = listaTipoAlmacen;
+    public void setListaProducto(List<Producto> listaProducto) {
+        this.ListaProducto = ListaProducto;
     }
 
-    public Integer getProximoId() {
-        return proximoId;
-    }
+
 }

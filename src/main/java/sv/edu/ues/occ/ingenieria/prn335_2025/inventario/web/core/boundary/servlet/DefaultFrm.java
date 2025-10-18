@@ -16,9 +16,11 @@ import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.FilterMeta;
 import org.primefaces.model.SortMeta;
+import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.boundary.ESTADO_CRUD;
 
 public abstract class DefaultFrm<T, K extends Serializable> implements Serializable {
 
+     ESTADO_CRUD estado = ESTADO_CRUD.NADA;
     protected String nombreBean;
     protected List<T> registros;
     protected LazyDataModel<T> model;
@@ -43,6 +45,7 @@ public abstract class DefaultFrm<T, K extends Serializable> implements Serializa
     @PostConstruct
     protected void initDefaultFrm() {
         try {
+
             this.nombreBean = getNombreBeanConfig();
             this.registro   = crearInstanciaVacia();
             configurarModeloLazy();
@@ -51,16 +54,20 @@ public abstract class DefaultFrm<T, K extends Serializable> implements Serializa
             log(Level.SEVERE, "Error inicializando el formulario", e);
             addMsg(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage());
         }
+
     }
 
     public void selectionHandler(SelectEvent<T> r) {
         if (r != null) {
             this.registro = r.getObject();
             this.editionMode = true;
+            this.estado = ESTADO_CRUD.MODIFICAR;
             this.pnlDetalle = true;
+            this.mostrarFormulario = false;
             System.out.println("✅ Registro seleccionado: " + this.registro);
         } else {
             System.out.println("⚠ Evento de selección nulo");
+            System.out.println("✅ ID del registro: " + getIdAsText(this.registro));
         }
     }
     /** Gancho opcional para la subclase (carga inicial, combos, etc.) */
@@ -69,7 +76,7 @@ public abstract class DefaultFrm<T, K extends Serializable> implements Serializa
     // ===== LazyDataModel =====
     private void configurarModeloLazy() {
 
-        this.model = new LazyDataModel<>() {
+        this.model = new LazyDataModel<T>() {
             @Override
             public String getRowKey(T object) {
                 if (object != null) {
@@ -133,6 +140,7 @@ public abstract class DefaultFrm<T, K extends Serializable> implements Serializa
     public void btnNuevoHandler(ActionEvent e) {
         this.registro = crearInstanciaVacia();
         this.editionMode = false;
+        this.estado = ESTADO_CRUD.CREAR;
         this.mostrarFormulario = true;
         FacesContext.getCurrentInstance().addMessage(null,
                 new FacesMessage(FacesMessage.SEVERITY_INFO, "Nuevo", "Formulario listo"));
@@ -171,7 +179,8 @@ public abstract class DefaultFrm<T, K extends Serializable> implements Serializa
                 crear(this.registro);
                 addMsg(FacesMessage.SEVERITY_INFO, "Éxito", "Registro creado correctamente");
             } else {
-                modificar(this.registro);
+                pnlDetalle=false;
+                        modificar(this.registro);
                 addMsg(FacesMessage.SEVERITY_INFO, "Éxito", "Registro modificado correctamente");
             }
             recargar();
@@ -203,11 +212,13 @@ public abstract class DefaultFrm<T, K extends Serializable> implements Serializa
         cancelarEdicion();
     }
 public void volver(){
-        pnlDetalle=false;
+        this.pnlDetalle=false;
+        this.estado = ESTADO_CRUD.NADA;
+
 }
     protected void cancelarEdicion() {
-        this.registro = crearInstanciaVacia();
-        this.editionMode = false;
+
+            this.estado = ESTADO_CRUD.NADA;
         this.mostrarFormulario = false;
 
     }
@@ -238,7 +249,9 @@ public void volver(){
     public String getNombreBean() {
         return nombreBean;
     }
-
+    public ESTADO_CRUD getEstado() {
+        return this.estado;
+    }
     public List<T> getRegistros() {
         return registros;
     }
@@ -269,6 +282,10 @@ public void volver(){
 
     public void setMostrarFormulario(boolean mostrarFormulario) {
         this.mostrarFormulario = mostrarFormulario;
+    }
+
+    public void setEstado(ESTADO_CRUD estado) {
+        this.estado = estado;
     }
 
     public boolean isEditionMode() {

@@ -7,18 +7,18 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import java.io.Serializable;
 import java.util.List;
-import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control.TipoAlmacenDAO;
-import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.TipoAlmacen;
+import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control.TipoUnidadMedidaDAO;
+import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.TipoUnidadMedida;
 
 @Named
 @ViewScoped
-public class TipoAlmacenFrm extends DefaultFrm<TipoAlmacen, Integer> implements Serializable {
+public class TipoUnidadMedidaFrm extends DefaultFrm<TipoUnidadMedida, Integer> implements Serializable {
     @Inject
     FacesContext facesContext;
     @Inject
-    TipoAlmacenDAO taDao;
+    TipoUnidadMedidaDAO taDao;
 
-    private List<TipoAlmacen> listaTipoAlmacen;
+    private List<TipoUnidadMedida> listaTipoUnidadMedida;
     private Integer proximoId;
 
     @Override
@@ -28,13 +28,13 @@ public class TipoAlmacenFrm extends DefaultFrm<TipoAlmacen, Integer> implements 
 
     @Override
     protected String getNombreBeanConfig() {
-        return "Tipo de Almacén";
+        return "Tipo De Unidad De Medida";
     }
 
     @Override
     protected void inicializar() {
         try {
-            listaTipoAlmacen = taDao.findRange(0, Integer.MAX_VALUE);
+            listaTipoUnidadMedida = taDao.findRange(0, Integer.MAX_VALUE);
             calcularProximoId();
         } catch (Exception e) {
             e.printStackTrace();
@@ -57,11 +57,11 @@ public class TipoAlmacenFrm extends DefaultFrm<TipoAlmacen, Integer> implements 
 
     // ===== Implementaciones CRUD =====
     @Override
-    protected TipoAlmacen crearInstanciaVacia() {
-        return new TipoAlmacen();
+    protected TipoUnidadMedida crearInstanciaVacia() {
+        return new TipoUnidadMedida();
     }
     @Override
-    protected String getIdAsText(TipoAlmacen r) {
+    protected String getIdAsText(TipoUnidadMedida r) {
         if (r != null && r.getId() != null) {
             return r.getId().toString();
         }
@@ -69,7 +69,7 @@ public class TipoAlmacenFrm extends DefaultFrm<TipoAlmacen, Integer> implements 
     }
 
     @Override
-    protected TipoAlmacen getIdByText(String id) {
+    protected TipoUnidadMedida getIdByText(String id) {
         if (id != null && this.model != null && !this.model.getWrappedData().isEmpty()) {
             try {
                 Integer buscado = Integer.parseInt(id);
@@ -86,42 +86,42 @@ public class TipoAlmacenFrm extends DefaultFrm<TipoAlmacen, Integer> implements 
     }
 
     @Override
-    protected Integer getId(TipoAlmacen entidad) {
+    protected Integer getId(TipoUnidadMedida entidad) {
         return entidad.getId();
     }
 
     @Override
-    protected void crear(TipoAlmacen entidad) {
+    protected void crear(TipoUnidadMedida entidad) {
         taDao.create(entidad);
     }
 
     @Override
-    protected void modificar(TipoAlmacen entidad) {
+    protected void modificar(TipoUnidadMedida entidad) {
         taDao.update(entidad);
     }
 
     @Override
-    protected void eliminar(TipoAlmacen entidad) {
+    protected void eliminar(TipoUnidadMedida entidad) {
         taDao.delete(entidad);
     }
 
     @Override
-    protected TipoAlmacen findById(Integer id) {
+    protected TipoUnidadMedida findById(Integer id) {
         return taDao.findById(id);
     }
 
     @Override
-    protected List<TipoAlmacen> findRange(int first, int pageSize) {
+    protected List<TipoUnidadMedida> findRange(int first, int pageSize) {
         return taDao.findRange(first, pageSize);
     }
 
     // ===== GETTERS / SETTERS ESPECÍFICOS =====
-    public List<TipoAlmacen> getListaTipoAlmacen() {
-        return listaTipoAlmacen;
+    public List<TipoUnidadMedida> getlistaTipoUnidadMedida() {
+        return listaTipoUnidadMedida;
     }
 
-    public void setListaTipoAlmacen(List<TipoAlmacen> listaTipoAlmacen) {
-        this.listaTipoAlmacen = listaTipoAlmacen;
+    public void setListaTipoUnidadMedida(List<TipoUnidadMedida> listaTipoUnidadMedida) {
+        this.listaTipoUnidadMedida = listaTipoUnidadMedida;
     }
 
     public Integer getProximoId() {

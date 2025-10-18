@@ -90,7 +90,7 @@
                     <h:outputText value="#{r.nombre}" />
                 </p:column>
 
-                
+
                 <!-- panel detalle -->
             </p:dataTable>
         <h:panelGroup>
@@ -126,7 +126,7 @@
                     <small class="text-500">Siguiente ID: #{tipoAlmacenFrm.proximoId}</small>
                 </h:panelGroup>
 
-                <p:inputText value="#{tipoAlmacenFrm.registro.nombre}" placeholder="Nombre" required="false"
+                <p:inputText value="#{tipoAlmacenFrm.registro.nombre}" placeholder="Nombre" required="true"
                                  requiredMessage="El nombre es obligatorio"/>
 
                 <p:inputTextarea value="#{tipoAlmacenFrm.registro.observaciones}" rows="3" autoResize="true"
