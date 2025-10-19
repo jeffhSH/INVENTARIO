@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+   <title>Sistema de Almacenes</title>
+   <h:outputStylesheet library="estilos" name="disenoAlmacen.css"/>
+   <h:outputStylesheet library="estilos" name="layout.css"/>
+</h:head>
+
+<h:body>
+   <div class="layout-container">
+
+      <!-- Sidebar Menu -->
+      <div class="sidebar">
+         <div class="sidebar-header">
+            <h2>Sistema Almacenes</h2>
+         </div>
+         <ul class="sidebar-menu">
+            <li class="menu-item">
+               <h:link outcome="producto" value="Productos" styleClass="menu-link"/>
+            </li>
+            <li class="menu-item">
+               <h:link outcome="tipoAlmacen" value="Tipos de Almacén" styleClass="menu-link"/>
+            </li>
+            <li class="menu-item">
+               <h:link outcome="proveedor" value="Proveedores" styleClass="menu-link"/>
+            </li>
+            <li class="menu-item">
+               <h:link outcome="Cliente" value="Clientes" styleClass="menu-link"/>
+            </li>
+            <li class="menu-item">
+               <h:link outcome="TipoUnidadMedida" value="TipoUnidadMedida" styleClass="menu-link"/>
+            </li>
+            <!-- Agrega más items según necesites -->
+         </ul>
+      </div>
+
+      <!-- Main Content Area -->
+      <div class="main-content">
+         <ui:insert name="content">
+            <!-- Aquí se renderizarán los diferentes formularios -->
+            <h1>Bienvenido al Sistema de Almacenes</h1>
+            <p>Selecciona una opción del menú lateral para comenzar.</p>
+         </ui:insert>
+      </div>
+   </div>
+</h:body>
+</html>

@@ -1,178 +1,178 @@
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
-<h:head>
-   <title>#{tipoUnidadMedidaFrm.nombreBean}</title>
-   <h:outputStylesheet library="estilos" name="disenoAlmacen.css"/>
-</h:head>
+<ui:composition template="template.xhtml">
 
-<h:body>
-   <h:form id="frmPrincipal" update=":frmPrincipal:toolbar">
+   <ui:define name="content">
+      <h:form id="frmPrincipal" update=":frmPrincipal:toolbar">
 
-      <p:growl id="growl" showDetail="true" life="3000" />
+         <p:growl id="growl" showDetail="true" life="3000" />
 
-      <!-- Toolbar superior -->
-      <p:toolbar id="toolbar" class="toolbar-gap">
-         <p:toolbarGroup class="toolbar-center">
-            <span class="toolbar-title">#{tipoUnidadMedidaFrm.nombreBean}</span>
-         </p:toolbarGroup>
+         <!-- Toolbar superior -->
+         <p:toolbar id="toolbar" class="toolbar-gap">
+            <p:toolbarGroup class="toolbar-center">
+               <span class="toolbar-title">#{tipoUnidadMedidaFrm.nombreBean}</span>
+            </p:toolbarGroup>
 
-         <p:toolbarGroup class="toolbar-group-right">
-            <p:inputText placeholder="Buscar por nombre…" value="#{tipoUnidadMedidaFrm.registro.nombre}" />
-            <p:commandButton value="Nuevo" icon="pi pi-plus"
-                             action="#{tipoUnidadMedidaFrm.btnNuevoHandler(r)}"
-                             update=":frmPrincipal:dlg"
-                             styleClass="p-button p-button-nuevo"
-                             rendered="#{!tipoUnidadMedidaFrm.pnlDetalle}"
-                             process="@this" immediate="true"/>
+            <p:toolbarGroup class="toolbar-group-right">
+               <p:inputText placeholder="Buscar por nombre…" value="#{tipoUnidadMedidaFrm.registro.nombre}" />
+               <p:commandButton value="Nuevo" icon="pi pi-plus"
+                                action="#{tipoUnidadMedidaFrm.btnNuevoHandler(r)}"
+                                update=":frmPrincipal:dlg"
+                                styleClass="p-button p-button-nuevo"
+                                rendered="#{!tipoUnidadMedidaFrm.pnlDetalle}"
+                                process="@this" immediate="true"/>
 
-            <p:commandButton id="btnVOLVER" icon="pi pi-arrow-left"  value="VOLVER"
-                             rendered="#{tipoUnidadMedidaFrm.pnlDetalle}"
-                             styleClass="p-button p-button-volver"
-                             action="#{tipoUnidadMedidaFrm.volver()}"
-                             update=":frmPrincipal, :frmPrincipal:toolbar" />
-         </p:toolbarGroup>
-         <p:toolbarGroup>
+               <p:commandButton id="btnVOLVER" icon="pi pi-arrow-left"  value="VOLVER"
+                                rendered="#{tipoUnidadMedidaFrm.pnlDetalle}"
+                                styleClass="p-button p-button-volver"
+                                action="#{tipoUnidadMedidaFrm.volver()}"
+                                update=":frmPrincipal, :frmPrincipal:toolbar" />
+            </p:toolbarGroup>
+            <p:toolbarGroup>
 
-            <!-- Botón Modificar -->
-            <p:commandButton id="btnModificar" value="Modificar"
-                             icon="pi pi-pencil"
-                             action="#{tipoUnidadMedidaFrm.btnEditarHandler(tipoUnidadMedidaFrm.registro)}"
-                             rendered="#{tipoUnidadMedidaFrm.pnlDetalle}"
-                             update=":frmPrincipal"
-                             oncomplete="PF('dlgVar').show()"
-                             styleClass="p-button p-button-modificar" />
+               <!-- Botón Modificar -->
+               <p:commandButton id="btnModificar" value="Modificar"
+                                icon="pi pi-pencil"
+                                action="#{tipoUnidadMedidaFrm.btnEditarHandler(tipoUnidadMedidaFrm.registro)}"
+                                rendered="#{tipoUnidadMedidaFrm.pnlDetalle}"
+                                update=":frmPrincipal"
+                                oncomplete="PF('dlgVar').show()"
+                                styleClass="p-button p-button-modificar" />
 
-            <p:commandButton icon="pi pi-trash" value="Eliminar"
-                             rendered="#{tipoUnidadMedidaFrm.pnlDetalle}"
-                             oncomplete="PF('confirmDel').show()"
-                             process="@this"
-                             styleClass="p-button p-button-eliminar">
-            </p:commandButton>
-         </p:toolbarGroup>
-      </p:toolbar>
+               <p:commandButton icon="pi pi-trash" value="Eliminar"
+                                rendered="#{tipoUnidadMedidaFrm.pnlDetalle}"
+                                oncomplete="PF('confirmDel').show()"
+                                process="@this"
+                                styleClass="p-button p-button-eliminar">
+               </p:commandButton>
+            </p:toolbarGroup>
+         </p:toolbar>
 
-      <!-- Tabla de Tipos de Unidad de Medida -->
-      <p:dataTable id="tbl"
-                   value="#{tipoUnidadMedidaFrm.model}" var="r"
-                   lazy="true" paginator="true" rows="10"
-                   rowsPerPageTemplate="10,20,50"
-                   currentPageReportTemplate="Mostrando {startRecord}-{endRecord} de {totalRecords}"
-                   paginatorPosition="bottom"
-                   responsiveLayout="scroll"
-                   rowHover="true"
-                   rendered="#{!tipoUnidadMedidaFrm.pnlDetalle}"
-                   emptyMessage="No hay registros"
-                   styleClass="table-modern"
-                   selectionMode="single"
-                   selection="#{tipoUnidadMedidaFrm.registro}" rowKey="#{r.id}" >
+         <!-- Tabla de Tipos de Unidad de Medida -->
+         <p:dataTable id="tbl"
+                      value="#{tipoUnidadMedidaFrm.model}" var="r"
+                      lazy="true" paginator="true" rows="10"
+                      rowsPerPageTemplate="10,20,50"
+                      currentPageReportTemplate="Mostrando {startRecord}-{endRecord} de {totalRecords}"
+                      paginatorPosition="bottom"
+                      responsiveLayout="scroll"
+                      rowHover="true"
+                      rendered="#{!tipoUnidadMedidaFrm.pnlDetalle}"
+                      emptyMessage="No hay registros"
+                      styleClass="table-modern"
+                      selectionMode="single"
+                      selection="#{tipoUnidadMedidaFrm.registro}" rowKey="#{r.id}" >
 
-         <p:ajax event="rowSelect"
-                 listener="#{tipoUnidadMedidaFrm.selectionHandler}"
-                 update="frmPrincipal"/>
+            <p:ajax event="rowSelect"
+                    listener="#{tipoUnidadMedidaFrm.selectionHandler}"
+                    update="frmPrincipal"/>
 
-         <p:ajax event="rowUnselect"
-                 listener="#{tipoUnidadMedidaFrm.rowUnselectHandler}"
-                 update=":frmPrincipal:tbl :frmPrincipal:growl :frmPrincipal:toolbar"  />
+            <p:ajax event="rowUnselect"
+                    listener="#{tipoUnidadMedidaFrm.rowUnselectHandler}"
+                    update=":frmPrincipal:tbl :frmPrincipal:growl :frmPrincipal:toolbar"  />
 
-         <p:column headerText="ID" style="width:90px" sortBy="#{r.id}">
-            <h:outputText value="#{r.id}" />
-         </p:column>
+            <p:column headerText="ID" style="width:90px" sortBy="#{r.id}">
+               <h:outputText value="#{r.id}" />
+            </p:column>
 
-         <p:column headerText="Nombre" sortBy="#{r.nombre}" filterBy="#{r.nombre}" filterMatchMode="contains">
-            <h:outputText value="#{r.nombre}" />
-         </p:column>
+            <p:column headerText="Nombre" sortBy="#{r.nombre}" filterBy="#{r.nombre}" filterMatchMode="contains">
+               <h:outputText value="#{r.nombre}" />
+            </p:column>
 
-         <p:column headerText="Unidad Base" sortBy="#{r.unidadBase}" filterBy="#{r.unidadBase}" filterMatchMode="contains">
-            <h:outputText value="#{r.unidadBase}" />
-         </p:column>
+            <p:column headerText="Unidad Base" sortBy="#{r.unidadBase}" filterBy="#{r.unidadBase}" filterMatchMode="contains">
+               <h:outputText value="#{r.unidadBase}" />
+            </p:column>
 
-         <p:column headerText="Estado" style="width:100px">
-            <h:outputText value="#{r.activo ? 'Activo' : 'Inactivo'}" />
-         </p:column>
-      </p:dataTable>
+            <p:column headerText="Estado" style="width:100px">
+               <h:outputText value="#{r.activo ? 'Activo' : 'Inactivo'}" />
+            </p:column>
+         </p:dataTable>
 
-      <!-- Panel de Detalle -->
-      <h:panelGroup id="pnlDetalle" class="detalle-panel" rendered="#{tipoUnidadMedidaFrm.pnlDetalle}">
-         <!-- Título del panel -->
-         <h:outputText value="Detalle del Tipo de Unidad de Medida" class="detalle-titulo"/>
+         <!-- Panel de Detalle -->
+         <h:panelGroup id="pnlDetalle" class="detalle-panel" rendered="#{tipoUnidadMedidaFrm.pnlDetalle}">
+            <!-- Título del panel -->
+            <h:outputText value="Detalle del Tipo de Unidad de Medida" class="detalle-titulo"/>
 
-         <h:panelGrid columns="2" class="form-item">
-            <p><strong>ID:</strong> #{tipoUnidadMedidaFrm.registro.id}</p>
-            <p><strong>Nombre:</strong> #{tipoUnidadMedidaFrm.registro.nombre}</p>
-         </h:panelGrid>
-
-         <h:panelGrid columns="2" class="form-item">
-            <p><strong>Unidad Base:</strong> #{tipoUnidadMedidaFrm.registro.unidadBase}</p>
-            <p><strong>Estado:</strong> #{tipoUnidadMedidaFrm.registro.activo ? 'Activo' : 'Inactivo'}</p>
-         </h:panelGrid>
-
-         <h:panelGrid columns="1" class="form-item">
-            <p><strong>Comentarios:</strong></p>
-            <p:inputTextarea value="#{tipoUnidadMedidaFrm.registro.comentarios}"
-                             rows="3" cols="50" disabled="true" />
-         </h:panelGrid>
-      </h:panelGroup>
-
-      <!-- Diálogo Crear/Editar -->
-      <p:dialog id="dlg" header="#{tipoUnidadMedidaFrm.editionMode ? 'Editar' : 'Nuevo'} Tipo de Unidad de Medida"
-                widgetVar="dlgVar" modal="true" resizable="true" closable="true" width="520"
-                visible="#{tipoUnidadMedidaFrm.mostrarFormulario}"
-                styleClass="ui-dialog">
-
-         <h:panelGrid columns="1" columnClasses="w-full" styleClass="gap-2 w-full">
-            <p:messages />
-
-            <h:panelGroup rendered="#{!tipoUnidadMedidaFrm.editionMode}">
-               <small class="text-500">Siguiente ID: #{tipoUnidadMedidaFrm.proximoId}</small>
-            </h:panelGroup>
-
-            <p:inputText value="#{tipoUnidadMedidaFrm.registro.nombre}" placeholder="Nombre" required="true"
-                         requiredMessage="El nombre es obligatorio"/>
-
-            <p:inputText value="#{tipoUnidadMedidaFrm.registro.unidadBase}" placeholder="Unidad Base (ej: gramos, litros, metros)"
-                         maxlength="155"/>
-
-            <p:inputTextarea value="#{tipoUnidadMedidaFrm.registro.comentarios}" rows="3" autoResize="true"
-                             placeholder="Comentarios adicionales (opcional)"/>
-
-            <h:panelGrid columns="2" styleClass="align-items-center">
-               <h:selectBooleanCheckbox id="chkActivo" value="#{tipoUnidadMedidaFrm.registro.activo}"/>
-               <h:outputLabel for="chkActivo" value="¿Activo?" />
+            <h:panelGrid columns="2" class="form-item">
+               <p><strong>ID:</strong> #{tipoUnidadMedidaFrm.registro.id}</p>
+               <p><strong>Nombre:</strong> #{tipoUnidadMedidaFrm.registro.nombre}</p>
             </h:panelGrid>
 
-            <div class="flex justify-end gap-2 mt-3">
-               <p:commandButton value="Cancelar" icon="pi pi-times"
-                                actionListener="#{tipoUnidadMedidaFrm.btnCancelarHandler}"
-                                process="@this"
-                                update=":frmPrincipal:dlg"
-                                styleClass="p-button-text"/>
-               <p:commandButton value="#{tipoUnidadMedidaFrm.editionMode ? 'Guardar cambios' : 'Crear'}"
-                                icon="pi pi-check"
-                                actionListener="#{tipoUnidadMedidaFrm.btnGuardarHandler}"
-                                process=":frmPrincipal:dlg"
-                                update=":frmPrincipal"
-                                oncomplete="if (!args.validationFailed) PF('dlgVar').hide();"/>
+            <h:panelGrid columns="2" class="form-item">
+               <p><strong>Unidad Base:</strong> #{tipoUnidadMedidaFrm.registro.unidadBase}</p>
+               <p><strong>Estado:</strong> #{tipoUnidadMedidaFrm.registro.activo ? 'Activo' : 'Inactivo'}</p>
+            </h:panelGrid>
+
+            <h:panelGrid columns="1" class="form-item">
+               <p><strong>Comentarios:</strong></p>
+               <p:inputTextarea value="#{tipoUnidadMedidaFrm.registro.comentarios}"
+                                rows="3" cols="50" disabled="true" />
+            </h:panelGrid>
+         </h:panelGroup>
+
+         <!-- Diálogo Crear/Editar -->
+         <p:dialog id="dlg" header="#{tipoUnidadMedidaFrm.editionMode ? 'Editar' : 'Nuevo'} Tipo de Unidad de Medida"
+                   widgetVar="dlgVar" modal="true" resizable="true" closable="true" width="520"
+                   visible="#{tipoUnidadMedidaFrm.mostrarFormulario}"
+                   styleClass="ui-dialog">
+
+            <h:panelGrid columns="1" columnClasses="w-full" styleClass="gap-2 w-full">
+               <p:messages />
+
+               <h:panelGroup rendered="#{!tipoUnidadMedidaFrm.editionMode}">
+                  <small class="text-500">Siguiente ID: #{tipoUnidadMedidaFrm.proximoId}</small>
+               </h:panelGroup>
+
+               <p:inputText value="#{tipoUnidadMedidaFrm.registro.nombre}" placeholder="Nombre" required="true"
+                            requiredMessage="El nombre es obligatorio"/>
+
+               <p:inputText value="#{tipoUnidadMedidaFrm.registro.unidadBase}" placeholder="Unidad Base (ej: gramos, litros, metros)"
+                            maxlength="155"/>
+
+               <p:inputTextarea value="#{tipoUnidadMedidaFrm.registro.comentarios}" rows="3" autoResize="true"
+                                placeholder="Comentarios adicionales (opcional)"/>
+
+               <h:panelGrid columns="2" styleClass="align-items-center">
+                  <h:selectBooleanCheckbox id="chkActivo" value="#{tipoUnidadMedidaFrm.registro.activo}"/>
+                  <h:outputLabel for="chkActivo" value="¿Activo?" />
+               </h:panelGrid>
+
+               <div class="flex justify-end gap-2 mt-3">
+                  <p:commandButton value="Cancelar" icon="pi pi-times"
+                                   actionListener="#{tipoUnidadMedidaFrm.btnCancelarHandler}"
+                                   process="@this"
+                                   update=":frmPrincipal:dlg"
+                                   styleClass="p-button-text"/>
+                  <p:commandButton value="#{tipoUnidadMedidaFrm.editionMode ? 'Guardar cambios' : 'Crear'}"
+                                   icon="pi pi-check"
+                                   actionListener="#{tipoUnidadMedidaFrm.btnGuardarHandler}"
+                                   process=":frmPrincipal:dlg"
+                                   update=":frmPrincipal"
+                                   oncomplete="if (!args.validationFailed) PF('dlgVar').hide();"/>
+               </div>
+            </h:panelGrid>
+         </p:dialog>
+
+         <!-- Confirmación elegante de borrado -->
+         <p:confirmDialog widgetVar="confirmDel" header="Confirmar eliminación" message="¿Eliminar este registro?"
+                          icon="pi pi-exclamation-triangle" closable="false"
+                          styleClass="ui-dialog">
+            <div class="flex justify-end gap-2">
+               <p:commandButton value="Cancelar" type="button" styleClass="p-button-text"
+                                onclick="PF('confirmDel').hide()"/>
+               <p:commandButton value="Sí, eliminar" icon="pi pi-trash"
+                                actionListener="#{tipoUnidadMedidaFrm.btnEliminarHandler(tipoUnidadMedidaFrm.registro)}"
+                                update="frmPrincipal"
+                                oncomplete="PF('confirmDel').hide();"/>
             </div>
-         </h:panelGrid>
-      </p:dialog>
+         </p:confirmDialog>
 
-      <!-- Confirmación elegante de borrado -->
-      <p:confirmDialog widgetVar="confirmDel" header="Confirmar eliminación" message="¿Eliminar este registro?"
-                       icon="pi pi-exclamation-triangle" closable="false"
-                       styleClass="ui-dialog">
-         <div class="flex justify-end gap-2">
-            <p:commandButton value="Cancelar" type="button" styleClass="p-button-text"
-                             onclick="PF('confirmDel').hide()"/>
-            <p:commandButton value="Sí, eliminar" icon="pi pi-trash"
-                             actionListener="#{tipoUnidadMedidaFrm.btnEliminarHandler(tipoUnidadMedidaFrm.registro)}"
-                             update="frmPrincipal"
-                             oncomplete="PF('confirmDel').hide();"/>
-         </div>
-      </p:confirmDialog>
-
-   </h:form>
-</h:body>
+      </h:form>
+   </ui:define>
+</ui:composition>
 </html>

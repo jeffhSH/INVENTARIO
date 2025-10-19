@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config xmlns="https://jakarta.ee/xml/ns/jakartaee"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-facesconfig_4_0.xsd"
+              version="4.0">
+
+    <application>
+        <locale-config>
+            <default-locale>es</default-locale>
+            <supported-locale>en</supported-locale>
+            <supported-locale>es</supported-locale>
+            <supported-locale>fr</supported-locale>
+        </locale-config>
+        <resource-bundle>
+            <base-name>messages</base-name>
+            <var>msg</var>
+        </resource-bundle>
+    </application>
+
+    <navigation-rule>
+        <from-view-id>*</from-view-id>
+        <navigation-case>
+            <from-outcome>producto</from-outcome>
+            <to-view-id>/paginas/Producto.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>tipoAlmacen</from-outcome>
+            <to-view-id>/paginas/TipoAlmacen.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>proveedor</from-outcome>
+            <to-view-id>/paginas/Proveedor.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>Clientes</from-outcome>
+            <to-view-id>/paginas/Cliente.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>Tipos de Unidad de medida</from-outcome>
+            <to-view-id>/paginas/TipoUnidadMedida.xhtml</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+
+</faces-config>

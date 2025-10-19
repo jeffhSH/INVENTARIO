@@ -1,183 +1,195 @@
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
-<h:head>
-    <title>#{productoFrm.nombreBean}</title>
-    <h:outputStylesheet library="estilos" name="disenoAlmacen.css"/>
+<ui:composition template="template.xhtml">
 
-</h:head>
-
-<h:body>
-    <h:form id="frmPrincipal" update=":frmPrincipal:toolbar">
+    <ui:define name="content">
+        <h:form id="frmPrincipal" update=":frmPrincipal:toolbar">
 
 
-        <p:growl id="growl" showDetail="true" life="3000" />
-        <!-- Toolbar superior -->
+            <p:growl id="growl" showDetail="true" life="3000" />
+            <!-- Toolbar superior -->
 
-        <p:toolbar id="toolbar" class="toolbar-gap">
-            <p:toolbarGroup class="toolbar-center">
-                <span class="toolbar-title">#{productoFrm.nombreBean}</span>
-            </p:toolbarGroup>
+            <p:toolbar id="toolbar" class="toolbar-gap">
+                <p:toolbarGroup class="toolbar-center">
+                    <span class="toolbar-title">#{productoFrm.nombreBean}</span>
+                </p:toolbarGroup>
 
-            <p:toolbarGroup class="toolbar-group-right">
-                <p:inputText placeholder="Buscar por nombre…" value="#{productoFrm.registro.nombreProducto}" />
-                <p:commandButton value="Nuevo" icon="pi pi-plus"
-                                 action="#{productoFrm.btnNuevoHandler(r)}"
-                                 update=":frmPrincipal:dlg"
-                                 styleClass="p-button p-button-nuevo"
-                                 rendered="#{!productoFrm.pnlDetalle}"
-                                 process="@this" immediate="true"/>
+                <p:toolbarGroup class="toolbar-group-right">
+                    <p:inputText placeholder="Buscar por nombre…" value="#{productoFrm.registro.nombreProducto}" />
+                    <p:commandButton value="Nuevo" icon="pi pi-plus"
+                                     action="#{productoFrm.btnNuevoHandler(r)}"
+                                     update=":frmPrincipal:dlg"
+                                     styleClass="p-button p-button-nuevo"
+                                     rendered="#{!productoFrm.pnlDetalle}"
+                                     process="@this" immediate="true"/>
 
-                <p:commandButton id="btnVOLVER" icon="pi pi-arrow-left"  value="VOLVER"
-                                 rendered="#{productoFrm.pnlDetalle}"
-                                 styleClass="p-button p-button-volver"
-                                 action="#{productoFrm.volver()}"
-                                 update=":frmPrincipal, :frmPrincipal:toolbar" />
-            </p:toolbarGroup>
-            <p:toolbarGroup>
+                    <p:commandButton id="btnVOLVER" icon="pi pi-arrow-left"  value="VOLVER"
+                                     rendered="#{productoFrm.pnlDetalle}"
+                                     styleClass="p-button p-button-volver"
+                                     action="#{productoFrm.volver()}"
+                                     update=":frmPrincipal, :frmPrincipal:toolbar" />
+                </p:toolbarGroup>
+                <p:toolbarGroup>
 
-                <!-- Botón Modificar -->
-                <p:commandButton id="btnModificar" value="Modificar"
-                                 icon="pi pi-pencil"
-                                 action="#{productoFrm.btnEditarHandler(productoFrm.registro)}"
-                                 rendered="#{productoFrm.pnlDetalle}"
-                                 update=":frmPrincipal"
-                                 oncomplete="PF('dlgVar').show()"
-                                 styleClass="p-button p-button-modificar" />
-
-                <p:commandButton icon="pi pi-trash" value="Eliminar"
-                                 rendered="#{productoFrm.pnlDetalle}"
-                                 oncomplete="PF('confirmDel').show()"
-                                 process="@this"
-                                 styleClass="p-button p-button-eliminar"
-                >
-
-                </p:commandButton>
-            </p:toolbarGroup>
-        </p:toolbar>
-
-
-        <p:dataTable id="tbl"
-                     value="#{productoFrm.model}" var="r"
-                     lazy="true" paginator="true" rows="10"
-                     rowsPerPageTemplate="10,20,50"
-                     currentPageReportTemplate="Mostrando {startRecord}-{endRecord} de {totalRecords}"
-                     paginatorPosition="bottom"
-                     responsiveLayout="scroll"
-                     rowHover="true"
-                     rendered="#{!productoFrm.pnlDetalle}"
-                     emptyMessage="No hay registros"
-                     styleClass="table-modern"
-                     selectionMode="single"
-                     selection="#{productoFrm.registro}" rowKey="#{r.id}" >
-            <p:ajax event="rowSelect"
-                    listener="#{productoFrm.selectionHandler}"
-                    update="frmPrincipal"
-
-            />
-
-            <p:ajax event="rowUnselect"
-                    listener="#{productoFrm.rowUnselectHandler}"
-                    update=":frmPrincipal:tbl :frmPrincipal:growl :frmPrincipal:toolbar"  />
-
-            <p:column headerText="ID" style="width:320px" sortBy="#{r.id}">
-                <h:outputText value="#{r.id}" />
-            </p:column>
-
-            <p:column headerText="Nombre" sortBy="#{r.nombreProducto}" filterBy="#{r.nombreProducto}" filterMatchMode="contains">
-                <h:outputText value="#{r.nombreProducto}" />
-            </p:column>
-
-            <p:column headerText="Referencia Externa" sortBy="#{r.referenciaExterna}" filterBy="#{r.referenciaExterna}" filterMatchMode="contains">
-                <h:outputText value="#{r.referenciaExterna}" />
-            </p:column>
-
-            <p:column headerText="Estado" style="width:100px">
-                <h:outputText value="#{r.activo ? 'Activo' : 'Inactivo'}" />
-            </p:column>
-
-
-            <!-- panel detalle -->
-        </p:dataTable>
-        <h:panelGroup>
-
-        </h:panelGroup>
-        <h:panelGroup id="pnlDetalle" class="detalle-panel" rendered="#{productoFrm.pnlDetalle}">
-            <!-- Título del panel -->
-            <h:outputText value="Detalle del Producto" class="detalle-titulo"/>
-
-            <h:panelGrid columns="2" class="form-item">
-                <p><strong>ID:</strong> #{productoFrm.registro.id}</p>
-                <p><strong>Nombre:</strong> #{productoFrm.registro.nombreProducto}</p>
-            </h:panelGrid>
-
-            <h:panelGrid columns="2" class="form-item">
-                <p><strong>Referencia Externa:</strong></p>
-                <p:inputTextarea value="#{productoFrm.registro.referenciaExterna}" rows="2" cols="30" disabled="true" />
-            </h:panelGrid>
-
-            <h:panelGrid columns="2" class="form-item">
-                <p><strong>Comentarios:</strong></p>
-                <p:inputTextarea value="#{productoFrm.registro.comentarios}" rows="3" cols="30" disabled="true" />
-            </h:panelGrid>
-
-            <p><strong>Estado:</strong> #{productoFrm.registro.activo ? 'Activo' : 'Inactivo'}</p>
-        </h:panelGroup>
-
-
-        <!-- Diálogo Crear/Editar -->
-        <p:dialog id="dlg" header="#{productoFrm.editionMode ? 'Editar' : 'Nuevo'} Producto"
-                  widgetVar="dlgVar" modal="true" resizable="true" closable="true" width="520"
-                  visible="#{productoFrm.mostrarFormulario}"
-                  styleClass="ui-dialog">
-
-            <h:panelGrid columns="1" columnClasses="w-full" styleClass="gap-2 w-full">
-                <p:messages />
-
-                <p:inputText value="#{productoFrm.registro.nombreProducto}" placeholder="Nombre del Producto" required="true"
-                             requiredMessage="El nombre del producto es obligatorio"/>
-
-                <p:inputTextarea value="#{productoFrm.registro.referenciaExterna}" rows="2" autoResize="true"
-                                 placeholder="Referencia Externa (opcional)"/>
-
-                <p:inputTextarea value="#{productoFrm.registro.comentarios}" rows="3" autoResize="true"
-                                 placeholder="Comentarios (opcional)"/>
-
-                <h:selectBooleanCheckbox id="chkActivo" value="#{productoFrm.registro.activo}"/>
-                <h:outputLabel for="chkActivo" value="¿Activo?" />
-
-                <div class="flex justify-end gap-2 mt-3">
-                    <p:commandButton value="Cancelar" icon="pi pi-times"
-                                     actionListener="#{productoFrm.btnCancelarHandler}"
-                                     process="@this"
-                                     update=":frmPrincipal:panelCompleto,:frmPrincipal:dlg"
-                                     styleClass="p-button-text"/>
-                    <p:commandButton value="#{productoFrm.editionMode ? 'Guardar cambios' : 'Crear'}"
-                                     icon="pi pi-check"
-                                     actionListener="#{productoFrm.btnGuardarHandler}"
-                                     process=":frmPrincipal:dlg"
+                    <!-- Botón Modificar -->
+                    <p:commandButton id="btnModificar" value="Modificar"
+                                     icon="pi pi-pencil"
+                                     action="#{productoFrm.btnEditarHandler(productoFrm.registro)}"
+                                     rendered="#{productoFrm.pnlDetalle}"
                                      update=":frmPrincipal"
-                                     oncomplete="if (!args.validationFailed) PF('dlgVar').hide(); var btn = document.getElementById('frmPrincipal:btnVOLVER'); if(btn) btn.click();"/>
-                </div>
-            </h:panelGrid>
-        </p:dialog>
+                                     oncomplete="PF('dlgVar').show()"
+                                     styleClass="p-button p-button-modificar" />
 
-        <!-- Confirmación elegante de borrado -->
-        <p:confirmDialog widgetVar="confirmDel" header="Confirmar eliminación" message="¿Eliminar este registro?"
-                         icon="pi pi-exclamation-triangle" closable="false"
-                         styleClass="ui-dialog">
-            <div class="flex justify-end gap-2">
-                <p:commandButton value="Cancelar" type="button" styleClass="p-button-text"
-                                 onclick="PF('confirmDel').hide()"/>
-                <p:commandButton value="Sí, eliminar" icon="pi pi-trash"
-                                 actionListener="#{productoFrm.btnEliminarHandler(productoFrm.registro)}"
-                                 update="frmPrincipal"
-                                 oncomplete="PF('confirmDel').hide();"/>
+                    <p:commandButton icon="pi pi-trash" value="Eliminar"
+                                     rendered="#{productoFrm.pnlDetalle}"
+                                     oncomplete="PF('confirmDel').show()"
+                                     process="@this"
+                                     styleClass="p-button p-button-eliminar"
+                    >
+
+                    </p:commandButton>
+                </p:toolbarGroup>
+            </p:toolbar>
+            <div class="">
+                <ul class="nav-list" style="">
+                    <li class="nav-item">
+                        <a href="TipoAlmacen.xhtml" class="nav-link">Tipo de Almacenes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="Proveedor.xhtml" class="nav-link">Proveedores</a>
+                    </li>
+                    <!-- Más elementos del menú -->
+                </ul>
+
             </div>
-        </p:confirmDialog>
 
-    </h:form>
-</h:body>
+
+            <div class="content">
+                <p:dataTable id="tbl"
+                             value="#{productoFrm.model}" var="r"
+                             lazy="true" paginator="true" rows="10"
+                             rowsPerPageTemplate="10,20,50"
+                             currentPageReportTemplate="Mostrando {startRecord}-{endRecord} de {totalRecords}"
+                             paginatorPosition="bottom"
+                             responsiveLayout="scroll"
+                             rowHover="true"
+                             rendered="#{!productoFrm.pnlDetalle}"
+                             emptyMessage="No hay registros"
+                             styleClass="table-modern"
+                             selectionMode="single"
+                             selection="#{productoFrm.registro}" rowKey="#{r.id}" >
+                    <p:ajax event="rowSelect"
+                            listener="#{productoFrm.selectionHandler}"
+                            update="frmPrincipal"
+
+                    />
+
+                    <p:ajax event="rowUnselect"
+                            listener="#{productoFrm.rowUnselectHandler}"
+                            update=":frmPrincipal:tbl :frmPrincipal:growl :frmPrincipal:toolbar"  />
+
+                    <p:column headerText="ID" style="width:320px" sortBy="#{r.id}">
+                        <h:outputText value="#{r.id}" />
+                    </p:column>
+
+                    <p:column headerText="Nombre" sortBy="#{r.nombreProducto}" filterBy="#{r.nombreProducto}" filterMatchMode="contains">
+                        <h:outputText value="#{r.nombreProducto}" />
+                    </p:column>
+
+                    <p:column headerText="Referencia Externa" sortBy="#{r.referenciaExterna}" filterBy="#{r.referenciaExterna}" filterMatchMode="contains">
+                        <h:outputText value="#{r.referenciaExterna}" />
+                    </p:column>
+
+                    <p:column headerText="Estado" style="width:100px">
+                        <h:outputText value="#{r.activo ? 'Activo' : 'Inactivo'}" />
+                    </p:column>
+
+
+                    <!-- panel detalle -->
+                </p:dataTable>
+                <h:panelGroup>
+
+                </h:panelGroup>
+                <h:panelGroup id="pnlDetalle" class="detalle-panel" rendered="#{productoFrm.pnlDetalle}">
+                    <!-- Título del panel -->
+                    <h:outputText value="Detalle del Producto" class="detalle-titulo"/>
+
+                    <h:panelGrid columns="2" class="form-item">
+                        <p><strong>ID:</strong> #{productoFrm.registro.id}</p>
+                        <p><strong>Nombre:</strong> #{productoFrm.registro.nombreProducto}</p>
+                    </h:panelGrid>
+
+                    <h:panelGrid columns="2" class="form-item">
+                        <p><strong>Referencia Externa:</strong></p>
+                        <p:inputTextarea value="#{productoFrm.registro.referenciaExterna}" rows="2" cols="30" disabled="true" />
+                    </h:panelGrid>
+
+                    <h:panelGrid columns="2" class="form-item">
+                        <p><strong>Comentarios:</strong></p>
+                        <p:inputTextarea value="#{productoFrm.registro.comentarios}" rows="3" cols="30" disabled="true" />
+                    </h:panelGrid>
+
+                    <p><strong>Estado:</strong> #{productoFrm.registro.activo ? 'Activo' : 'Inactivo'}</p>
+                </h:panelGroup>
+
+
+                <!-- Diálogo Crear/Editar -->
+                <p:dialog id="dlg" header="#{productoFrm.editionMode ? 'Editar' : 'Nuevo'} Producto"
+                          widgetVar="dlgVar" modal="true" resizable="true" closable="true" width="520"
+                          visible="#{productoFrm.mostrarFormulario}"
+                          styleClass="ui-dialog">
+
+                    <h:panelGrid columns="1" columnClasses="w-full" styleClass="gap-2 w-full">
+                        <p:messages />
+
+                        <p:inputText value="#{productoFrm.registro.nombreProducto}" placeholder="Nombre del Producto" required="true"
+                                     requiredMessage="El nombre del producto es obligatorio"/>
+
+                        <p:inputTextarea value="#{productoFrm.registro.referenciaExterna}" rows="2" autoResize="true"
+                                         placeholder="Referencia Externa (opcional)"/>
+
+                        <p:inputTextarea value="#{productoFrm.registro.comentarios}" rows="3" autoResize="true"
+                                         placeholder="Comentarios (opcional)"/>
+
+                        <h:selectBooleanCheckbox id="chkActivo" value="#{productoFrm.registro.activo}"/>
+                        <h:outputLabel for="chkActivo" value="¿Activo?" />
+
+                        <div class="flex justify-end gap-2 mt-3">
+                            <p:commandButton value="Cancelar" icon="pi pi-times"
+                                             actionListener="#{productoFrm.btnCancelarHandler}"
+                                             process="@this"
+                                             update=":frmPrincipal:panelCompleto,:frmPrincipal:dlg"
+                                             styleClass="p-button-text"/>
+                            <p:commandButton value="#{productoFrm.editionMode ? 'Guardar cambios' : 'Crear'}"
+                                             icon="pi pi-check"
+                                             actionListener="#{productoFrm.btnGuardarHandler}"
+                                             process=":frmPrincipal:dlg"
+                                             update=":frmPrincipal"
+                                             oncomplete="if (!args.validationFailed) PF('dlgVar').hide(); var btn = document.getElementById('frmPrincipal:btnVOLVER'); if(btn) btn.click();"/>
+                        </div>
+                    </h:panelGrid>
+                </p:dialog>
+
+                <!-- Confirmación elegante de borrado -->
+                <p:confirmDialog widgetVar="confirmDel" header="Confirmar eliminación" message="¿Eliminar este registro?"
+                                 icon="pi pi-exclamation-triangle" closable="false"
+                                 styleClass="ui-dialog">
+                    <div class="flex justify-end gap-2">
+                        <p:commandButton value="Cancelar" type="button" styleClass="p-button-text"
+                                         onclick="PF('confirmDel').hide()"/>
+                        <p:commandButton value="Sí, eliminar" icon="pi pi-trash"
+                                         actionListener="#{productoFrm.btnEliminarHandler(productoFrm.registro)}"
+                                         update="frmPrincipal"
+                                         oncomplete="PF('confirmDel').hide();"/>
+                    </div>
+                </p:confirmDialog>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
 </html>

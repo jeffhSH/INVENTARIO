@@ -522,3 +522,79 @@
     .ui-dialog-message {
         color: #f39c12; /* Color anaranjado para los mensajes */
     }
+    .layout-container {
+        display: flex;
+        min-height: 100vh;
+    }
+
+    .sidebar {
+        width: 250px;
+        background-color: #2c3e50;
+        color: white;
+        position: fixed;
+        height: 100vh;
+        overflow-y: auto;
+    }
+
+    .sidebar-header {
+        padding: 20px;
+        border-bottom: 1px solid #34495e;
+        text-align: center;
+    }
+
+    .sidebar-header h2 {
+        margin: 0;
+        font-size: 1.2em;
+    }
+
+    .sidebar-menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .menu-item {
+        border-bottom: 1px solid #34495e;
+    }
+
+    .menu-link {
+        display: block;
+        padding: 15px 20px;
+        color: #ecf0f1;
+        text-decoration: none;
+        transition: background-color 0.3s;
+    }
+
+    .menu-link:hover {
+        background-color: #34495e;
+        color: white;
+    }
+
+    .main-content {
+        margin-left: 250px;
+        padding: 20px;
+        width: calc(100% - 250px);
+        background-color: #ecf0f1;
+        min-height: 100vh;
+    }
+
+    .content-panel {
+        background: white;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    /* Ajustes para el toolbar */
+    .toolbar-gap {
+        margin-bottom: 20px;
+    }
+
+    .toolbar-center {
+        flex-grow: 1;
+        justify-content: center;
+    }
+
+    .toolbar-group-right {
+        margin-left: auto;
+    }
