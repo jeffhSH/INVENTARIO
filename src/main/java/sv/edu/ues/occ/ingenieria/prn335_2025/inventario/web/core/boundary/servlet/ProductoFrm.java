@@ -22,7 +22,6 @@ public class ProductoFrm extends DefaultFrm<Producto, UUID> implements Serializa
 
     private List<Producto> ListaProducto;
 
-
     @Override
     protected Object getDao() {
         return taDao;

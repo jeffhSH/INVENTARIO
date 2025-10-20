@@ -69,7 +69,7 @@ public class ClienteFrm extends DefaultFrm<Cliente, UUID> implements Serializabl
         if (id != null && this.model != null && !this.model.getWrappedData().isEmpty()) {
             try {
                 UUID buscado = UUID.fromString(id);
-                return this.model.getWrappedData().stream()
+                return this.model .getWrappedData().stream()
                         .filter(r -> r.getId() != null && r.getId().equals(buscado))
                         .findFirst()
                         .orElse(null);

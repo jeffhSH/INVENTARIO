@@ -31,6 +31,7 @@ public abstract class DefaultFrm<T, K extends Serializable> implements Serializa
     protected boolean pnlDetalle = false;
     abstract protected String getIdAsText(T r);
     abstract protected T getIdByText(String id);
+
     //protected T selectedRow;
 
 
@@ -309,5 +310,6 @@ public void volver(){
     protected abstract void modificar(T entidad);
     protected abstract void eliminar(T entidad);
     protected abstract T findById(K id);
+
     protected abstract List<T> findRange(int first, int pageSize);
 }

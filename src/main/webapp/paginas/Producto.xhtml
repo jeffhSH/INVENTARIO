@@ -57,6 +57,7 @@
             </p:toolbar>
 
             <div class="content">
+
                 <p:dataTable id="tbl"
                              value="#{productoFrm.model}" var="r"
                              lazy="true" paginator="true" rows="10"
@@ -78,7 +79,7 @@
 
                     <p:ajax event="rowUnselect"
                             listener="#{productoFrm.rowUnselectHandler}"
-                            update=":frmPrincipal:tbl :frmPrincipal:growl :frmPrincipal:toolbar"  />
+                            update=":frmPrincipal:tbl :frmPrincipal:growl :frmPrincipal:toolbar :frmPrincipal:tabViewProducto"  />
 
                     <p:column headerText="ID" style="width:320px" sortBy="#{r.id}">
                         <h:outputText value="#{r.id}" />
@@ -96,33 +97,87 @@
                         <h:outputText value="#{r.activo ? 'Activo' : 'Inactivo'}" />
                     </p:column>
 
-
-                    <!-- panel detalle -->
                 </p:dataTable>
-                <h:panelGroup>
 
+                <p:tabView id="tabViewProducto" rendered="#{productoFrm.pnlDetalle}" cache="false" dynamic="true">
+
+                    <!-- Pestaña 1: Información General -->
+                    <p:tab title="Información General">
+
+                        <h:panelGrid columns="2" class="form-item">
+                            <p><strong>ID:</strong> #{productoFrm.registro.id}</p>
+                            <p><strong>Nombre:</strong> #{productoFrm.registro.nombreProducto}</p>
+                        </h:panelGrid>
+
+                        <h:panelGrid columns="2" class="form-item">
+                            <p><strong>Referencia Externa:</strong></p>
+                            <p:inputTextarea value="#{productoFrm.registro.referenciaExterna}" rows="2" cols="30" disabled="true" />
+                        </h:panelGrid>
+
+                        <h:panelGrid columns="2" class="form-item">
+                            <p><strong>Comentarios:</strong></p>
+                            <p:inputTextarea value="#{productoFrm.registro.comentarios}" rows="3" cols="30" disabled="true" />
+                        </h:panelGrid>
+
+                        <p><strong>Estado:</strong> #{productoFrm.registro.activo ? 'Activo' : 'Inactivo'}</p>
+                    </p:tab>
+
+                    <!-- Pestaña 2: Tipos de Producto -->
+                    <p:tab title="Tipos de Producto" closable="false">
+
+                <h:panelGroup id="pnlTipos">
+                   <h:panelGrid>
+
+                       <p:dataTable id="tblTipos"
+                                    value="#{productoTipoProductoFrm.findByIdP(productoFrm.registro.id)}"  var="relacion"
+                                    lazy="true" paginator="true" rows="5"
+                                    rowsPerPageTemplate="5,10,20"
+                                    currentPageReportTemplate="Mostrando {startRecord}-{endRecord} de {totalRecords}"
+                                    paginatorPosition="bottom"
+                                    emptyMessage="No hay relaciones producto-tipo registradas"
+                                    styleClass="table-modern"
+                                    selectionMode="single"
+                                    selection="#{productoTipoProductoFrm.registro}"
+                                    rowKey="#{relacion.id}">
+
+                           <p:ajax event="rowSelect"
+                                   listener="#{productoTipoProductoFrm.selectionHandler}"
+                                   update="frmPrincipal" />
+
+                           <p:column headerText="ID" style="width: 80px;" sortBy="#{relacion.id}">
+                               <h:outputText value="#{relacion.id}" />
+                           </p:column>
+
+                           <p:column headerText="Producto">
+                               <h:outputText value="#{productoTipoProductoFrm.getNombreProducto(relacion)}" />
+                           </p:column>
+
+                           <p:column headerText="Tipo Producto">
+                               <h:outputText value="#{productoTipoProductoFrm.getNombreTipoProducto(relacion)}" />
+                           </p:column>
+
+                           <p:column headerText="Fecha Creación" sortBy="#{relacion.fechaCreacion}">
+                               <h:outputText value="#{relacion.fechaCreacion}">
+                                   <f:converter converterId="offsetDateTimeConverter" />
+                               </h:outputText>
+                           </p:column>
+
+                           <p:column headerText="Estado" style="width: 100px;">
+                               <h:outputText value="#{relacion.activo ? 'Activo' : 'Inactivo'}" />
+                           </p:column>
+
+                           <p:column headerText="Observaciones" sortBy="#{relacion.observaciones}">
+                               <h:outputText value="#{relacion.observaciones}" />
+                           </p:column>
+
+                       </p:dataTable>
+
+                   </h:panelGrid>
                 </h:panelGroup>
-                <h:panelGroup id="pnlDetalle" class="detalle-panel" rendered="#{productoFrm.pnlDetalle}">
-                    <!-- Título del panel -->
-                    <h:outputText value="Detalle del Producto" class="detalle-titulo"/>
 
-                    <h:panelGrid columns="2" class="form-item">
-                        <p><strong>ID:</strong> #{productoFrm.registro.id}</p>
-                        <p><strong>Nombre:</strong> #{productoFrm.registro.nombreProducto}</p>
-                    </h:panelGrid>
+                    </p:tab>
+                </p:tabView>
 
-                    <h:panelGrid columns="2" class="form-item">
-                        <p><strong>Referencia Externa:</strong></p>
-                        <p:inputTextarea value="#{productoFrm.registro.referenciaExterna}" rows="2" cols="30" disabled="true" />
-                    </h:panelGrid>
-
-                    <h:panelGrid columns="2" class="form-item">
-                        <p><strong>Comentarios:</strong></p>
-                        <p:inputTextarea value="#{productoFrm.registro.comentarios}" rows="3" cols="30" disabled="true" />
-                    </h:panelGrid>
-
-                    <p><strong>Estado:</strong> #{productoFrm.registro.activo ? 'Activo' : 'Inactivo'}</p>
-                </h:panelGroup>
 
 
                 <!-- Diálogo Crear/Editar -->
@@ -180,3 +235,4 @@
     </ui:define>
 </ui:composition>
 </html>
+

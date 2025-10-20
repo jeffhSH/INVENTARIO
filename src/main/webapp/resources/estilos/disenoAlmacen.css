@@ -426,7 +426,7 @@
 
     /* Estilo para el título dentro del panel de detalle */
     .detalle-titulo {
-        font-size: 2.5rem; /* Título más grande */
+        font-size: 2.0rem; /* Título más grande */
         font-weight: 800; /* Negrita para mayor énfasis */
         color: #f39c12; /* Color anaranjado brillante para el título */
         text-align: center; /* Centrado */
