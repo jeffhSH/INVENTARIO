@@ -36,7 +36,7 @@ public class ProductoFrm extends DefaultFrm<Producto, UUID> implements Serializa
     protected void inicializar() {
         try {
             ListaProducto = taDao.findRange(0, Integer.MAX_VALUE);
-/// ///PRUEBA2
+/// ///PRUEBA3
         } catch (Exception e) {
             e.printStackTrace();
             FacesContext.getCurrentInstance().addMessage(
