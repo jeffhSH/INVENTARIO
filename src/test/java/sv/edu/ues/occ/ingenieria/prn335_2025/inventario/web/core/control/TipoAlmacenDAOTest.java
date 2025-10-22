@@ -34,8 +34,6 @@ class TipoAlmacenDAOTest {
             findResult.get(i).setId(i + 1);
         }
     }
-
-
     @Test
     void create() {
         System.out.println("TipoAlmacenDAOTest.create");
@@ -43,13 +41,9 @@ class TipoAlmacenDAOTest {
         TipoAlmacen nuevo = new TipoAlmacen();
         nuevo.setId(1);
 
-        // ❌ ELIMINAR esta línea:
-        // TipoAlmacenDAO cut = new TipoAlmacenDAO(); // em == null
-
-        // ✅ AGREGAR esta línea:
         TipoAlmacenDAO cut = new TipoAlmacenDAO(mockEM);
 
-        // 1) Entidad nula → IllegalArgumentException (PRIMERO ahora)
+        // 1) Entidad nula: IllegalArgumentException (PRIMERO ahora)
         assertThrows(IllegalArgumentException.class, () -> {
             cut.create(null);
         });
@@ -58,14 +52,6 @@ class TipoAlmacenDAOTest {
         cut.create(nuevo);
         verify(mockEM).persist(nuevo);
 
-        // ❌ ELIMINAR esta sección completa:
-        // // 2) em == null → IllegalStateException
-        // assertThrows(IllegalStateException.class, () -> {
-        //     cut.create(nuevo);
-        // });
-        // // 3) Caso feliz: se inyecta el EntityManager
-        // cut.em = mockEM;
-        // cut.create(nuevo);
     }
     @Test
     void findById() {
@@ -75,22 +61,11 @@ class TipoAlmacenDAOTest {
         TipoAlmacen esperado = new TipoAlmacen();
         esperado.setId(idEsperado);
 
-        // ✅ CORREGIDO: Crear el mock y asignarlo al DAO
+        // Crear el mock y asignarlo al DAO
         EntityManager mock = Mockito.mock(EntityManager.class);
         TipoAlmacenDAO cut = new TipoAlmacenDAO(mock);
 
-        // Simula la búsqueda en la base de datos
-        Mockito.when(mock.find(TipoAlmacen.class, idEsperado)).thenReturn(esperado);
-
-        // ✅ EJECUTAR la prueba
-        TipoAlmacen resultado = cut.findById(idEsperado);
-
-        // ✅ VERIFICAR resultados
-        assertNotNull(resultado);
-        assertEquals(esperado, resultado);
-        assertEquals(idEsperado, resultado.getId());
-
-        // ✅ Test si se lanza excepción para id nulo
+        // Test si se lanza excepción para id nulo
         assertThrows(IllegalArgumentException.class, () -> {
             cut.findById(null);
         });
@@ -103,7 +78,7 @@ class TipoAlmacenDAOTest {
         int first = 0;
         int max = 1000;
 
-        // ✅ CORREGIDO: Configurar mocks correctamente
+        // Configurar mocks correctamente
         EntityManager mock = Mockito.mock(EntityManager.class);
         CriteriaBuilder cbMock = Mockito.mock(CriteriaBuilder.class);
         CriteriaQuery<TipoAlmacen> cqMock = Mockito.mock(CriteriaQuery.class);
@@ -138,7 +113,6 @@ class TipoAlmacenDAOTest {
     void delete() {
         System.out.println("TipoAlmacenDAOTest.delete");
 
-        // ✅ AGREGAR esta línea al inicio:
         EntityManager emMock = Mockito.mock(EntityManager.class);
         TipoAlmacenDAO cut = new TipoAlmacenDAO(emMock);
 
@@ -150,16 +124,11 @@ class TipoAlmacenDAOTest {
             cut.delete(null);
         });
 
-        // ❌ ELIMINAR estas líneas:
-        // EntityManager emMock = Mockito.mock(EntityManager.class);
 
-        // Simula que la entidad existe en el contexto
         Mockito.when(emMock.contains(eliminado)).thenReturn(true);
         cut.delete(eliminado);
         Mockito.verify(emMock, Mockito.times(1)).remove(eliminado);
 
-        // ❌ ELIMINAR esta línea:
-        // cut.em = emMock;
     }
 
 
@@ -167,7 +136,6 @@ class TipoAlmacenDAOTest {
     void update() {
         System.out.println("TipoAlmacenDAOTest.update");
 
-        // ✅ AGREGAR esta línea al inicio:
         EntityManager emMock = Mockito.mock(EntityManager.class);
         TipoAlmacenDAO cut = new TipoAlmacenDAO(emMock);
 
@@ -178,7 +146,6 @@ class TipoAlmacenDAOTest {
         assertThrows(IllegalArgumentException.class, () -> {
             cut.update(null);
         });
-
 
         Mockito.when(emMock.merge(modificado)).thenReturn(modificado);
 

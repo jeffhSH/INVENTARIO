@@ -39,15 +39,15 @@ public class ProductoTipoProductoDAO extends InventarioDefaultDataAccess<Product
                 .setParameter("idProducto", idProducto)
                 .getResultList();
     }
-    public List<ProductoTipoProducto> findByProduct(UUID idProducto) {
+    public ProductoTipoProducto findByProduct(UUID idProducto) {
         if (idProducto == null) {
             throw new IllegalArgumentException("ID Producto no puede ser nulo");
         }
 
-        return em.createQuery(
+        return (ProductoTipoProducto) em.createQuery(
                         "SELECT ptp FROM ProductoTipoProducto ptp WHERE ptp.idProducto.id =:idProducto")
                 .setParameter("idProducto", idProducto)
-                .getResultList();
+                .getSingleResult();
     }
 
     /**

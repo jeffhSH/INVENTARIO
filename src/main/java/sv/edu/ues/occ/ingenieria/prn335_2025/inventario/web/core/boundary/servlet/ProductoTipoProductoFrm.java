@@ -119,10 +119,9 @@ public class ProductoTipoProductoFrm extends DefaultFrm<ProductoTipoProducto, UU
         return dao.findRange(first, pageSize);
     }
 
-        public List<ProductoTipoProducto> findByIdP(UUID idProducto) {
-            return dao.findByProducto(idProducto);
-        }
-
+    public ProductoTipoProducto findByIdP(UUID idProducto) {
+        return (ProductoTipoProducto) dao.findByProduct(idProducto);
+    }
     // Métodos específicos para ProductoTipoProducto
 
     public void seleccionarProducto(Producto producto) {
