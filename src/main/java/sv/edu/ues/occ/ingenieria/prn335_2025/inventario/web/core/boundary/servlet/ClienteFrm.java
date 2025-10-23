@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control.ClienteDAO;
+import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control.InventarioDefaultDataAccess;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control.ProductoDAO;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.Cliente;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.Producto;
@@ -26,7 +27,7 @@ public class ClienteFrm extends DefaultFrm<Cliente, UUID> implements Serializabl
 
 
     @Override
-    protected Object getDao() {
+    protected InventarioDefaultDataAccess<Cliente> getDao() {
         return ClienteDAO;
     }
 

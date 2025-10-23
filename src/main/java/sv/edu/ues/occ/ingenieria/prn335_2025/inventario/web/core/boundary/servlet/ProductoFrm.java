@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
+import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control.InventarioDefaultDataAccess;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control.ProductoDAO;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.Producto;
 
@@ -23,7 +24,7 @@ public class ProductoFrm extends DefaultFrm<Producto, UUID> implements Serializa
     private List<Producto> ListaProducto;
 
     @Override
-    protected Object getDao() {
+    protected InventarioDefaultDataAccess<Producto> getDao() {
         return taDao;
     }
 

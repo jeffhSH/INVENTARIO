@@ -4,6 +4,7 @@ import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control.InventarioDefaultDataAccess;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control.ProductoTipoProductoDAO;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.ProductoTipoProducto;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.Producto;
@@ -43,7 +44,7 @@ public class ProductoTipoProductoFrm extends DefaultFrm<ProductoTipoProducto, UU
     }
 
     @Override
-    protected Object getDao() {
+    protected InventarioDefaultDataAccess<ProductoTipoProducto> getDao() {
         return dao;
     }
 
