@@ -28,7 +28,7 @@ public class ProveedorFrm extends DefaultFrm<Proveedor, Integer> implements Seri
     }
 
     @Override
-    protected Object getDao() {
+    protected InventarioDefaultDataAccess<Proveedor> getDao() {
         return proveedorDao;
     }
 

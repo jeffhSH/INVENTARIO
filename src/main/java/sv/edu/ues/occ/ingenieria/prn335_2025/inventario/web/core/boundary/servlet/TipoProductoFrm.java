@@ -6,6 +6,7 @@ import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
+import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control.InventarioDefaultDataAccess;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control.TipoProductoDAO;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.TipoProducto;
 
@@ -47,7 +48,7 @@ public class TipoProductoFrm extends DefaultFrm<TipoProducto, Long> implements S
     // ===== IMPLEMENTACIÓN DE MÉTODOS ABSTRACTOS =====
 
     @Override
-    protected Object getDao() {
+    protected InventarioDefaultDataAccess<TipoProducto> getDao() {
         return dao;
     }
 

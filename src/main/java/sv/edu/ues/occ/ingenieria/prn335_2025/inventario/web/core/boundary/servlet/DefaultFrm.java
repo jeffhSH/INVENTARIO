@@ -17,6 +17,7 @@ import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.FilterMeta;
 import org.primefaces.model.SortMeta;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.boundary.ESTADO_CRUD;
+import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control.InventarioDefaultDataAccess;
 
 public abstract class DefaultFrm<T, K extends Serializable> implements Serializable {
 
@@ -38,7 +39,8 @@ public abstract class DefaultFrm<T, K extends Serializable> implements Serializa
 
 
     /** Cada subclase debe entregar su DAO concreto */
-    protected abstract Object getDao(); // mantiene flexibilidad en jerarquías de DAO
+    //protected abstract Object getDao(); // mantiene flexibilidad en jerarquías de DAO
+    protected abstract InventarioDefaultDataAccess<T> getDao();
 
     /** Nombre que se mostrará en la vista (título del formulario) */
     protected abstract String getNombreBeanConfig();

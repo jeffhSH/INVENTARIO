@@ -7,6 +7,8 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import java.io.Serializable;
 import java.util.List;
+
+import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control.InventarioDefaultDataAccess;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control.TipoUnidadMedidaDAO;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.TipoUnidadMedida;
 
@@ -22,7 +24,7 @@ public class TipoUnidadMedidaFrm extends DefaultFrm<TipoUnidadMedida, Integer> i
     private Integer proximoId;
 
     @Override
-    protected Object getDao() {
+    protected InventarioDefaultDataAccess<TipoUnidadMedida> getDao() {
         return taDao;
     }
 

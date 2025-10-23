@@ -74,7 +74,7 @@ public abstract class InventarioDefaultDataAccess<T> implements InventarioDAOInt
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<T> cq = cb.createQuery(entityClass);
         Root<T> root = cq.from(entityClass);
-        cq.select(root);
+        cq.select(root).orderBy(cb.asc(root.get("id")));
 
         TypedQuery<T> query = em.createQuery(cq);
         query.setFirstResult(first);
