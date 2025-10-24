@@ -96,9 +96,12 @@
          <!-- Panel de Detalle -->
          <h:panelGroup id="pnlDetalle" class="detalle-panel" rendered="#{tipoUnidadMedidaFrm.pnlDetalle}">
             <!-- Título del panel -->
-            <h:outputText value="Detalle del Tipo de Unidad de Medida" class="detalle-titulo"/>
+
 
             <h:panelGrid columns="2" class="form-item">
+               <p><strong>ID:</strong></p>
+               <h:inputTextarea value="#{tipoUnidadMedidaFrm.registro.id}"
+                                rows="2" cols="1" disabled="true" />
                <p><strong>ID:</strong> #{tipoUnidadMedidaFrm.registro.id}</p>
                <p><strong>Nombre:</strong> #{tipoUnidadMedidaFrm.registro.nombre}</p>
             </h:panelGrid>
