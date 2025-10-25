@@ -3,7 +3,9 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:cbtn="http://xmlns.jcp.org/jsf/composite/componentes">
+>
 
 <ui:composition template="template.xhtml">
 
@@ -21,6 +23,10 @@
 
                 <p:toolbarGroup class="toolbar-group-right">
                     <p:inputText placeholder="Buscar por nombre…" value="#{tipoAlmacenFrm.registro.nombre}" />
+                    <cbtn:botones-top bean="#{tipoAlmacenFrm}"
+                                      updateNuevo=":frmPrincipal:dlg"
+                                      updateVolver=":frmPrincipal, :frmPrincipal:toolbar"/>
+                    <!--
                     <p:commandButton value="Nuevo" icon="pi pi-plus"
                                      action="#{tipoAlmacenFrm.btnNuevoHandler(r)}"
                                      update=":frmPrincipal:dlg"
@@ -32,7 +38,8 @@
                                      rendered="#{tipoAlmacenFrm.pnlDetalle}"
                                      styleClass="p-button p-button-volver"
                                      action="#{tipoAlmacenFrm.volver()}"
-                                     update=":frmPrincipal, :frmPrincipal:toolbar" />
+                                     update=":frmPrincipal, :frmPrincipal:toolbar"/>
+                                     -->
                 </p:toolbarGroup>
                 <p:toolbarGroup>
 
