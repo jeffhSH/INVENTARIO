@@ -20,34 +20,26 @@
 
             <p:toolbarGroup class="toolbar-group-right">
                <p:inputText placeholder="Buscar…" value="#{productoTipoProductoFrm.registro.observaciones}" />
-               <p:commandButton value="Nuevo" icon="pi pi-plus"
-                                action="#{productoTipoProductoFrm.btnNuevoHandler(r)}"
-                                update=":frmPrincipal:dlg"
-                                styleClass="p-button p-button-nuevo"
-                                rendered="#{!productoTipoProductoFrm.pnlDetalle}"
-                                process="@this" immediate="true"/>
-
-               <p:commandButton id="btnVOLVER" icon="pi pi-arrow-left" value="VOLVER"
-                                rendered="#{productoTipoProductoFrm.pnlDetalle}"
-                                styleClass="p-button p-button-volver"
-                                action="#{productoTipoProductoFrm.volver()}"
-                                update=":frmPrincipal, :frmPrincipal:toolbar" />
+               <ui:include src="componentes/botones-top.xhtml">
+                  <ui:param name="section" value="nuevo"/>
+                  <ui:param name="bean" value="#{productoTipoProductoFrm}"/>
+               </ui:include>
+               <ui:include src="componentes/botones-top.xhtml">
+                  <ui:param name="section" value="volver"/>
+                  <ui:param name="bean" value="#{productoTipoProductoFrm}"/>
+               </ui:include>
             </p:toolbarGroup>
             <p:toolbarGroup>
                <!-- Botón Modificar -->
-               <p:commandButton id="btnModificar" value="Modificar"
-                                icon="pi pi-pencil"
-                                action="#{productoTipoProductoFrm.btnEditarHandler(productoTipoProductoFrm.registro)}"
-                                rendered="#{productoTipoProductoFrm.pnlDetalle}"
-                                update=":frmPrincipal"
-                                oncomplete="PF('dlgVar').show()"
-                                styleClass="p-button p-button-modificar" />
+               <ui:include src="componentes/botones-top.xhtml">
+                  <ui:param name="section" value="modificar"/>
+                  <ui:param name="bean" value="#{productoTipoProductoFrm}"/>
+               </ui:include>
 
-               <p:commandButton icon="pi pi-trash" value="Eliminar"
-                                rendered="#{productoTipoProductoFrm.pnlDetalle}"
-                                oncomplete="PF('confirmDel').show()"
-                                process="@this"
-                                styleClass="p-button p-button-eliminar" />
+               <ui:include src="componentes/botones-top.xhtml">
+                  <ui:param name="section" value="eliminar"/>
+                  <ui:param name="bean" value="#{productoTipoProductoFrm}"/>
+               </ui:include>
             </p:toolbarGroup>
          </p:toolbar>
 
@@ -147,17 +139,14 @@
                <h:outputLabel for="chkActivo" value="¿Activo?" />
 
                <div class="flex justify-end gap-2 mt-3">
-                  <p:commandButton value="Cancelar" icon="pi pi-times"
-                                   actionListener="#{productoTipoProductoFrm.btnCancelarHandler}"
-                                   process="@this"
-                                   update=":frmPrincipal:panelCompleto,:frmPrincipal:dlg"
-                                   styleClass="p-button-text"/>
-                  <p:commandButton value="#{productoTipoProductoFrm.editionMode ? 'Guardar cambios' : 'Crear'}"
-                                   icon="pi pi-check"
-                                   actionListener="#{productoTipoProductoFrm.btnGuardarHandler}"
-                                   process=":frmPrincipal:dlg"
-                                   update=":frmPrincipal"
-                                   oncomplete="if (!args.validationFailed) PF('dlgVar').hide(); var btn = document.getElementById('frmPrincipal:btnVOLVER'); if(btn) btn.click();"/>
+                  <ui:include src="componentes/botones-top.xhtml">
+                     <ui:param name="section" value="cancelar"/>
+                     <ui:param name="bean" value="#{productoTipoProductoFrm}"/>
+                  </ui:include>
+                  <ui:include src="componentes/botones-top.xhtml">
+                     <ui:param name="section" value="guardar"/>
+                     <ui:param name="bean" value="#{productoTipoProductoFrm}"/>
+                  </ui:include>
                </div>
             </h:panelGrid>
          </p:dialog>
@@ -167,12 +156,14 @@
                           icon="pi pi-exclamation-triangle" closable="false"
                           styleClass="ui-dialog">
             <div class="flex justify-end gap-2">
-               <p:commandButton value="Cancelar" type="button" styleClass="p-button-text"
-                                onclick="PF('confirmDel').hide()"/>
-               <p:commandButton value="Sí, eliminar" icon="pi pi-trash"
-                                actionListener="#{productoTipoProductoFrm.btnEliminarHandler(productoTipoProductoFrm.registro)}"
-                                update="frmPrincipal"
-                                oncomplete="PF('confirmDel').hide();"/>
+               <ui:include src="componentes/botones-top.xhtml">
+                  <ui:param name="section" value="cancelarBorrado"/>
+                  <ui:param name="bean" value="#{productoTipoProductoFrm}"/>
+               </ui:include>
+               <ui:include src="componentes/botones-top.xhtml">
+                  <ui:param name="section" value="eliminarDefinitivo"/>
+                  <ui:param name="bean" value="#{productoTipoProductoFrm}"/>
+               </ui:include>
             </div>
          </p:confirmDialog>
 
