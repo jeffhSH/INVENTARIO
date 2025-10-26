@@ -19,7 +19,7 @@
                 </p:toolbarGroup>
 
                 <p:toolbarGroup class="toolbar-group-right">
-                    <p:inputText placeholder="Buscar por nombre…" value="#{clienteFrm.registro.nombre}" />
+                    <p:inputText placeholder="#{msg['etiqueta.buscar']}" value="#{clienteFrm.registro.nombre}" />
                     <ui:include src="componentes/botones-top.xhtml">
                         <ui:param name="section" value="nuevo"/>
                         <ui:param name="bean" value="#{clienteFrm}"/>
@@ -49,12 +49,12 @@
                          value="#{clienteFrm.model}" var="r"
                          lazy="true" paginator="true" rows="10"
                          rowsPerPageTemplate="10,20,50"
-                         currentPageReportTemplate="Mostrando {startRecord}-{endRecord} de {totalRecords}"
+                         currentPageReportTemplate="#{msg['etiqueta.reporte.pagina']}"
                          paginatorPosition="bottom"
                          responsiveLayout="scroll"
                          rowHover="true"
                          rendered="#{!clienteFrm.pnlDetalle}"
-                         emptyMessage="No hay registros"
+                         emptyMessage="#{msg['etiqueta.registroNulo']}"
                          styleClass="table-modern"
                          selectionMode="single"
                          selection="#{clienteFrm.registro}" rowKey="#{r.id}" >
@@ -67,61 +67,59 @@
                         listener="#{clienteFrm.rowUnselectHandler}"
                         update=":frmPrincipal:tbl :frmPrincipal:growl :frmPrincipal:toolbar"  />
 
-                <p:column headerText="ID" style="width:320px" sortBy="#{r.id}">
+                <p:column headerText="#{msg['etiqueta.Id']}" style="width:320px" sortBy="#{r.id}">
                     <h:outputText value="#{r.id}" />
                 </p:column>
 
-                <p:column headerText="Nombre" sortBy="#{r.nombre}" filterBy="#{r.nombre}" filterMatchMode="contains">
+                <p:column headerText="#{msg['etiqueta.nombre']}" sortBy="#{r.nombre}" filterBy="#{r.nombre}" filterMatchMode="contains">
                     <h:outputText value="#{r.nombre}" />
                 </p:column>
 
-                <p:column headerText="DUI" sortBy="#{r.dui}" filterBy="#{r.dui}" filterMatchMode="contains">
+                <p:column headerText="#{msg['cliente.Dui']}" sortBy="#{r.dui}" filterBy="#{r.dui}" filterMatchMode="contains">
                     <h:outputText value="#{r.dui}" />
                 </p:column>
 
-                <p:column headerText="NIT" sortBy="#{r.nit}" filterBy="#{r.nit}" filterMatchMode="contains">
+                <p:column headerText="#{msg['cliente.Nit']}" sortBy="#{r.nit}" filterBy="#{r.nit}" filterMatchMode="contains">
                     <h:outputText value="#{r.nit}" />
                 </p:column>
 
-                <p:column headerText="Estado" style="width:100px">
-                    <h:outputText value="#{r.activo ? 'Activo' : 'Inactivo'}" />
+                <p:column headerText="#{msg['cliente.estado']}" style="width:100px">
+                    <h:outputText value="#{r.activo ? msg['etiqueta.activo'] : msg['etiqueta.inactivo']}" />
                 </p:column>
             </p:dataTable>
 
             <!-- Panel de Detalle -->
             <h:panelGroup id="pnlDetalle" class="detalle-panel" rendered="#{clienteFrm.pnlDetalle}">
                 <!-- Título del panel -->
-                <h:outputText value="Detalle del Cliente" class="detalle-titulo"/>
+                <h:outputText value="#{msg['cliente.detalle']}" class="detalle-titulo"/>
 
                 <h:panelGrid columns="2" class="form-item">
-                    <p><strong>ID:</strong> #{clienteFrm.registro.id}</p>
-                    <p><strong>Nombre:</strong> #{clienteFrm.registro.nombre}</p>
+                    <p><strong>#{msg['etiqueta.Id']}:</strong> #{clienteFrm.registro.id}</p>
+                    <p><strong>#{msg['etiqueta.nombre']}:</strong> #{clienteFrm.registro.nombre}</p>
                 </h:panelGrid>
 
                 <h:panelGrid columns="2" class="form-item">
-                    <p><strong>DUI:</strong> #{clienteFrm.registro.dui}</p>
-                    <p><strong>NIT:</strong> #{clienteFrm.registro.nit}</p>
+                    <p><strong>#{msg['cliente.Dui']}:</strong> #{clienteFrm.registro.dui}</p>
+                    <p><strong>#{msg['cliente.Nit']}:</strong> #{clienteFrm.registro.nit}</p>
                 </h:panelGrid>
 
-                <p><strong>Estado:</strong> #{clienteFrm.registro.activo ? 'Activo' : 'Inactivo'}</p>
+                <p><strong>#{msg['cliente.estado']}:</strong> #{clienteFrm.registro.activo ? msg['etiqueta.activo'] : msg['etiqueta.inactivo']}</p>
             </h:panelGroup>
 
             <!-- Diálogo Crear/Editar -->
-            <p:dialog id="dlg" header="#{clienteFrm.editionMode ? 'Editar' : 'Nuevo'} Cliente"
+            <p:dialog id="dlg" header="#{clienteFrm.editionMode ? msg['etiqueta.editar'] : msg['etiqueta.nuevo']} #{msg['cliente.cliente']}"
                       widgetVar="dlgVar" modal="true" resizable="true" closable="true" width="520"
                       visible="#{clienteFrm.mostrarFormulario}"
                       styleClass="ui-dialog">
 
                 <h:panelGrid columns="1" columnClasses="w-full" styleClass="gap-2 w-full">
                     <p:messages />
-
-                    <p:inputText value="#{clienteFrm.registro.nombre}" placeholder="Nombre" required="true"
-                                 requiredMessage="El nombre es obligatorio"/>
-
+                    <p:inputText value="#{clienteFrm.registro.nombre}" placeholder="#{msg['etiqueta.nombre']}" required="true"
+                                 requiredMessage="#{msg['cliente.mensaje.nombre']}"/>
                     <p:inputText value="#{clienteFrm.registro.dui}" placeholder="DUI (00000000-0)"
                                  maxlength="10"
                                  required="true"
-                                 requiredMessage="El DUI es obligatorio"/>
+                                 requiredMessage="#{msg['cliente.mensaje.dui']}"/>
 
                     <p:inputText value="#{clienteFrm.registro.nit}" placeholder="NIT (0000-000000-000-0)"
                                  maxlength="17"/>
@@ -136,7 +134,7 @@
                             <ui:param name="section" value="cancelar"/>
                             <ui:param name="bean" value="#{clienteFrm}"/>
                         </ui:include>
-                        <p:commandButton value="#{clienteFrm.editionMode ? 'Guardar cambios' : 'Crear'}"
+                        <p:commandButton value="#{clienteFrm.editionMode ? msg['boton.guardar'] : msg['boton.cancelar']}"
                                          icon="pi pi-check"
                                          actionListener="#{clienteFrm.btnGuardarHandler}"
                                          process=":frmPrincipal:dlg"
@@ -147,7 +145,7 @@
             </p:dialog>
 
             <!-- Confirmación elegante de borrado -->
-            <p:confirmDialog widgetVar="confirmDel" header="Confirmar eliminación" message="¿Eliminar este registro?"
+            <p:confirmDialog widgetVar="confirmDel" header="#{msg['etiqueta.confirmarEliminar']}" message="#{msg['etiqueta.mensajeEliminar']}"
                              icon="pi pi-exclamation-triangle" closable="false"
                              styleClass="ui-dialog">
                 <div class="flex justify-end gap-2">

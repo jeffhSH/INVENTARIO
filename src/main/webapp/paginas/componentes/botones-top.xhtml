@@ -3,7 +3,7 @@
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui">
     <ui:fragment rendered="#{section == 'nuevo'}">
-        <p:commandButton value="Nuevo" icon="pi pi-plus"
+        <p:commandButton value="#{msg['boton.nuevo']}" icon="pi pi-plus"
                          action="#{bean.btnNuevoHandler(r)}"
                          update=":frmPrincipal:dlg"
                          styleClass="p-button p-button-nuevo"
@@ -11,7 +11,7 @@
                          process="@this" immediate="true"/>
     </ui:fragment>
     <ui:fragment rendered="#{section == 'volver'}">
-        <p:commandButton icon="pi pi-arrow-left"  value="VOLVER"
+        <p:commandButton icon="pi pi-arrow-left"  value="#{msg['boton.volver']}"
                          rendered="#{bean.pnlDetalle}"
                          styleClass="p-button p-button-volver"
                          action="#{bean.volver()}"
@@ -19,7 +19,7 @@
     </ui:fragment>
 
     <ui:fragment rendered="#{section == 'modificar'}">
-        <p:commandButton value="Modificar"
+        <p:commandButton value="#{msg['boton.modificar']}"
                          icon="pi pi-pencil"
                          action="#{bean.btnEditarHandler(bean.registro)}"
                          rendered="#{bean.pnlDetalle}"
@@ -29,7 +29,7 @@
     </ui:fragment>
 
     <ui:fragment rendered="#{section == 'eliminar'}">
-        <p:commandButton icon="pi pi-trash" value="Eliminar"
+        <p:commandButton icon="pi pi-trash" value="#{msg['boton.eliminar']}"
                          rendered="#{bean.pnlDetalle}"
                          oncomplete="PF('confirmDel').show()"
                          process="@this"
@@ -37,7 +37,7 @@
     </ui:fragment>
 
     <ui:fragment rendered="#{section == 'guardar'}">
-        <p:commandButton value="#{bean.editionMode ? 'Guardar cambios' : 'Crear'}"
+        <p:commandButton value="#{bean.editionMode ? msg['boton.guardar'] : msg['boton.Crear']}"
                          icon="pi pi-check"
                          actionListener="#{bean.btnGuardarHandler}"
                          process=":frmPrincipal:dlg"
@@ -46,7 +46,7 @@
     </ui:fragment>
 
     <ui:fragment rendered="#{section == 'cancelar'}">
-        <p:commandButton value="Cancelar" icon="pi pi-times"
+        <p:commandButton value="#{msg['boton.cancelar']}" icon="pi pi-times"
                          actionListener="#{bean.btnCancelarHandler}"
                          process="@this"
                          update=":frmPrincipal:panelCompleto,:frmPrincipal:dlg"
@@ -54,12 +54,12 @@
     </ui:fragment>
 
     <ui:fragment rendered="#{section == 'cancelarBorrado'}">
-        <p:commandButton value="Cancelar" type="button" styleClass="p-button-text"
+        <p:commandButton value="#{msg['boton.cancelar']}" type="button" styleClass="p-button-text"
                          onclick="PF('confirmDel').hide()"/>
     </ui:fragment>
 
     <ui:fragment rendered="#{section == 'eliminarDefinitivo'}">
-        <p:commandButton value="Sí, eliminar" icon="pi pi-trash"
+        <p:commandButton value="#{msg['boton.eliminarD']}" icon="pi pi-trash"
                          actionListener="#{bean.btnEliminarHandler(bean.registro)}"
                          update="frmPrincipal"
                          oncomplete="PF('confirmDel').hide();"/>

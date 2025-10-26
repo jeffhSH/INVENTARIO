@@ -20,7 +20,7 @@
                 </p:toolbarGroup>
 
                 <p:toolbarGroup class="toolbar-group-right">
-                    <p:inputText placeholder="Buscar por nombre…" value="#{productoFrm.registro.nombreProducto}"/>
+                    <p:inputText placeholder="#{msg['etiqueta.buscar']}" value="#{productoFrm.registro.nombreProducto}"/>
                     <ui:include src="componentes/botones-top.xhtml">
                         <ui:param name="section" value="nuevo"/>
                         <ui:param name="bean" value="#{productoFrm}"/>
@@ -51,72 +51,69 @@
                              value="#{productoFrm.model}" var="r"
                              lazy="true" paginator="true" rows="10"
                              rowsPerPageTemplate="10,20,50"
-                             currentPageReportTemplate="Mostrando {startRecord}-{endRecord} de {totalRecords}"
+                             currentPageReportTemplate="#{msg['etiqueta.reporte.pagina']}"
                              paginatorPosition="bottom"
                              responsiveLayout="scroll"
                              rowHover="true"
                              rendered="#{!productoFrm.pnlDetalle}"
-                             emptyMessage="No hay registros"
+                             emptyMessage="#{msg['etiqueta.registroNulo']}"
                              styleClass="table-modern"
                              selectionMode="single"
                              selection="#{productoFrm.registro}" rowKey="#{r.id}">
                     <p:ajax event="rowSelect"
                             listener="#{productoFrm.selectionHandler}"
-                            update="frmPrincipal"
-
-                    />
+                            update="frmPrincipal"/>
 
                     <p:ajax event="rowUnselect"
                             listener="#{productoFrm.rowUnselectHandler}"
                             update=":frmPrincipal:tbl :frmPrincipal:growl :frmPrincipal:toolbar :frmPrincipal:tabViewProducto"/>
 
-                    <p:column headerText="ID" style="width:320px" sortBy="#{r.id}">
+                    <p:column headerText="#{msg['etiqueta.Id']}" style="width:320px" sortBy="#{r.id}">
                         <h:outputText value="#{r.id}"/>
                     </p:column>
 
-                    <p:column headerText="Nombre" sortBy="#{r.nombreProducto}" filterBy="#{r.nombreProducto}"
+                    <p:column headerText="#{msg['etiqueta.nombre']}" sortBy="#{r.nombreProducto}" filterBy="#{r.nombreProducto}"
                               filterMatchMode="contains">
                         <h:outputText value="#{r.nombreProducto}"/>
                     </p:column>
 
-                    <p:column headerText="Referencia Externa" sortBy="#{r.referenciaExterna}"
+                    <p:column headerText="#{msg['producto.referencia']}" sortBy="#{r.referenciaExterna}"
                               filterBy="#{r.referenciaExterna}" filterMatchMode="contains">
                         <h:outputText value="#{r.referenciaExterna}"/>
                     </p:column>
 
-                    <p:column headerText="Estado" style="width:100px">
-                        <h:outputText value="#{r.activo ? 'Activo' : 'Inactivo'}"/>
+                    <p:column headerText="#{msg['producto.estado']}" style="width:100px">
+                        <h:outputText value="#{r.activo ? msg['etiqueta.activo'] : msg['etiqueta.inactivo']}"/>
                     </p:column>
-
                 </p:dataTable>
 
                 <p:tabView id="tabViewProducto" rendered="#{productoFrm.pnlDetalle}" cache="false" dynamic="true">
 
                     <!-- Pestaña 1: Información General -->
-                    <p:tab title="Información General">
+                    <p:tab title="#{msg['producto.pestaña.uno']}">
 
                         <h:panelGrid columns="2" class="form-item">
-                            <p><strong>ID:</strong> #{productoFrm.registro.id}</p>
-                            <p><strong>Nombre:</strong> #{productoFrm.registro.nombreProducto}</p>
+                            <p><strong>#{msg['etiqueta.Id']}:</strong> #{productoFrm.registro.id}</p>
+                            <p><strong>#{msg['etiqueta.nombre']}:</strong> #{productoFrm.registro.nombreProducto}</p>
                         </h:panelGrid>
 
                         <h:panelGrid columns="2" class="form-item">
-                            <p><strong>Referencia Externa:</strong></p>
+                            <p><strong>#{msg['producto.referencia']}:</strong></p>
                             <p:inputTextarea value="#{productoFrm.registro.referenciaExterna}" rows="2" cols="30"
                                              disabled="true"/>
                         </h:panelGrid>
 
                         <h:panelGrid columns="2" class="form-item">
-                            <p><strong>Comentarios:</strong></p>
+                            <p><strong>#{msg['producto.comentarios']}:</strong></p>
                             <p:inputTextarea value="#{productoFrm.registro.comentarios}" rows="3" cols="30"
                                              disabled="true"/>
                         </h:panelGrid>
 
-                        <p><strong>Estado:</strong> #{productoFrm.registro.activo ? 'Activo' : 'Inactivo'}</p>
+                        <p><strong>#{msg['producto.estado']}:</strong> #{productoFrm.registro.activo ? msg['etiqueta.activo'] : msg['etiqueta.inactivo']}</p>
                     </p:tab>
 
                     <!-- Pestaña 2: Tipos de Producto -->
-                    <p:tab title="Tipos de Producto" closable="false">
+                    <p:tab title="#{msg['producto.pestaña.dos']}" closable="false">
 
                         <h:panelGroup id="pnlTipos">
                             <h:panelGrid>
@@ -126,9 +123,9 @@
                                              var="relacion"
                                              lazy="true" paginator="true" rows="5"
                                              rowsPerPageTemplate="5,10,20"
-                                             currentPageReportTemplate="Mostrando {startRecord}-{endRecord} de {totalRecords}"
+                                             currentPageReportTemplate="#{msg['etiqueta.reporte.pagina']}"
                                              paginatorPosition="bottom"
-                                             emptyMessage="No hay relaciones producto-tipo registradas"
+                                             emptyMessage="#{msg['producto.mensaje.uno']}"
                                              styleClass="table-modern"
                                              selectionMode="single"
                                              selection="#{productoTipoProductoFrm.registro}"
@@ -138,30 +135,30 @@
                                             listener="#{productoTipoProductoFrm.selectionHandler}"
                                             update="frmPrincipal"/>
 
-                                    <p:column headerText="ID" style="width: 80px;" sortBy="#{relacion.id}">
+                                    <p:column headerText="#{msg['etiqueta.Id']}" style="width: 80px;" sortBy="#{relacion.id}">
                                         <h:outputText value="#{relacion.id}"/>
                                     </p:column>
 
-                                    <p:column headerText="Producto">
+                                    <p:column headerText="#{msg['producto.producto']}">
                                         <h:outputText value="#{productoTipoProductoFrm.getNombreProducto(relacion)}"/>
                                     </p:column>
 
-                                    <p:column headerText="Tipo Producto">
+                                    <p:column headerText="#{msg['menu.tipoProducto']}">
                                         <h:outputText
                                                 value="#{productoTipoProductoFrm.getNombreTipoProducto(relacion)}"/>
                                     </p:column>
 
-                                    <p:column headerText="Fecha Creación" sortBy="#{relacion.fechaCreacion}">
+                                    <p:column headerText="#{msg['ptp.fechaCreacion']}" sortBy="#{relacion.fechaCreacion}">
                                         <h:outputText value="#{relacion.fechaCreacion}">
                                             <f:converter converterId="offsetDateTimeConverter"/>
                                         </h:outputText>
                                     </p:column>
 
-                                    <p:column headerText="Estado" style="width: 100px;">
-                                        <h:outputText value="#{relacion.activo ? 'Activo' : 'Inactivo'}"/>
+                                    <p:column headerText="#{msg['ptp.estado']}" style="width: 100px;">
+                                        <h:outputText value="#{relacion.activo ? msg['etiqueta.activo'] : msg['etiqueta.inactivo']}"/>
                                     </p:column>
 
-                                    <p:column headerText="Observaciones" sortBy="#{relacion.observaciones}">
+                                    <p:column headerText="#{msg['ptp.observaciones']}" sortBy="#{relacion.observaciones}">
                                         <h:outputText value="#{relacion.observaciones}"/>
                                     </p:column>
 
@@ -175,7 +172,7 @@
 
 
                 <!-- Diálogo Crear/Editar -->
-                <p:dialog id="dlg" header="#{productoFrm.editionMode ? 'Editar' : 'Nuevo'} Producto"
+                <p:dialog id="dlg" header="#{productoFrm.editionMode ? msg['etiqueta.editar'] : msg['etiqueta.nuevo']} #{msg['producto.producto']}"
                           widgetVar="dlgVar" modal="true" resizable="true" closable="true" width="520"
                           visible="#{productoFrm.mostrarFormulario}"
                           styleClass="ui-dialog">
@@ -183,15 +180,15 @@
                     <h:panelGrid columns="1" columnClasses="w-full" styleClass="gap-2 w-full">
                         <p:messages/>
 
-                        <p:inputText value="#{productoFrm.registro.nombreProducto}" placeholder="Nombre del Producto"
+                        <p:inputText value="#{productoFrm.registro.nombreProducto}" placeholder="#{msg['producto.titulo.uno']}"
                                      required="true"
-                                     requiredMessage="El nombre del producto es obligatorio"/>
+                                     requiredMessage="#{msg['producto.mensaje.dos']}"/>
 
                         <p:inputTextarea value="#{productoFrm.registro.referenciaExterna}" rows="2" autoResize="true"
-                                         placeholder="Referencia Externa (opcional)"/>
+                                         placeholder="#{msg['producto.titulo.dos']}"/>
 
                         <p:inputTextarea value="#{productoFrm.registro.comentarios}" rows="3" autoResize="true"
-                                         placeholder="Comentarios (opcional)"/>
+                                         placeholder="#{msg['producto.titulo.tres']}"/>
 
                         <h:selectBooleanCheckbox id="chkActivo" value="#{productoFrm.registro.activo}"/>
                         <h:outputLabel for="chkActivo" value="¿Activo?"/>
@@ -210,8 +207,8 @@
                 </p:dialog>
 
                 <!-- Confirmación elegante de borrado -->
-                <p:confirmDialog widgetVar="confirmDel" header="Confirmar eliminación"
-                                 message="¿Eliminar este registro?"
+                <p:confirmDialog widgetVar="confirmDel" header="#{msg['etiqueta.confirmarEliminar']}"
+                                 message="#{msg['etiqueta.mensajeEliminar']}"
                                  icon="pi pi-exclamation-triangle" closable="false"
                                  styleClass="ui-dialog">
                     <div class="flex justify-end gap-2">
