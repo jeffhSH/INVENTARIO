@@ -4,7 +4,6 @@ import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Query;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.Producto;
 
 import java.io.Serializable;
@@ -16,7 +15,7 @@ public class ProductoDAO extends InventarioDefaultDataAccess<Producto> implement
 
     @PersistenceContext(unitName = "inventarioPU")
     private EntityManager em;
-
+  UUID id;
     public ProductoDAO() {
         super(Producto.class);
     }
@@ -45,13 +44,20 @@ public class ProductoDAO extends InventarioDefaultDataAccess<Producto> implement
             }
             // Generar UUID si no existe
             if (registro.getId() == null) {
-                registro.setId(UUID.randomUUID());
+                this.id=UUID.randomUUID();
+                registro.setId(id);
+
             }
 
             em.persist(registro);
         } catch (Exception ex) {
             throw new IllegalStateException("Error al crear el registro", ex);
         }
+
+    }
+
+    public UUID getId() {
+        return this.id;
     }
 }
 

@@ -466,7 +466,7 @@
     }
     /* Estilo general para los diálogos */
     .ui-dialog {
-        background-color: rgba(0, 0, 0, 0.8) !important; /* Fondo oscuro con transparencia */
+        background-color: rgba(0, 0, 0, 0.89) !important; /* Fondo oscuro con transparencia */
         border-radius: 12px; /* Bordes redondeados */
         color: white; /* Texto blanco */
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Sombra suave */
@@ -509,13 +509,23 @@
 
     /* Estilo para los campos del formulario dentro del diálogo */
     .ui-dialog input, .ui-dialog textarea {
-        background-color: #333;
-        color: white;
-        border: 1px solid #f39c12;
+        background-color: #ffffff;
+        color: #0c0c0c;
+        border: 1px solid #43ff98;
         padding: 12px;
         border-radius: 8px;
         width: 100%;
         font-size: 1rem;
+    }
+    .ui-selectonemenu,
+    .ui-selectonemenu-label,
+    .ui-selectonemenu-panel,
+    .ui-selectonemenu-items-wrapper {
+        background-color: #ffffff !important;  /* Fondo blanco */
+        color: #000000 !important;             /* Texto negro para contraste */
+        border: 1px solid #43ff98;    /* Bordes visibles */
+        padding: 2px;
+        box-shadow: none !important;
     }
 
     /* Estilo para los mensajes dentro de los diálogos */

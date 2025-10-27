@@ -5,6 +5,7 @@ import jakarta.ejb.EJB;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control.InventarioDefaultDataAccess;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control.TipoProductoDAO;
@@ -18,7 +19,7 @@ import java.util.logging.Level;
 @ViewScoped
 public class TipoProductoFrm extends DefaultFrm<TipoProducto, Long> implements Serializable {
 
-    @EJB
+    @Inject
     private TipoProductoDAO dao;
 
     private List<TipoProducto> tiposPadre; // Para el combo de tipos padre
@@ -61,6 +62,7 @@ public class TipoProductoFrm extends DefaultFrm<TipoProducto, Long> implements S
     protected TipoProducto crearInstanciaVacia() {
         TipoProducto tipo = new TipoProducto();
         tipo.setActivo(true); // Por defecto activo
+
         return tipo;
     }
 
@@ -162,7 +164,7 @@ public class TipoProductoFrm extends DefaultFrm<TipoProducto, Long> implements S
     // ===== GETTERS Y SETTERS PARA LA VISTA =====
 
     public List<TipoProducto> getTiposPadre() {
-        return tiposPadre;
+        return dao.findTiposPadre();
     }
 
     public void setTiposPadre(List<TipoProducto> tiposPadre) {

@@ -39,7 +39,7 @@ public abstract class DefaultFrm<T, K extends Serializable> implements Serializa
 
 
     /** Cada subclase debe entregar su DAO concreto */
-    //protected abstract Object getDao(); // mantiene flexibilidad en jerarquías de DAO
+    //protected abstract Object getDao();
     protected abstract InventarioDefaultDataAccess<T> getDao();
 
     /** Nombre que se mostrará en la vista (título del formulario) */
@@ -145,9 +145,10 @@ public abstract class DefaultFrm<T, K extends Serializable> implements Serializa
         this.editionMode = false;
         this.estado = ESTADO_CRUD.CREAR;
         this.mostrarFormulario = true;
-        FacesContext.getCurrentInstance().addMessage(null,
-                new FacesMessage(FacesMessage.SEVERITY_INFO, "Nuevo", "Formulario listo"));
-
+        if(this.registro != null) {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Nuevo", "Formulario " + this.nombreBean + " listo"));
+        }
     }
     public void rowUnselectHandler(UnselectEvent event) {
         // Restablece la propiedad editionMode cuando se deselecciona la fila
@@ -167,6 +168,7 @@ public abstract class DefaultFrm<T, K extends Serializable> implements Serializa
                 addMsg(FacesMessage.SEVERITY_ERROR, "Error", "El ID del registro es nulo");
                 return;
             }
+
             this.registro = findById(id);
             this.editionMode = true;
             this.mostrarFormulario = true;
@@ -178,6 +180,10 @@ public abstract class DefaultFrm<T, K extends Serializable> implements Serializa
 
     public void btnGuardarHandler(ActionEvent e) {
         try {
+           if (registro == null) {
+               addMsg(FacesMessage.SEVERITY_WARN, "Atención", "Registro nulo");
+                return;
+           }
             if (!editionMode) {
                 crear(this.registro);
                 addMsg(FacesMessage.SEVERITY_INFO, "Éxito", "Registro creado correctamente");

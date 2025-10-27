@@ -11,6 +11,7 @@ import java.util.List;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control.InventarioDefaultDataAccess;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control.TipoUnidadMedidaDAO;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.TipoUnidadMedida;
+import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.UnidadMedida;
 
 @Named
 @ViewScoped
@@ -19,6 +20,8 @@ public class TipoUnidadMedidaFrm extends DefaultFrm<TipoUnidadMedida, Integer> i
     FacesContext facesContext;
     @Inject
     TipoUnidadMedidaDAO taDao;
+    @Inject
+    private UnidadMedidaFrm unidadMedidaFrm;
 
     private List<TipoUnidadMedida> listaTipoUnidadMedida;
     private Integer proximoId;
@@ -33,29 +36,9 @@ public class TipoUnidadMedidaFrm extends DefaultFrm<TipoUnidadMedida, Integer> i
         return "Tipo De Unidad De Medida";
     }
 
-    @Override
-    protected void inicializar() {
-        try {
-            listaTipoUnidadMedida = taDao.findRange(0, Integer.MAX_VALUE);
-            calcularProximoId();
-        } catch (Exception e) {
-            e.printStackTrace();
-            FacesContext.getCurrentInstance().addMessage(
-                    null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error al cargar datos", e.getMessage())
-            );
-        }
-    }
 
-    private void calcularProximoId() {
-        try {
-            Integer id = taDao.obtenerProximoId();
-            proximoId = (id != null && id > 0) ? id : 1;
-        } catch (Exception e) {
-            e.printStackTrace();
-            proximoId = 1;
-        }
-    }
+
+
 
     // ===== Implementaciones CRUD =====
     @Override
@@ -86,6 +69,7 @@ public class TipoUnidadMedidaFrm extends DefaultFrm<TipoUnidadMedida, Integer> i
         }
         return null;
     }
+
 
     @Override
     protected Integer getId(TipoUnidadMedida entidad) {
@@ -118,7 +102,11 @@ public class TipoUnidadMedidaFrm extends DefaultFrm<TipoUnidadMedida, Integer> i
     }
 
     // ===== GETTERS / SETTERS ESPECÍFICOS =====
-    public List<TipoUnidadMedida> getlistaTipoUnidadMedida() {
+    public List<TipoUnidadMedida> getlistaAtivos() {
+        if (listaTipoUnidadMedida == null) {
+            listaTipoUnidadMedida = taDao.getlistaActivos();
+        }
+
         return listaTipoUnidadMedida;
     }
 
@@ -126,7 +114,5 @@ public class TipoUnidadMedidaFrm extends DefaultFrm<TipoUnidadMedida, Integer> i
         this.listaTipoUnidadMedida = listaTipoUnidadMedida;
     }
 
-    public Integer getProximoId() {
-        return proximoId;
-    }
+
 }

@@ -10,6 +10,10 @@
         <servlet-class>jakarta.faces.webapp.FacesServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
+    <error-page>
+        <exception-type>jakarta.el.PropertyNotFoundException</exception-type>
+        <location>/error.xhtml</location>
+    </error-page>
 
     <!-- Mapeo para .xhtml y .jsf -->
     <servlet-mapping>

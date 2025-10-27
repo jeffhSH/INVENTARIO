@@ -10,28 +10,30 @@
     <ui:define name="content">
         <h:form id="frmPrincipal" update=":frmPrincipal:toolbar">
 
-
             <p:growl id="growl" showDetail="true" life="3000" />
             <!-- Toolbar superior -->
 
             <p:toolbar id="toolbar" class="toolbar-gap">
                 <p:toolbarGroup class="toolbar-center">
-                    <span class="toolbar-title">#{tipoAlmacenFrm.nombreBean}</span>
+                    <span class="toolbar-title">#{unidadMedidaFrm.nombreBean}</span>
                 </p:toolbarGroup>
 
                 <p:toolbarGroup class="toolbar-group-right">
-                    <p:inputText placeholder="Buscar por nombre…" value="#{tipoAlmacenFrm.registro.nombre}" />
+                    <p:inputText placeholder="Buscar por expresión regular…" value="#{unidadMedidaFrm.registro.expresionRegular}" />
                     <p:commandButton value="Nuevo" icon="pi pi-plus"
-                                     action="#{tipoAlmacenFrm.btnNuevoHandler(r)}"
+                                     action="#{unidadMedidaFrm.btnNuevoHandler(r)}"
                                      update=":frmPrincipal:dlg"
                                      styleClass="p-button p-button-nuevo"
-                                     rendered="#{!tipoAlmacenFrm.pnlDetalle}"
-                                     process="@this" immediate="true"/>
+                                     rendered="#{!unidadMedidaFrm.pnlDetalle}"
+                                     process="@this" immediate="true"
+                                     oncomplete="
+                     #{unidadMedidaFrm.registro.setIdTipoUnidadMedida(tipoUnidadMedidaFrm.registro)}"
+                                     />
 
                     <p:commandButton id="btnVOLVER" icon="pi pi-arrow-left"  value="VOLVER"
-                                     rendered="#{tipoAlmacenFrm.pnlDetalle}"
+                                     rendered="#{unidadMedidaFrm.pnlDetalle}"
                                      styleClass="p-button p-button-volver"
-                                     action="#{tipoAlmacenFrm.volver()}"
+                                     action="#{unidadMedidaFrm.volver()}"
                                      update=":frmPrincipal, :frmPrincipal:toolbar" />
                 </p:toolbarGroup>
                 <p:toolbarGroup>
@@ -39,14 +41,14 @@
                     <!-- Botón Modificar -->
                     <p:commandButton id="btnModificar" value="Modificar"
                                      icon="pi pi-pencil"
-                                     action="#{tipoAlmacenFrm.btnEditarHandler(tipoAlmacenFrm.registro)}"
-                                     rendered="#{tipoAlmacenFrm.pnlDetalle}"
+                                     action="#{unidadMedidaFrm.btnEditarHandler(unidadMedidaFrm.registro)}"
+                                     rendered="#{unidadMedidaFrm.pnlDetalle}"
                                      update=":frmPrincipal"
                                      oncomplete="PF('dlgVar').show()"
                                      styleClass="p-button p-button-modificar" />
 
                     <p:commandButton icon="pi pi-trash" value="Eliminar"
-                                     rendered="#{tipoAlmacenFrm.pnlDetalle}"
+                                     rendered="#{unidadMedidaFrm.pnlDetalle}"
                                      oncomplete="PF('confirmDel').show()"
                                      process="@this"
                                      styleClass="p-button p-button-eliminar"
@@ -56,92 +58,105 @@
                 </p:toolbarGroup>
             </p:toolbar>
 
-
             <p:dataTable id="tbl"
-                         value="#{tipoAlmacenFrm.model}" var="r"
+                         value="#{unidadMedidaFrm.model}" var="r"
                          lazy="true" paginator="true" rows="10"
                          rowsPerPageTemplate="10,20,50"
                          currentPageReportTemplate="Mostrando {startRecord}-{endRecord} de {totalRecords}"
                          paginatorPosition="bottom"
                          responsiveLayout="scroll"
                          rowHover="true"
-                         rendered="#{!tipoAlmacenFrm.pnlDetalle}"
+                         rendered="#{!unidadMedidaFrm.pnlDetalle}"
                          emptyMessage="No hay registros"
                          styleClass="table-modern"
                          selectionMode="single"
-                         selection="#{tipoAlmacenFrm.registro}" rowKey="#{r.id}" >
+                         selection="#{unidadMedidaFrm.registro}" rowKey="#{r.id}" >
                 <p:ajax event="rowSelect"
-                        listener="#{tipoAlmacenFrm.selectionHandler}"
+                        listener="#{unidadMedidaFrm.selectionHandler}"
                         update="frmPrincipal"
-
                 />
 
                 <p:ajax event="rowUnselect"
-                        listener="#{tipoAlmacenFrm.rowUnselectHandler}"
+                        listener="#{unidadMedidaFrm.rowUnselectHandler}"
                         update=":frmPrincipal:tbl :frmPrincipal:growl :frmPrincipal:toolbar"  />
 
                 <p:column headerText="ID" style="width:90px" sortBy="#{r.id}">
                     <h:outputText value="#{r.id}" />
                 </p:column>
 
-                <p:column headerText="Nombre" sortBy="#{r.nombre}" filterBy="#{r.nombre}" filterMatchMode="contains">
-                    <h:outputText value="#{r.nombre}" />
+                <p:column headerText="Tipo Unidad" sortBy="#{r.idTipoUnidadMedida.nombre}" filterBy="#{r.idTipoUnidadMedida.nombre}" filterMatchMode="contains">
+                    <h:outputText value="#{r.idTipoUnidadMedida.nombre}" />
                 </p:column>
 
+                <p:column headerText="Equivalencia" sortBy="#{r.equivalencia}">
+                    <h:outputText value="#{r.equivalencia}" />
+                </p:column>
 
-                <!-- panel detalle -->
+                <p:column headerText="Expresión Regular" sortBy="#{r.expresionRegular}" filterBy="#{r.expresionRegular}" filterMatchMode="contains">
+                    <h:outputText value="#{r.expresionRegular}" />
+                </p:column>
+
+                <p:column headerText="Estado" sortBy="#{r.activo}">
+                    <h:outputText value="#{r.activo ? 'Activo' : 'Inactivo'}" />
+                </p:column>
             </p:dataTable>
-            <h:panelGroup>
 
-            </h:panelGroup>
-            <h:panelGroup id="pnlDetalle" class="detalle-panel" rendered="#{tipoAlmacenFrm.pnlDetalle}">
+            <h:panelGroup id="pnlDetalle" class="detalle-panel" rendered="#{unidadMedidaFrm.pnlDetalle}">
                 <!-- Título del panel -->
-                <h:outputText value="Detalle del Almacén" class="detalle-titulo"/>
+                <h:outputText value="Detalle de la Unidad de Medida" class="detalle-titulo"/>
 
                 <h:panelGrid columns="2" class="form-item">
-                    <p><strong>ID:</strong> #{tipoAlmacenFrm.registro.id}</p>
-                    <p><strong>Nombre:</strong> #{tipoAlmacenFrm.registro.nombre}</p>
+                    <p><strong>ID:</strong> #{unidadMedidaFrm.registro.id}</p>
+                    <p><strong>Tipo Unidad:</strong> #{unidadMedidaFrm.registro.idTipoUnidadMedida.nombre}</p>
                 </h:panelGrid>
 
                 <h:panelGrid columns="2" class="form-item">
-                    <p><strong>Observaciones:</strong></p>
-                    <p:inputTextarea value="#{tipoAlmacenFrm.registro.observaciones}" rows="3" cols="30" disabled="true" />
+                    <p><strong>Equivalencia:</strong> #{unidadMedidaFrm.registro.equivalencia}</p>
+                    <p><strong>Expresión Regular:</strong> #{unidadMedidaFrm.registro.expresionRegular}</p>
                 </h:panelGrid>
 
-                <p><strong>Estado:</strong> #{tipoAlmacenFrm.registro.activo ? 'Activo' : 'Inactivo'}</p>
+                <h:panelGrid columns="2" class="form-item">
+                    <p><strong>Comentarios:</strong></p>
+                    <p:inputTextarea value="#{unidadMedidaFrm.registro.comentarios}" rows="3" cols="30" disabled="true" />
+                </h:panelGrid>
+
+                <p><strong>Estado:</strong> #{unidadMedidaFrm.registro.activo ? 'Activo' : 'Inactivo'}</p>
             </h:panelGroup>
-
 
             <!-- Diálogo Crear/Editar -->
-            <p:dialog id="dlg" header="#{tipoAlmacenFrm.editionMode ? 'Editar' : 'Nuevo'} Tipo de Almacén"
+            <p:dialog id="dlg" header="#{unidadMedidaFrm.editionMode ? 'Editar' : 'Nueva'} Unidad de Medida"
                       widgetVar="dlgVar" modal="true" resizable="true" closable="true" width="520"
-                      visible="#{tipoAlmacenFrm.mostrarFormulario}"
+                      visible="#{unidadMedidaFrm.mostrarFormulario}"
                       styleClass="ui-dialog">
 
-                <h:panelGrid columns="1" columnClasses="w-full" style="width: 90%">
+                <h:panelGrid columns="1" columnClasses="w-full" styleClass="gap-2 w-full">
                     <p:messages />
-                    <h:panelGroup rendered="#{!tipoAlmacenFrm.editionMode}">
-                        <small class="text-500">Siguiente ID: #{tipoAlmacenFrm.proximoId}</small>
-                    </h:panelGroup>
 
-                    <p:inputText value="#{tipoAlmacenFrm.registro.nombre}" placeholder="Nombre" required="true"
-                                 requiredMessage="El nombre es obligatorio"/>
+                    <p:inputText value="#{unidadMedidaFrm.registro.idTipoUnidadMedida.id}" placeholder="idTipoUnidadMedida" required="true"
+                                 requiredMessage="idTipoUnidadMedida es obligatorio"/>
 
-                    <p:inputTextarea value="#{tipoAlmacenFrm.registro.observaciones}" rows="3" autoResize="true"
-                                     placeholder="Observaciones (opcional)"/>
+                    <p:inputText value="#{unidadMedidaFrm.registro.equivalencia}" placeholder="Equivalencia">
+                        <f:convertNumber maxFractionDigits="2" minFractionDigits="2" />
+                    </p:inputText>
 
-                    <h:selectBooleanCheckbox id="chkActivo" value="#{tipoAlmacenFrm.registro.activo}"/>
+                    <p:inputText value="#{unidadMedidaFrm.registro.expresionRegular}" placeholder="Expresión Regular" required="true"
+                                 requiredMessage="La expresión regular es obligatoria"/>
+
+                    <p:inputTextarea value="#{unidadMedidaFrm.registro.comentarios}" rows="3" autoResize="true"
+                                     placeholder="Comentarios (opcional)"/>
+
+                    <h:selectBooleanCheckbox id="chkActivo" value="#{unidadMedidaFrm.registro.activo}"/>
                     <h:outputLabel for="chkActivo" value="¿Activo?" />
 
                     <div class="flex justify-end gap-2 mt-3">
                         <p:commandButton value="Cancelar" icon="pi pi-times"
-                                         actionListener="#{tipoAlmacenFrm.btnCancelarHandler}"
+                                         actionListener="#{unidadMedidaFrm.btnCancelarHandler}"
                                          process="@this"
                                          update=":frmPrincipal:panelCompleto,:frmPrincipal:dlg"
                                          styleClass="p-button-text"/>
-                        <p:commandButton value="#{tipoAlmacenFrm.editionMode ? 'Guardar cambios' : 'Crear'}"
+                        <p:commandButton value="#{unidadMedidaFrm.editionMode ? 'Guardar cambios' : 'Crear'}"
                                          icon="pi pi-check"
-                                         actionListener="#{tipoAlmacenFrm.btnGuardarHandler}"
+                                         actionListener="#{unidadMedidaFrm.btnGuardarHandler}"
                                          process=":frmPrincipal:dlg"
                                          update=":frmPrincipal"
                                          oncomplete="if (!args.validationFailed) PF('dlgVar').hide(); var btn = document.getElementById('frmPrincipal:btnVOLVER'); if(btn) btn.click();"/>
@@ -157,7 +172,7 @@
                     <p:commandButton value="Cancelar" type="button" styleClass="p-button-text"
                                      onclick="PF('confirmDel').hide()"/>
                     <p:commandButton value="Sí, eliminar" icon="pi pi-trash"
-                                     actionListener="#{tipoAlmacenFrm.btnEliminarHandler(tipoAlmacenFrm.registro)}"
+                                     actionListener="#{unidadMedidaFrm.btnEliminarHandler(unidadMedidaFrm.registro)}"
                                      update="frmPrincipal"
                                      oncomplete="PF('confirmDel').hide();"/>
                 </div>

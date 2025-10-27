@@ -54,7 +54,7 @@ public class TipoProductoDAO extends InventarioDefaultDataAccess<TipoProducto> {
      */
     public List<TipoProducto> findTiposPadre() {
         return em.createQuery(
-                        "SELECT t FROM TipoProducto t WHERE t.idTipoProductoPadre IS NULL ORDER BY t.nombre",
+                        "SELECT t FROM TipoProducto t WHERE t.idTipoProductoPadre IS NULL AND t.activo = true ORDER BY t.nombre",
                         TipoProducto.class)
                 .getResultList();
     }

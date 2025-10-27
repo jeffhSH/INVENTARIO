@@ -5,9 +5,12 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
+import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.TipoProducto;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.TipoUnidadMedida;
+import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.UnidadMedida;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Stateless
 @LocalBean
@@ -31,30 +34,15 @@ public class TipoUnidadMedidaDAO extends InventarioDefaultDataAccess<TipoUnidadM
         return em;
     }
 
+   public List<TipoUnidadMedida>getlistaActivos(){
 
-    public Integer obtenerProximoId() {
-        try {
-            EntityManager em = getEntityManager();
+       return em.createQuery(
+                       "SELECT t FROM TipoUnidadMedida t WHERE t.activo =true ORDER BY t.nombre",
+                       TipoUnidadMedida.class)
+               .getResultList();
 
-            if (em != null) {
-                // Obtener el máximo ID actual de la tabla
-                Query maxQuery = em.createQuery(
-                        "SELECT MAX(u.id) FROM TipoUnidadMedida u"
-                );
-                Integer maxId = (Integer) maxQuery.getSingleResult();
-                System.out.println("DEBUG: Max ID actual = " + maxId);
 
-                if (maxId != null && maxId > 0) {
-                    return maxId + 1;
-                }
-            }
-            return 1;
-        } catch (Exception e) {
-            System.out.println("DEBUG: Error obteniendo próximo ID: " + e.getMessage());
-            e.printStackTrace();
-            return 1;
-        }
-    }
+   }
 }
 
 

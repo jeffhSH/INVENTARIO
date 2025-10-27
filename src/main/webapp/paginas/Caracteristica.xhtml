@@ -1,0 +1,187 @@
+   <!DOCTYPE html>
+   <html xmlns="http://www.w3.org/1999/xhtml"
+         xmlns:h="http://xmlns.jcp.org/jsf/html"
+         xmlns:f="http://xmlns.jcp.org/jsf/core"
+         xmlns:p="http://primefaces.org/ui"
+         xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+   <ui:composition template="template.xhtml">
+
+      <ui:define name="content">
+         <h:form id="frmPrincipal" update=":frmPrincipal:toolbar">
+
+            <p:growl id="growl" showDetail="true" life="3000" />
+
+            <!-- Toolbar superior -->
+            <p:toolbar id="toolbar" class="toolbar-gap">
+               <p:toolbarGroup class="toolbar-center">
+                  <span class="toolbar-title">#{caracteristicaFrm.nombreBean}</span>
+               </p:toolbarGroup>
+
+               <p:toolbarGroup class="toolbar-group-right">
+                  <p:inputText placeholder="Buscar por nombre…" value="#{caracteristicaFrm.registro.nombre}" />
+                  <p:commandButton value="Nuevo" icon="pi pi-plus"
+                                   action="#{caracteristicaFrm.btnNuevoHandler(r)}"
+                                   update=":frmPrincipal:dlg"
+                                   styleClass="p-button p-button-nuevo"
+                                   rendered="#{!caracteristicaFrm.pnlDetalle}"
+                                   process="@this" immediate="true"/>
+
+                  <p:commandButton id="btnVOLVER" icon="pi pi-arrow-left"  value="VOLVER"
+                                   rendered="#{caracteristicaFrm.pnlDetalle}"
+                                   styleClass="p-button p-button-volver"
+                                   action="#{caracteristicaFrm.volver()}"
+                                   update=":frmPrincipal, :frmPrincipal:toolbar" />
+               </p:toolbarGroup>
+               <p:toolbarGroup>
+                  <!-- Botón Modificar -->
+
+               </p:toolbarGroup>
+            </p:toolbar>
+
+            <div class="content">
+               <!-- Tabla de características -->
+               <p:dataTable id="tbl"
+                            value="#{caracteristicaFrm.model}" var="r"
+                            lazy="true" paginator="true" rows="10"
+                            rowsPerPageTemplate="10,20,50"
+                            currentPageReportTemplate="Mostrando {startRecord}-{endRecord} de {totalRecords}"
+                            paginatorPosition="bottom"
+                            responsiveLayout="scroll"
+                            rowHover="true"
+                            rendered="#{!caracteristicaFrm.pnlDetalle}"
+                            emptyMessage="No hay registros"
+                            styleClass="table-modern"
+                            selectionMode="single"
+                            selection="#{caracteristicaFrm.registro}" rowKey="#{r.id}" >
+                  <p:ajax event="rowSelect"
+                          listener="#{caracteristicaFrm.selectionHandler}"
+                          update="frmPrincipal" />
+
+                  <p:ajax event="rowUnselect"
+                          listener="#{caracteristicaFrm.rowUnselectHandler}"
+                          update=":frmPrincipal:tbl :frmPrincipal:growl :frmPrincipal:toolbar" />
+
+                  <p:column headerText="ID" style="width:100px" sortBy="#{r.id}">
+                     <h:outputText value="#{r.id}" />
+                  </p:column>
+
+                  <p:column headerText="Nombre" sortBy="#{r.nombre}" filterBy="#{r.nombre}" filterMatchMode="contains">
+                     <h:outputText value="#{r.nombre}" />
+                  </p:column>
+
+                  <p:column headerText="Tipo Unidad Medida" sortBy="#{r.idTipoUnidadMedida.id}" filterBy="#{r.idTipoUnidadMedida.id}" filterMatchMode="contains">
+                     <h:outputText value="#{r.idTipoUnidadMedida.id}" />
+                  </p:column>
+
+                  <p:column headerText="Estado" style="width:100px">
+                     <h:outputText value="#{r.activo ? 'Activo' : 'Inactivo'}" />
+                  </p:column>
+
+                  <p:column headerText="Descripción" sortBy="#{r.descripcion}" filterBy="#{r.descripcion}" filterMatchMode="contains">
+                     <h:outputText value="#{r.descripcion}" />
+                  </p:column>
+               </p:dataTable>
+
+               <!-- Panel de detalle -->
+               <h:panelGroup id="pnlDetalle" rendered="#{caracteristicaFrm.pnlDetalle}">
+                  <p:commandButton id="btnModificar" value="Modificar"
+                                   icon="pi pi-pencil"
+                                   action="#{caracteristicaFrm.btnEditarHandler(caracteristicaFrm.registro)}"
+                                   rendered="#{caracteristicaFrm.pnlDetalle}"
+                                   update=":frmPrincipal:dlg"
+                                   oncomplete="PF('dlgVar').show()"
+                                   styleClass="p-button p-button-modificar" />
+
+                  <p:commandButton icon="pi pi-trash" value="Eliminar"
+                                   rendered="#{caracteristicaFrm.pnlDetalle}"
+                                   oncomplete="PF('confirmDel').show()"
+                                   process="@this"
+                                   styleClass="p-button p-button-eliminar" />
+                  <div class="detail-panel">
+                     <h3>Detalle de Característica</h3>
+
+                     <h:panelGrid columns="2" class="">
+                        <p><strong>ID:</strong> #{caracteristicaFrm.registro.id}</p>
+                        <p><strong>Nombre:</strong> #{caracteristicaFrm.registro.nombre}</p>
+                     </h:panelGrid>
+
+                     <h:panelGrid columns="2" class="">
+                        <p><strong>Tipo Unidad Medida:</strong> #{caracteristicaFrm.registro.idTipoUnidadMedida.id}</p>
+                        <p><strong>Estado:</strong> #{caracteristicaFrm.registro.activo ? 'Activo' : 'Inactivo'}</p>
+                     </h:panelGrid>
+
+                     <h:panelGrid columns="1" class="form-item">
+                        <p><strong>Descripción:</strong></p>
+                        <p:inputTextarea value="#{caracteristicaFrm.registro.descripcion}" rows="3" cols="50" disabled="true" />
+                     </h:panelGrid>
+                  </div>
+               </h:panelGroup>
+
+               <!-- Diálogo Crear/Editar -->
+               <p:dialog id="dlg" header="#{caracteristicaFrm.editionMode ? 'Editar' : 'Nueva'} Característica"
+                         widgetVar="dlgVar" modal="true" resizable="true" closable="true" width="400"
+                         visible="#{caracteristicaFrm.mostrarFormulario}">
+
+                  <h:panelGrid columns="2" style="width: 90%;" cellpadding="2">
+
+                     <p:outputLabel for="nombre" value="Nombre:" />
+                     <p:inputText id="nombre" value="#{caracteristicaFrm.registro.nombre}"
+                                  placeholder="Nombre" required="true" style="width: 100%"/>
+
+                     <p:outputLabel for="tipoUnidad" value="Tipo Unidad Medida:" />
+                     <p:selectOneMenu id="tipoUnidad"
+                             value="#{caracteristicaFrm.registro.idTipoUnidadMedida}"
+                                      converter="tipoUnidadMedidaConverter"
+                                      style="width: 100%">
+                        <f:selectItem itemLabel="#{caracteristicaFrm.editionMode and caracteristicaFrm.registro.idTipoUnidadMedida != null ? caracteristicaFrm.registro.idTipoUnidadMedida.nombre : 'Select One'}"
+                                      itemValue="#{caracteristicaFrm.editionMode and caracteristicaFrm.registro.idTipoUnidadMedida != null ? caracteristicaFrm.registro.idTipoUnidadMedida : null}"
+                                      noSelectionOption="true" />
+                        <f:selectItems value="#{tipoUnidadMedidaFrm.getlistaAtivos()}"
+                                       var="tipo"
+                                       itemLabel="#{tipo.nombre}"
+                                       itemValue="#{tipo}" />
+                     </p:selectOneMenu>
+
+                     <p:outputLabel for="descripcion" value="Descripción:" />
+                     <p:inputTextarea id="descripcion" value="#{caracteristicaFrm.registro.descripcion}"
+                                      rows="2" placeholder="Descripción" style="width: 100%"/>
+
+                     <p:outputLabel for="activo" value="Activo:" />
+                     <h:selectBooleanCheckbox id="activo" value="#{caracteristicaFrm.registro.activo}"/>
+
+                  </h:panelGrid>
+
+                  <div class="flex justify-end gap-2 mt-3">
+                     <p:commandButton value="Cancelar" icon="pi pi-times"
+                                      actionListener="#{caracteristicaFrm.btnCancelarHandler}"
+                                      process="@this"
+                                      update=":frmPrincipal"
+                                      styleClass="p-button-text"/>
+                     <p:commandButton value="#{caracteristicaFrm.editionMode ? 'Guardar' : 'Crear'}"
+                                      icon="pi pi-check"
+                                      actionListener="#{caracteristicaFrm.btnGuardarHandler}"
+                                      process=":frmPrincipal:dlg"
+                                      update=":frmPrincipal"
+                                      oncomplete="if (!args.validationFailed) PF('dlgVar').hide();"/>
+                  </div>
+               </p:dialog>
+
+               <!-- Confirmación elegante de borrado -->
+               <p:confirmDialog widgetVar="confirmDel" header="Confirmar eliminación" message="¿Eliminar este registro?"
+                                icon="pi pi-exclamation-triangle" closable="false"
+                                styleClass="ui-dialog">
+                  <div class="flex justify-end gap-2">
+                     <p:commandButton value="Cancelar" type="button" styleClass="p-button-text"
+                                      onclick="PF('confirmDel').hide()"/>
+                     <p:commandButton value="Sí, eliminar" icon="pi pi-trash"
+                                      actionListener="#{caracteristicaFrm.btnEliminarHandler(caracteristicaFrm.registro)}"
+                                      update="frmPrincipal"
+                                      oncomplete="PF('confirmDel').hide();"/>
+                  </div>
+               </p:confirmDialog>
+            </div>
+         </h:form>
+      </ui:define>
+   </ui:composition>
+   </html>

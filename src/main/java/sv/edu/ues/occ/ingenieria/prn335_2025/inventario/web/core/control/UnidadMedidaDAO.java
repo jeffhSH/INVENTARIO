@@ -1,5 +1,7 @@
 package sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control;
 
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -10,9 +12,10 @@ import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.UnidadMe
 
 import java.io.Serializable;
 import java.util.List;
-
+@Stateless
+@LocalBean
 public class UnidadMedidaDAO extends InventarioDefaultDataAccess<UnidadMedida> implements Serializable {
-    @PersistenceContext(unitName="InventarioPU")
+    @PersistenceContext(unitName="inventarioPU")
     private EntityManager em;
 
     public UnidadMedidaDAO() {super(UnidadMedida.class);}
@@ -59,6 +62,13 @@ public class UnidadMedidaDAO extends InventarioDefaultDataAccess<UnidadMedida> i
         return em.createQuery(cq).getSingleResult();
     }
 
-
+    public List<UnidadMedida> buscarPorTipo(Integer idTipoU){
+        if (idTipoU == null) {
+            throw new IllegalArgumentException("ID TipoProducto no puede ser nulo");
+        }
+        EntityManager em = getEntityManager();
+        return em.createQuery("SELECT ud FROM UnidadMedida ud WHERE ud.idTipoUnidadMedida.id=:idTipoU", UnidadMedida.class)
+                .setParameter("idTipoU",idTipoU).getResultList();
+    }
 
 }

@@ -11,7 +11,7 @@ import java.io.Serializable;
 import java.util.List;
 
 public class AlmacenDAO extends InventarioDefaultDataAccess<Almacen> implements Serializable {
-    @PersistenceContext(unitName = "InventarioPU")
+    @PersistenceContext(unitName = "inventarioPU")
     private EntityManager em;
 
 
