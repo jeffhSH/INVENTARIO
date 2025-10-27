@@ -28,6 +28,7 @@ public class TipoProductoFrm extends DefaultFrm<TipoProducto, Long> implements S
     @Override
     protected void initDefaultFrm() {
         super.initDefaultFrm();
+        cargarTiposPadre();
     }
 
     @Override
@@ -122,7 +123,7 @@ public class TipoProductoFrm extends DefaultFrm<TipoProducto, Long> implements S
     }
 
     @Override
-    protected TipoProducto findById(Long id) {
+    public TipoProducto findById(Long id) {
         return dao.findById(id);
     }
 
