@@ -179,6 +179,7 @@ public abstract class DefaultFrm<T, K extends Serializable> implements Serializa
     }
 
     public void btnGuardarHandler(ActionEvent e) {
+
         try {
            if (registro == null) {
                addMsg(FacesMessage.SEVERITY_WARN, "Atención", "Registro nulo");

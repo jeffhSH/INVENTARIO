@@ -19,7 +19,7 @@
             </p:toolbarGroup>
 
             <p:toolbarGroup class="toolbar-group-right">
-               <p:inputText placeholder="Buscar por nombre…" value="#{tipoProductoFrm.registro.nombre}" />
+
                <p:commandButton value="Nuevo" icon="pi pi-plus"
                                 action="#{tipoProductoFrm.btnNuevoHandler(r)}"
                                 update=":frmPrincipal:dlg"
@@ -130,13 +130,17 @@
             visible="#{tipoProductoFrm.mostrarFormulario}"
             width="520">
 
-            <p:panelGrid columns="2" columnClasses="col-4,col-8" styleClass="w-full" layout="grid" >
-               <p:outputLabel for="nombre" value="Nombre:*" />
+               <h:panelGrid columns="2" style="width: 90%;" cellpadding="2">
+
+               <p:outputLabel for="nombre" value="Nombre:" />
                <p:inputText id="nombre" value="#{tipoProductoFrm.registro.nombre}" required="true" />
 
                <p:outputLabel for="tipoProducto" value="Tipo padre:" />
                <p:selectOneMenu id="tipoProducto"
-                                value="#{tipoProductoFrm.registro.idTipoProductoPadre}">
+                                value="#{tipoProductoFrm.registro.idTipoProductoPadre}"
+
+                                style="width: 100%">
+
                   <f:selectItem itemLabel="Seleccione..." itemValue="#{null}" noSelectionOption="true"/>
                   <f:selectItems value="#{tipoProductoFrm.tiposPadre}"
                                  var="tipo" itemLabel="#{tipo.nombre}" itemValue="#{tipo}"/>
@@ -147,14 +151,14 @@
 
                <p:outputLabel for="activo" value="Activo:" />
                <h:selectBooleanCheckbox id="activo" value="#{tipoProductoFrm.registro.activo}"/>
-            </p:panelGrid>
+            </h:panelGrid>
 
             <div class="flex justify-end gap-2 mt-3">
                <p:commandButton value="Cancelar" icon="pi pi-times"
                                 actionListener="#{tipoProductoFrm.btnCancelarHandler}"
                                 process="@this" update=":frmPrincipal" styleClass="p-button-text"/>
                <p:commandButton value="#{tipoProductoFrm.editionMode ? 'Guardar' : 'Crear'}" icon="pi pi-check"
-                                actionListener="#{tipoProductoFrm.btnGuardarHandler}"
+                                action="#{tipoProductoFrm.btnGuardarHandler}"
                                 process=":frmPrincipal:dlg" update=":frmPrincipal"
                                 oncomplete="if (!args.validationFailed) PF('dlgVar').hide();"/>
             </div>
