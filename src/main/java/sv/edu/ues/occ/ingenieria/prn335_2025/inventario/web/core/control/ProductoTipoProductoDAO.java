@@ -3,6 +3,7 @@ package sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.Cliente;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.ProductoTipoProducto;
 
 import java.util.List;
@@ -13,6 +14,12 @@ public class ProductoTipoProductoDAO extends InventarioDefaultDataAccess<Product
 
     @PersistenceContext(unitName = "inventarioPU")
     private EntityManager em;
+
+    // Constructor para testing (Mockito)
+    public ProductoTipoProductoDAO(EntityManager em) {
+        super(ProductoTipoProducto.class);
+        this.em = em;
+    }
 
     public ProductoTipoProductoDAO() {
         super(ProductoTipoProducto.class);
