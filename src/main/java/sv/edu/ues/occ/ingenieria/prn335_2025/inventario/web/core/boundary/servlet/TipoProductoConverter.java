@@ -32,7 +32,7 @@ public class TipoProductoConverter implements Converter<TipoProducto> {
                     .getValue(context.getELContext());
 
             if (bean != null) {
-                List<TipoProducto> items = bean.getTiposPadre(); // O el método que uses para obtener la lista
+                List<TipoProducto> items = bean.getTiposPadre();
                 if (items != null) {
                     for (TipoProducto item : items) {
                         if (item.getId().equals(id)) {

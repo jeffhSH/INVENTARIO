@@ -19,7 +19,7 @@
             </p:toolbarGroup>
 
             <p:toolbarGroup class="toolbar-group-right">
-
+               <p:inputText placeholder="Buscar por nombre…" value="#{tipoProductoFrm.registro.nombre}" />
                <p:commandButton value="Nuevo" icon="pi pi-plus"
                                 action="#{tipoProductoFrm.btnNuevoHandler(r)}"
                                 update=":frmPrincipal:dlg"
@@ -117,54 +117,71 @@
                </div>
             </h:panelGroup>
 
-
+            <!-- Diálogo Crear/Editar -->
             <p:dialog id="dlg"
                       header="#{tipoProductoFrm.editionMode ? 'Editar' : 'Nuevo'} Tipo de Producto"
                       widgetVar="dlgVar"
                       modal="true"
                       resizable="true"
-                      draggable="false"
-                      responsive="true"
-                      appendTo="@(body)"
-                      styleClass="p-fluid"
-            visible="#{tipoProductoFrm.mostrarFormulario}"
-            width="520">
+                      closable="true"
+                      width="500"
+                      visible="#{tipoProductoFrm.mostrarFormulario}">
 
-               <h:panelGrid columns="2" style="width: 90%;" cellpadding="2">
+               <h:panelGrid columns="2" style="width: 100%;" columnClasses="label,component" cellpadding="5">
 
-               <p:outputLabel for="nombre" value="Nombre:" />
-               <p:inputText id="nombre" value="#{tipoProductoFrm.registro.nombre}" required="true" />
+                  <p:outputLabel for="nombre" value="Nombre: *" />
+                  <p:inputText id="nombre"
+                               value="#{tipoProductoFrm.registro.nombre}"
+                               placeholder="Ingrese el nombre"
+                               required="true"
+                               requiredMessage="El nombre es obligatorio"
+                               style="width: 100%"/>
 
-               <p:outputLabel for="tipoProducto" value="Tipo padre:" />
-               <p:selectOneMenu id="tipoProducto"
-                                value="#{tipoProductoFrm.registro.idTipoProductoPadre}"
+                  <p:outputLabel for="tipoProducto" value="Tipo padre:" />
+                  <p:selectOneMenu id="tipoProducto"
+                                   value="#{tipoProductoFrm.registro.idTipoProductoPadre}"
+                                   converter="tipoProductoConverter"
+                                   style="width: 100%">
+                     <f:selectItem itemLabel="-- Seleccione --"
+                                   itemValue="#{null}" />
+                     <f:selectItems value="#{tipoProductoFrm.tiposPadre}"
+                                    var="tipo"
+                                    itemLabel="#{tipo.nombre}"
+                                    itemValue="#{tipo.idTipoProductoPadre}" />
+                  </p:selectOneMenu>
 
-                                style="width: 100%">
+                  <p:outputLabel for="comentarios" value="Comentarios:" />
+                  <p:inputTextarea id="comentarios"
+                                   value="#{tipoProductoFrm.registro.comentarios}"
+                                   rows="3"
+                                   placeholder="Comentarios opcionales"
+                                   style="width: 100%"/>
 
-                  <f:selectItem itemLabel="Seleccione..." itemValue="#{null}" noSelectionOption="true"/>
-                  <f:selectItems value="#{tipoProductoFrm.tiposPadre}"
-                                 var="tipo" itemLabel="#{tipo.nombre}" itemValue="#{tipo}"/>
-               </p:selectOneMenu>
+                  <p:outputLabel for="activo" value="Activo:" />
+                  <h:selectBooleanCheckbox id="activo"
+                                           value="#{tipoProductoFrm.registro.activo}"
+                                           style="margin-top: 8px;"/>
 
-               <p:outputLabel for="comentarios" value="Comentarios:" />
-               <p:inputTextarea id="comentarios" value="#{tipoProductoFrm.registro.comentarios}" rows="3" />
+               </h:panelGrid>
 
-               <p:outputLabel for="activo" value="Activo:" />
-               <h:selectBooleanCheckbox id="activo" value="#{tipoProductoFrm.registro.activo}"/>
-            </h:panelGrid>
+               <div class="flex justify-end gap-2 mt-3">
+                  <p:commandButton value="Cancelar"
+                                   icon="pi pi-times"
+                                   action="#{tipoProductoFrm.btnCancelarHandler}"
+                                   process="@this"
+                                   update=":frmPrincipal"
+                                   styleClass="p-button-text"/>
 
-            <div class="flex justify-end gap-2 mt-3">
-               <p:commandButton value="Cancelar" icon="pi pi-times"
-                                actionListener="#{tipoProductoFrm.btnCancelarHandler}"
-                                process="@this" update=":frmPrincipal" styleClass="p-button-text"/>
-               <p:commandButton value="#{tipoProductoFrm.editionMode ? 'Guardar' : 'Crear'}" icon="pi pi-check"
-                                action="#{tipoProductoFrm.btnGuardarHandler}"
-                                process=":frmPrincipal:dlg" update=":frmPrincipal"
-                                oncomplete="if (!args.validationFailed) PF('dlgVar').hide();"/>
-            </div>
-         </p:dialog>
+                  <p:commandButton value="#{tipoProductoFrm.editionMode ? 'Guardar' : 'Crear'}"
+                                   icon="pi pi-check"
+                                   actionListener="#{tipoProductoFrm.btnGuardarHandler}"
+                                   process=":frmPrincipal:dlg"
+                                   update=":frmPrincipal"
+                                   oncomplete="if (!args.validationFailed) PF('dlgVar').hide();"/>
+               </div>
+            </p:dialog>
 
-         <!-- Confirmación elegante de borrado -->
+            <!-- Confirmación elegante de borrado -->
             <p:confirmDialog widgetVar="confirmDel" header="Confirmar eliminación" message="¿Eliminar este registro?"
                              icon="pi pi-exclamation-triangle" closable="false"
                              styleClass="ui-dialog">
@@ -174,6 +191,7 @@
                   <p:commandButton value="Sí, eliminar" icon="pi pi-trash"
                                    actionListener="#{tipoProductoFrm.btnEliminarHandler(tipoProductoFrm.registro)}"
                                    update="frmPrincipal"
+                                   immediate="true"
                                    oncomplete="PF('confirmDel').hide();"/>
                </div>
             </p:confirmDialog>
