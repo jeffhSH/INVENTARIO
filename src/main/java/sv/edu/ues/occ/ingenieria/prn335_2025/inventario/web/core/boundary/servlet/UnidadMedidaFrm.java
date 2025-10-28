@@ -25,8 +25,12 @@ public class UnidadMedidaFrm extends DefaultFrm<UnidadMedida, Integer> implement
     }
     @Inject
     private UnidadMedidaDAO taDao;
-
+    @Inject
+    private TipoUnidadMedidaFrm tipoUnidadMedidaFrm;
     private List<UnidadMedida> listaUnidadMedida;
+
+    @Inject
+    private TipoUnidadMedidaDAO tipoUnidadMedidaDAO;
 
 
     @Override
@@ -53,26 +57,39 @@ public class UnidadMedidaFrm extends DefaultFrm<UnidadMedida, Integer> implement
         }
     }
     @PostConstruct
-    public void init() {
-        if (this.registro == null) {
-            this.registro = new UnidadMedida();
+    @Override
+    protected void initDefaultFrm() {
+        super.initDefaultFrm();
+        if (getRegistro() == null) {
+            setRegistro(crearInstanciaVacia());
         }
+    }
+    @Override
+    public UnidadMedida getRegistro() {
+        if (super.getRegistro() == null) {
+            setRegistro(crearInstanciaVacia());
+        }
+        return super.getRegistro();
+    }
+    public  List<UnidadMedida> getListaCompleta(){
+        return taDao.getListaCompleta();
     }
 
     // ===== Implementaciones CRUD =====
     @Override
     protected UnidadMedida crearInstanciaVacia() {
         UnidadMedida unidadMedida = new UnidadMedida();
-        unidadMedida.setIdTipoUnidadMedida(new TipoUnidadMedida());
+
+        if (tipoUnidadMedidaFrm.getRegistro() != null) {
+            TipoUnidadMedida tipoPersistido = tipoUnidadMedidaDAO.findById(tipoUnidadMedidaFrm.getRegistro().getId());
+            unidadMedida.setIdTipoUnidadMedida(tipoPersistido);
+            System.out.println("✅ Tipo asignado en crearInstanciaVacia: " + tipoPersistido.getNombre());
+        }
+
         return unidadMedida;
     }
 
-    public void btnNuevoHandler() {
-        this.registro = crearInstanciaVacia();
-        this.editionMode = false;
-        this.estado = ESTADO_CRUD.CREAR;
-        this.mostrarFormulario = true;
-    }
+
 
     public void setTipoUnidadMedida(TipoUnidadMedida tipo) {
         if (this.registro != null && tipo != null) {

@@ -71,6 +71,7 @@ public class CaracteristicaFrm extends DefaultFrm<Caracteristica, Integer>implem
         return Caracteristica;
     }
 
+
     // ===== Implementaciones CRUD =====
 
     @Override
@@ -80,6 +81,10 @@ public class CaracteristicaFrm extends DefaultFrm<Caracteristica, Integer>implem
         }
         return null;
     }
+public List<Caracteristica> getListaCompleta() {
+    return taDao.getListaCompleta();
+}
+
 
     @Override
     protected Caracteristica getIdByText(String id) {

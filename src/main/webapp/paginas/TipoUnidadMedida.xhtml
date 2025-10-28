@@ -160,14 +160,14 @@
 
                   </p:dataTable>
                   <p:commandButton value="Nueva Unidad de Medida" icon="pi pi-plus"
-                                   actionListener="#{unidadMedidaFrm.btnNuevoHandler(f)}"
+                                   actionListener="#{unidadMedidaFrm.btnNuevoHandler(z)}"
                                    process="@this"
-                                   update=":frmPrincipal"
+                                   update=":frmPrincipal:pnlDetalle"
 
                                    styleClass="p-button p-button-nuevo"/>
                <!-- dialog de crear Unidad de medida-->
                   <p:dialog id="dlgU" header="Nueva Unidad de Unidad de Medida"
-                            widgetVar="dlgVar1" modal="true" resizable="false" closable="true" width="520"
+                            widgetVar="dlgU" modal="true" resizable="false" closable="true" width="520"
                             visible="#{unidadMedidaFrm.mostrarFormulario}"
                             styleClass="ui-dialog">
 
@@ -175,8 +175,8 @@
                         <p:messages />
 
                         <h:panelGrid columns="2" styleClass="align-items-center">
-                           <p:inputText value="#{unidadMedidaFrm.registro.idTipoUnidadMedida.id}" placeholder="ID Tipo Unidad de Medida"
-                           />
+                           <p:outputLabel value="ID Tipo Unidad de Medida:" />
+                           <h:outputText value="#{tipoUnidadMedidaFrm.registro.id}" />
                         </h:panelGrid>
 
 
@@ -208,8 +208,8 @@
                                             styleClass="p-button-text"/>
                            <p:commandButton value="Crear Unidad de Medida"
                                             icon="pi pi-check"
-                                            action="#{unidadMedidaFrm.btnGuardarHandler}"
-                                            process=":frmPrincipal"
+                                            action="#{unidadMedidaFrm.btnGuardarHandler(x)}"
+                                            process=":frmPrincipal:pnlDetalle"
                                             update=":frmPrincipal:growl"
                                             oncomplete=" PF('dlgVar1').hide();"/>
                         </div>
@@ -252,7 +252,7 @@
                                       styleClass="p-button-text"/>
                      <p:commandButton value="#{tipoUnidadMedidaFrm.editionMode ? 'Guardar cambios' : 'Crear'}"
                                       icon="pi pi-check"
-                                      actionListener="#{tipoUnidadMedidaFrm.btnGuardarHandler}"
+                                      action="#{tipoUnidadMedidaFrm.btnGuardarHandler}"
                                       process=":frmPrincipal:dlg"
                                       update=":frmPrincipal"
                                       oncomplete="if (!args.validationFailed) PF('dlgVar1').hide();"/>

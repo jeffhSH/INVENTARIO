@@ -70,7 +70,13 @@ public class TipoUnidadMedidaFrm extends DefaultFrm<TipoUnidadMedida, Integer> i
         return null;
     }
 
-
+    @Override
+    public TipoUnidadMedida getRegistro() {
+        if (super.getRegistro() == null) {
+            setRegistro(crearInstanciaVacia());
+        }
+        return super.getRegistro();
+    }
     @Override
     protected Integer getId(TipoUnidadMedida entidad) {
         return entidad.getId();

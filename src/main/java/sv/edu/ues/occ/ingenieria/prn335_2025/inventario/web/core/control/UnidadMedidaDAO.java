@@ -7,6 +7,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
+import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.Caracteristica;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.TipoUnidadMedida;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.UnidadMedida;
 
@@ -30,6 +31,15 @@ public class UnidadMedidaDAO extends InventarioDefaultDataAccess<UnidadMedida> i
         return this.em;
     }
 
+
+    public  List<UnidadMedida> getListaCompleta(){
+        return em.createQuery(
+                        "SELECT u FROM Caracteristica u ORDER BY u.nombre",
+                        UnidadMedida.class)
+                .getResultList();
+
+
+    }
     public List<UnidadMedida> findByActivo(boolean activo) {
         EntityManager em=getEntityManager();
         CriteriaBuilder cb=em.getCriteriaBuilder();

@@ -70,7 +70,7 @@
                </p:column>
 
                <p:column headerText="Depende de" sortBy="#{r.idTipoProductoPadre.id}" filterBy="#{r.idTipoProductoPadre.id}" filterMatchMode="contains">
-                  <h:outputText value="#{r.idTipoProductoPadre != null ? r.idTipoProductoPadre.id : 'N/A'}" />
+                  <h:outputText value="#{r.idTipoProductoPadre != null ? r.idTipoProductoPadre.id : 'PADRE'}" />
                </p:column>
 
                <p:column headerText="Estado" style="width:100px">
@@ -84,6 +84,11 @@
 
             <!-- Panel de detalle -->
             <h:panelGroup id="pnlDetalle" rendered="#{tipoProductoFrm.pnlDetalle}">
+
+               <p:tabView id="tabViewProductoCaracteristica" rendered="#{tipoProductoFrm.pnlDetalle}" cache="false" dynamic="true">
+
+                  <p:tab title="Generalidades">
+
                <p:commandButton id="btnModificar" value="Modificar"
                                 icon="pi pi-pencil"
                                 action="#{tipoProductoFrm.btnEditarHandler(tipoProductoFrm.registro)}"
@@ -115,6 +120,115 @@
                      <p:inputTextarea value="#{tipoProductoFrm.registro.comentarios}" rows="3" cols="50" disabled="true" />
                   </h:panelGrid>
                </div>
+                  </p:tab>
+
+                  <p:tab title="Caracteristicas">
+                     <p:commandButton value="Nuevo" icon="pi pi-plus"
+                                      action="#{tipoProductoCaracteristicaFrm.btnNuevoHandler(r)}"
+                                      update=":frmPrincipal"
+                                      styleClass="p-button p-button-nuevo"
+
+                                      process="@this" immediate="true"/>
+                     <h:panelGroup id="pnlCaracteristicas">
+                        <h:panelGrid>
+                           <p:dataTable id="tblCaracteristicas"
+                                        value="#{tipoProductoCaracteristicaFrm.findByTipoProductoId(tipoProductoFrm.registro.id)}"
+                                        var="caracteristica"
+                                        lazy="true" paginator="true" rows="5"
+                                        rowsPerPageTemplate="5,10,20"
+                                        currentPageReportTemplate="Mostrando {startRecord}-{endRecord} de {totalRecords}"
+                                        paginatorPosition="bottom"
+                                        emptyMessage="No hay características registradas para este tipo de producto"
+                                        styleClass="table-modern"
+                                        selectionMode="single"
+                                        selection="#{tipoProductoCaracteristicaFrm.registro}"
+                                        rowKey="#{caracteristica.id}">
+
+                              <p:ajax event="rowSelect"
+                                      listener="#{tipoProductoCaracteristicaFrm.selectionHandler}"
+                                      update="frmPrincipal" />
+
+                              <p:column headerText="ID" style="width: 80px;" sortBy="#{caracteristica.id}">
+                                 <h:outputText value="#{caracteristica.id}" />
+                              </p:column>
+
+                              <p:column headerText="Característica">
+                                 <h:outputText value="#{caracteristica.idCaracteristica.nombre}" />
+                              </p:column>
+
+                              <p:column headerText="Obligatorio" style="width: 100px;">
+                                 <h:outputText value="#{caracteristica.obligatorio ? 'Sí' : 'No'}" />
+                              </p:column>
+
+                              <p:column headerText="Fecha Creación" sortBy="#{caracteristica.fechaCreacion}">
+                                 <h:outputText value="#{caracteristica.fechaCreacion}">
+                                    <f:converter converterId="offsetDateTimeConverter" />
+                                 </h:outputText>
+                              </p:column>
+
+                           </p:dataTable>
+                        </h:panelGrid>
+                     </h:panelGroup>
+
+                     <p:dialog id="dlgC"
+                               header="#{tipoProductoFrm.editionMode ? 'Editar' : 'Nuevo'} Tipo de Producto"
+                               widgetVar="dlgVarC"
+                               modal="true"
+                               resizable="true"
+                               closable="true"
+                               width="500"
+                               visible="#{tipoProductoCaracteristicaFrm.mostrarFormulario}">
+
+                        <h:panelGrid columns="2" style="width: 100%;" columnClasses="label,component" cellpadding="5">
+                           <p:selectOneMenu id="tipoUnidad"
+                                            value="#{caracteristicaFrm.registro.idTipoUnidadMedida}"
+                                            converter="tipoUnidadMedidaConverter"
+                                            style="width: 100%">
+                              <f:selectItem itemLabel="#{caracteristicaFrm.editionMode and caracteristicaFrm.registro.idTipoUnidadMedida != null ? caracteristicaFrm.registro.idTipoUnidadMedida.nombre : 'Select One'}"
+                                            itemValue="#{caracteristicaFrm.editionMode and caracteristicaFrm.registro.idTipoUnidadMedida != null ? caracteristicaFrm.registro.idTipoUnidadMedida : null}"
+                                            noSelectionOption="true" />
+                              <f:selectItems value="#{tipoUnidadMedidaFrm.getlistaAtivos()}"
+                                             var="tipo"
+                                             itemLabel="#{tipo.nombre}"
+                                             itemValue="#{tipo}" />
+                           </p:selectOneMenu>
+
+                           <p:outputLabel for="idTipoProducto" value="ID Tipo Producto:" />
+                           <p:inputText id="idTipoProducto"
+                                        value="#{tipoProductoCaracteristicaFrm.registro.idTipoProducto}"
+                                        converter="tipoProductoConverter"
+                                        placeholder="ID de tipo producto"
+                                        style="width: 100%"/>
+
+                           <p:outputLabel for="obligatorio" value="Obligatorio:" />
+                           <h:selectBooleanCheckbox id="obligatorio"
+                                                    value="#{tipoProductoCaracteristicaFrm.registro.obligatorio}"
+                                                    style="margin-top: 8px;"/>
+
+                           <p:outputLabel for="fechaCreacion" value="Fecha Creación:" />
+                           <p:outputLabel id="fechaCreacion" value="#{tipoProductoCaracteristicaFrm.registro.fechaCreacion}">
+                              <f:converter converterId="offsetDateTimeConverter" />
+                           </p:outputLabel>
+                        </h:panelGrid>
+
+                        <div class="flex justify-end gap-2 mt-3">
+                           <p:commandButton value="Cancelar"
+                                            icon="pi pi-times"
+                                            action="#{tipoProductoCaracteristicaFrm.btnCancelarHandler(null)}"
+                                            process="@this" immediate="true"
+                                            update=":frmPrincipal"
+                                            styleClass="p-button-text"/>
+
+                           <p:commandButton value="#{tipoProductoFrm.editionMode ? 'Guardar' : 'Crear'}"
+                                            icon="pi pi-check"
+                                            actionListener="#{tipoProductoCaracteristicaFrm.btnGuardarHandler}"
+                                            process=":frmPrincipal"
+                                            update=":frmPrincipal"
+                                            oncomplete="if (!args.validationFailed) PF('dlgVarC').hide();"/>
+                        </div>
+                     </p:dialog>
+                  </p:tab>
+               </p:tabView>
             </h:panelGroup>
 
             <!-- Diálogo Crear/Editar -->
@@ -167,8 +281,8 @@
                <div class="flex justify-end gap-2 mt-3">
                   <p:commandButton value="Cancelar"
                                    icon="pi pi-times"
-                                   action="#{tipoProductoFrm.btnCancelarHandler}"
-                                   process="@this"
+                                   action="#{tipoProductoFrm.btnCancelarHandler(x)}"
+                                   process="@this" immediate="true"
                                    update=":frmPrincipal"
                                    styleClass="p-button-text"/>
 
@@ -187,6 +301,7 @@
                              styleClass="ui-dialog">
                <div class="flex justify-end gap-2">
                   <p:commandButton value="Cancelar" type="button" styleClass="p-button-text"
+
                                    onclick="PF('confirmDel').hide()"/>
                   <p:commandButton value="Sí, eliminar" icon="pi pi-trash"
                                    actionListener="#{tipoProductoFrm.btnEliminarHandler(tipoProductoFrm.registro)}"
