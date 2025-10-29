@@ -13,43 +13,23 @@ public class CaracteristicaConverter implements Converter<Caracteristica> {
         System.out.println("✅ CONVERTER INSTANCIADO - caracteristicaConverter");
     }
 
+
     @Override
     public Caracteristica getAsObject(FacesContext context, UIComponent component, String value) {
-
-        if (value == null || value.trim().isEmpty()) {
-            System.out.println("⚠️  VALOR NULL O VACÍO DETECTADO en getAsObject()");
-            System.out.println("🔍 Valor recibido: " + value);
-            return null;
-        }
+        if (value == null || value.trim().isEmpty()) return null;
 
         try {
             Integer id = Integer.parseInt(value);
+            CaracteristicaFrm bean = context.getApplication().evaluateExpressionGet(context, "#{caracteristicaFrm}", CaracteristicaFrm.class);
 
-            CaracteristicaFrm bean = (CaracteristicaFrm) context.getApplication()
-                    .getExpressionFactory()
-                    .createValueExpression(context.getELContext(), "#{caracteristicaFrm}", CaracteristicaFrm.class)
-                    .getValue(context.getELContext());
-
-            if (bean != null) {
-                List<Caracteristica> items = bean.getListaCompleta();
-                if (items != null) {
-                    for (Caracteristica item : items) {
-                        if (item.getId().equals(id)) {
-                            System.out.println("Caracteristica ENCONTRADA: " + item.getNombre());
-                            return item;
-                        }
-                    }
-                }
-                Caracteristica resultado = bean.findById(id);
-                return resultado;
-            }
+            // Busca directamente por ID en lugar de en la lista
+            return bean.findById(id);
 
         } catch (Exception e) {
-            System.err.println("Error en CaracteristicaConverter: " + e.getMessage());
+            System.err.println("Error en converter: " + e.getMessage());
+            return null;
         }
-        return null;
     }
-
     @Override
     public String getAsString(FacesContext context, UIComponent component, Caracteristica value) {
         if (value == null) {

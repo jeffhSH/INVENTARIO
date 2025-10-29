@@ -5,6 +5,18 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "caracteristica", schema = "public")
 public class Caracteristica {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Caracteristica)) return false;
+        Caracteristica that = (Caracteristica) o;
+        return getId() != null && getId().equals(that.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_caracteristica", nullable = false)
