@@ -80,10 +80,12 @@ public class UnidadMedidaFrm extends DefaultFrm<UnidadMedida, Integer> implement
     protected UnidadMedida crearInstanciaVacia() {
         UnidadMedida unidadMedida = new UnidadMedida();
 
-        if (tipoUnidadMedidaFrm.getRegistro() != null) {
+        if (tipoUnidadMedidaFrm.getRegistro() != null && tipoUnidadMedidaFrm.getRegistro().getId() != null) {
             TipoUnidadMedida tipoPersistido = tipoUnidadMedidaDAO.findById(tipoUnidadMedidaFrm.getRegistro().getId());
-            unidadMedida.setIdTipoUnidadMedida(tipoPersistido);
-            System.out.println("✅ Tipo asignado en crearInstanciaVacia: " + tipoPersistido.getNombre());
+            if (tipoPersistido != null) {
+                unidadMedida.setIdTipoUnidadMedida(tipoPersistido);
+                System.out.println("✅ Tipo asignado en crearInstanciaVacia: " + tipoPersistido.getNombre());
+            }
         }
 
         return unidadMedida;

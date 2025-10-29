@@ -19,7 +19,7 @@ import java.util.logging.Level;
 @Named
 @SessionScoped
 public class ProductoTipoProductoFrm extends DefaultFrm<ProductoTipoProducto, UUID> implements Serializable {
-
+    boolean formularioTipo = false;
     @Inject
     private ProductoTipoProductoDAO dao;
 
@@ -75,6 +75,13 @@ public class ProductoTipoProductoFrm extends DefaultFrm<ProductoTipoProducto, UU
             log(Level.WARNING, "ID inválido: {0}", e);
             return null;
         }
+    }
+
+    public boolean mostrarFormularioTipo() {
+        return formularioTipo==true;
+    }
+    public boolean OcultarFormularioTipo() {
+        return formularioTipo==false;
     }
 
     @Override

@@ -147,6 +147,10 @@ public class TipoProductoFrm extends DefaultFrm<TipoProducto, Long> implements S
         }
         return null;
     }
+    public List<TipoProducto> getActivos() {
+        return dao.findActivos();
+
+    }
 
     /**
      * Verifica si el tipo de producto actual tiene subtipos
