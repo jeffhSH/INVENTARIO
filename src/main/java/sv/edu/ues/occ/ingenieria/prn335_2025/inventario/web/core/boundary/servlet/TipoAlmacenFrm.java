@@ -131,14 +131,4 @@ public class TipoAlmacenFrm extends DefaultFrm<TipoAlmacen, Integer> implements 
         return proximoId;
     }
 
-    private AccionesFrm<TipoAlmacen> acciones;
-
-    @PostConstruct
-    public void init() {
-        acciones = new AccionesFrm<>();
-        acciones.setNuevoHandler(t -> btnNuevoHandler());
-        acciones.setEditarHandler(t -> btnEditarHandler(registro));
-        acciones.setEliminarHandler(t -> btnEliminarHandler(registro));
-        acciones.setVolverHandler(() -> volver());
-    }
 }

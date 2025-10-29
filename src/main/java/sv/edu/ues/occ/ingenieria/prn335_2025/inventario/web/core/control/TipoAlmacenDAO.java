@@ -8,6 +8,8 @@ import jakarta.persistence.Query;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.TipoAlmacen;
 
 import java.io.Serializable;
+import java.util.Collections;
+import java.util.List;
 
 @Stateless
 @LocalBean
@@ -54,6 +56,16 @@ public class TipoAlmacenDAO extends InventarioDefaultDataAccess<TipoAlmacen> imp
             e.printStackTrace();
             return 1;
         }
+    }
+
+    public List<TipoAlmacen> findLikeConsulta(String consulta){
+        if (consulta == null || consulta.isBlank()) {
+            return Collections.emptyList();
+        }
+        String queryStr = "SELECT t FROM TipoAlmacen t WHERE LOWER(t.nombre) LIKE :consulta";
+        return em.createQuery(queryStr, TipoAlmacen.class)
+                .setParameter("consulta", "%" + consulta.toLowerCase() + "%")
+                .getResultList();
     }
 }
 

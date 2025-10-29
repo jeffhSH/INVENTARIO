@@ -608,3 +608,7 @@
     .toolbar-group-right {
         margin-left: auto;
     }
+
+    .ui-autocomplete-panel {
+        z-index: 999999 !important;
+    }
