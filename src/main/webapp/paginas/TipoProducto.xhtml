@@ -179,26 +179,16 @@
                                width="500"
                                visible="#{tipoProductoCaracteristicaFrm.mostrarFormulario}">
 
-                        <h:panelGrid columns="2" style="width: 100%;" columnClasses="label,component" cellpadding="5">
-                           <p:selectOneMenu id="tipoUnidad"
-                                            value="#{caracteristicaFrm.registro.idTipoUnidadMedida}"
-                                            converter="tipoUnidadMedidaConverter"
-                                            style="width: 100%">
-                              <f:selectItem itemLabel="#{caracteristicaFrm.editionMode and caracteristicaFrm.registro.idTipoUnidadMedida != null ? caracteristicaFrm.registro.idTipoUnidadMedida.nombre : 'Select One'}"
-                                            itemValue="#{caracteristicaFrm.editionMode and caracteristicaFrm.registro.idTipoUnidadMedida != null ? caracteristicaFrm.registro.idTipoUnidadMedida : null}"
-                                            noSelectionOption="true" />
-                              <f:selectItems value="#{tipoUnidadMedidaFrm.getlistaAtivos()}"
-                                             var="tipo"
-                                             itemLabel="#{tipo.nombre}"
-                                             itemValue="#{tipo}" />
-                           </p:selectOneMenu>
 
-                           <p:outputLabel for="idTipoProducto" value="ID Tipo Producto:" />
-                           <p:inputText id="idTipoProducto"
-                                        value="#{tipoProductoCaracteristicaFrm.registro.idTipoProducto}"
-                                        converter="tipoProductoConverter"
-                                        placeholder="ID de tipo producto"
-                                        style="width: 100%"/>
+
+
+                        <h:panelGrid columns="2" style="width: 100%;" columnClasses="label,component" cellpadding="5">
+                        <p:outputLabel for="idCaracteristicas" value="ID Caracteristica:" />
+                        <p:inputText id="idCaracteristicas"
+                                     value="#{tipoProductoCaracteristicaFrm.registro.idCaracteristica}"
+                                     converter="caracteristicaConverter"
+                                     placeholder="ID"
+                                     style="width: 100%"/>
 
                            <p:outputLabel for="obligatorio" value="Obligatorio:" />
                            <h:selectBooleanCheckbox id="obligatorio"

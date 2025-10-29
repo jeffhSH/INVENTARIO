@@ -6,10 +6,8 @@ import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control.InventarioDefaultDataAccess;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control.TipoProductoCaracteristicaDAO;
-import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.Caracteristica;
-import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.ProductoTipoProducto;
-import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.TipoProducto;
-import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.TipoProductoCaracteristica;
+import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control.TipoProductoDAO;
+import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.*;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
@@ -23,7 +21,10 @@ public class TipoProductoCaracteristicaFrm extends DefaultFrm<TipoProductoCaract
 
     @Inject
     private TipoProductoCaracteristicaDAO dao;
-
+    @Inject
+    private  TipoProductoFrm tipoProductoFrm;
+    @Inject
+    private TipoProductoDAO tipoProductoDAO;
     @PostConstruct
     @Override
     protected void initDefaultFrm() {
@@ -59,6 +60,14 @@ public class TipoProductoCaracteristicaFrm extends DefaultFrm<TipoProductoCaract
 
         TipoProductoCaracteristica nuevaRelacion = new TipoProductoCaracteristica();
         nuevaRelacion.setFechaCreacion(OffsetDateTime.now());
+
+
+        if (tipoProductoFrm.getRegistro() != null) {
+            TipoProducto tipoPersistido = tipoProductoDAO.findById(tipoProductoFrm.getRegistro().getId());
+            nuevaRelacion.setIdTipoProducto(tipoPersistido);
+            System.out.println("✅ Tipo asignado en crearInstanciaVacia: " + tipoPersistido.getNombre());
+
+        }
         return nuevaRelacion;
     }
     public Long getTipoProductoId() {
