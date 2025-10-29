@@ -1,0 +1,69 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui">
+   <ui:fragment rendered="#{section == 'nuevo'}">
+      <p:commandButton value="#{msg['boton.nuevo']}" icon="pi pi-plus"
+                       action="#{bean.btnNuevoHandler(r)}"
+                       update=":frmPrincipal:dlg"
+                       styleClass="p-button p-button-nuevo"
+                       rendered="#{!bean.pnlDetalle}"
+                       process="@this" immediate="true"/>
+   </ui:fragment>
+   <ui:fragment rendered="#{section == 'volver'}">
+      <p:commandButton id="#{not empty paramBtnId ? paramBtnId : 'btnVOLVERDefault'}"
+                       icon="pi pi-arrow-left"  value="#{msg['boton.volver']}"
+                       rendered="#{bean.pnlDetalle}"
+                       styleClass="p-button p-button-volver"
+                       action="#{bean.volver()}"
+                       update=":frmPrincipal, :frmPrincipal:toolbar" />
+   </ui:fragment>
+
+   <ui:fragment rendered="#{section == 'modificar'}">
+      <p:commandButton id="#{not empty paramBtnId ? paramBtnId : 'btnMODIFICARDefault'}"
+                       value="#{msg['boton.modificar']}"
+                       icon="pi pi-pencil"
+                       action="#{bean.btnEditarHandler(bean.registro)}"
+                       rendered="#{bean.pnlDetalle}"
+                       update=":frmPrincipal"
+                       oncomplete="PF('dlgVar').show()"
+                       styleClass="p-button p-button-modificar" />
+   </ui:fragment>
+
+   <ui:fragment rendered="#{section == 'eliminar'}">
+      <p:commandButton icon="pi pi-trash" value="#{msg['boton.eliminar']}"
+                       rendered="#{bean.pnlDetalle}"
+                       oncomplete="PF('confirmDel').show()"
+                       process="@this"
+                       styleClass="p-button p-button-eliminar"/>
+   </ui:fragment>
+
+   <ui:fragment rendered="#{section == 'guardar'}">
+      <p:commandButton value="#{bean.editionMode ? msg['boton.guardar'] : msg['boton.Crear']}"
+                       icon="pi pi-check"
+                       actionListener="#{bean.btnGuardarHandler}"
+                       process=":frmPrincipal:dlg"
+                       update=":frmPrincipal"
+                       oncomplete="if (!args.validationFailed) PF('dlgVar').hide(); var btn = document.getElementById('frmPrincipal:btnVOLVER'); if(btn) btn.click();"/>
+   </ui:fragment>
+
+   <ui:fragment rendered="#{section == 'cancelar'}">
+      <p:commandButton value="#{msg['boton.cancelar']}" icon="pi pi-times"
+                       actionListener="#{bean.btnCancelarHandler}"
+                       process="@this"
+                       update=":frmPrincipal:panelCompleto,:frmPrincipal:dlg"
+                       styleClass="p-button-text"/>
+   </ui:fragment>
+
+   <ui:fragment rendered="#{section == 'cancelarBorrado'}">
+      <p:commandButton value="#{msg['boton.cancelar']}" type="button" styleClass="p-button-text"
+                       onclick="PF('confirmDel').hide()"/>
+   </ui:fragment>
+
+   <ui:fragment rendered="#{section == 'eliminarDefinitivo'}">
+      <p:commandButton value="#{msg['boton.eliminarD']}" icon="pi pi-trash"
+                       actionListener="#{bean.btnEliminarHandler(bean.registro)}"
+                       update="frmPrincipal"
+                       oncomplete="PF('confirmDel').hide();"/>
+   </ui:fragment>
+</ui:composition>

@@ -12,6 +12,36 @@ target/
 *.iml
 *.ipr
 
+# Archivos temporales de IntelliJ
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries/
+.idea/httpRequests/
+.idea/sonarlint/
+.idea/shelf/
+out/
+
+# Servidores de aplicación
+wlp/
+payara5/
+glassfish/
+logs/
+.derby/
+domains/
+
+# Archivos del sistema
+Thumbs.db
+*.log
+*.swp
+*.tmp
+
+# Configuraciones personales
+.env
+.env.local
+*.properties.local
+*.xml.local
+
+
 ### Eclipse ###
 .apt_generated
 .classpath
@@ -36,3 +66,6 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### configuraciones propias del sistema ###
+pom.xml

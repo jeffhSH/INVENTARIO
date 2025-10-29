@@ -38,7 +38,7 @@
 
     <!-- Página de inicio opcional -->
     <welcome-file-list>
-        <welcome-file>index.xhtml</welcome-file>
+        <welcome-file>/paginas/TipoAlmacen.xhtml</welcome-file>
     </welcome-file-list>
 
 </web-app>

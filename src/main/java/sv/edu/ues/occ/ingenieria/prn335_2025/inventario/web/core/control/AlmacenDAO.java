@@ -1,5 +1,7 @@
 package sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control;
 
+import jakarta.faces.view.ViewScoped;
+import jakarta.inject.Named;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -10,7 +12,10 @@ import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.Almacen;
 import java.io.Serializable;
 import java.util.List;
 
+@Named
+@ViewScoped
 public class AlmacenDAO extends InventarioDefaultDataAccess<Almacen> implements Serializable {
+
     @PersistenceContext(unitName = "inventarioPU")
     private EntityManager em;
 

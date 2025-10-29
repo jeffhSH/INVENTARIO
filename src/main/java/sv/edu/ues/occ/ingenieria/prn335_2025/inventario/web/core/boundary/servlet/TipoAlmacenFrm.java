@@ -1,5 +1,6 @@
 package sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.boundary.servlet;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
@@ -128,5 +129,16 @@ public class TipoAlmacenFrm extends DefaultFrm<TipoAlmacen, Integer> implements 
 
     public Integer getProximoId() {
         return proximoId;
+    }
+
+    private AccionesFrm<TipoAlmacen> acciones;
+
+    @PostConstruct
+    public void init() {
+        acciones = new AccionesFrm<>();
+        acciones.setNuevoHandler(t -> btnNuevoHandler());
+        acciones.setEditarHandler(t -> btnEditarHandler(registro));
+        acciones.setEliminarHandler(t -> btnEliminarHandler(registro));
+        acciones.setVolverHandler(() -> volver());
     }
 }
