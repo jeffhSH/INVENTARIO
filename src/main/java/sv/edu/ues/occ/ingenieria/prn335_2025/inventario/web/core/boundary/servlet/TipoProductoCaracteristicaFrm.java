@@ -59,6 +59,7 @@ public class TipoProductoCaracteristicaFrm extends DefaultFrm<TipoProductoCaract
     protected TipoProductoCaracteristica crearInstanciaVacia() {
 
         TipoProductoCaracteristica nuevaRelacion = new TipoProductoCaracteristica();
+        nuevaRelacion.setIdCaracteristica(new Caracteristica()  );
         nuevaRelacion.setFechaCreacion(OffsetDateTime.now());
 
 

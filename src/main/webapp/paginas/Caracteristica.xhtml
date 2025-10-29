@@ -177,6 +177,7 @@
                      <p:commandButton value="Sí, eliminar" icon="pi pi-trash"
                                       actionListener="#{caracteristicaFrm.btnEliminarHandler(caracteristicaFrm.registro)}"
                                       update="frmPrincipal"
+                                      immediate="true"
                                       oncomplete="PF('confirmDel').hide();"/>
                   </div>
                </p:confirmDialog>

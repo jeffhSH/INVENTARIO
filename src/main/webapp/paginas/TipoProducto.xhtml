@@ -183,12 +183,7 @@
 
 
                         <h:panelGrid columns="2" style="width: 100%;" columnClasses="label,component" cellpadding="5">
-                        <p:outputLabel for="idCaracteristicas" value="ID Caracteristica:" />
-                        <p:inputText id="idCaracteristicas"
-                                     value="#{tipoProductoCaracteristicaFrm.registro.idCaracteristica}"
-                                     converter="caracteristicaConverter"
-                                     placeholder="ID"
-                                     style="width: 100%"/>
+
 
                            <p:outputLabel for="obligatorio" value="Obligatorio:" />
                            <h:selectBooleanCheckbox id="obligatorio"
@@ -199,6 +194,17 @@
                            <p:outputLabel id="fechaCreacion" value="#{tipoProductoCaracteristicaFrm.registro.fechaCreacion}">
                               <f:converter converterId="offsetDateTimeConverter" />
                            </p:outputLabel>
+                           <p:outputLabel for="Caracteristica" value="Caracteristica:" />
+                           <p:selectOneMenu id="Caracteristica"
+                                            value="#{tipoProductoCaracteristicaFrm.registro.idCaracteristica}"
+                                            converter="caracteristicaConverter"
+                                            style="width: 100%">
+                              <f:selectItem itemLabel="ELIJA" />
+                              <f:selectItems value="#{caracteristicaFrm.getListaCompleta()}"
+                                             var="tipo"
+                                             itemLabel="#{tipo.nombre}"
+                                             itemValue="#{tipo}" />
+                           </p:selectOneMenu>
                         </h:panelGrid>
 
                         <div class="flex justify-end gap-2 mt-3">
