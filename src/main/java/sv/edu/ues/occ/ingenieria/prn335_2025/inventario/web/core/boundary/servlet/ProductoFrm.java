@@ -78,11 +78,14 @@ public class ProductoFrm extends DefaultFrm<Producto, UUID> implements Serializa
         }
         return null;
     }
-
-    @Override
-    protected UUID getId(Producto entidad) {
-        return entidad.getId();
+    public List<Producto> findProductosActivos() {
+        return taDao.findProductosActivos();
     }
+
+        @Override
+        protected UUID getId(Producto entidad) {
+            return entidad.getId();
+        }
 
     @Override
     protected void crear(Producto entidad) {

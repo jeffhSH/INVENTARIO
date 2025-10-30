@@ -5,43 +5,38 @@ import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import java.io.Serializable;
-import java.util.List;
-import java.util.UUID;
-
-import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control.ClienteDAO;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control.InventarioDefaultDataAccess;
-import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control.ProductoDAO;
+import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control.VentaDAO;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.Cliente;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.Producto;
+import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.Venta;
 
+import java.io.Serializable;
+import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.UUID;
 @Named
 @ViewScoped
-public class ClienteFrm extends DefaultFrm<Cliente, UUID> implements Serializable {
-
-
+public class VentaFrm extends DefaultFrm<Venta, UUID> implements Serializable {
     @Inject
-    ClienteDAO ClienteDAO;
+    VentaDAO taDao;
 
-    private List<Cliente> ListaCliente;
+    private List<Venta> ListaVenta;
 
-    public List<Cliente> findActivos() {
-        return ClienteDAO.findActivos();
-    }
     @Override
-    protected InventarioDefaultDataAccess<Cliente> getDao() {
-        return ClienteDAO;
+    protected InventarioDefaultDataAccess<Venta> getDao() {
+        return taDao;
     }
 
     @Override
     protected String getNombreBeanConfig() {
-        return "Clientes";
+        return "Ventas";
     }
 
     @Override
     protected void inicializar() {
         try {
-            ListaCliente= ClienteDAO.findRange(0, Integer.MAX_VALUE);
+            ListaVenta = taDao.findRange(0, Integer.MAX_VALUE);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -56,23 +51,26 @@ public class ClienteFrm extends DefaultFrm<Cliente, UUID> implements Serializabl
 
     // ===== Implementaciones CRUD =====
     @Override
-    protected Cliente crearInstanciaVacia() {
-        return new Cliente();
+    protected Venta crearInstanciaVacia() {
+        Venta venta = new Venta();
+        venta.setFecha(OffsetDateTime.now());
+        venta.setIdCliente(new Cliente());
+        return venta;
     }
     @Override
-    protected String getIdAsText(Cliente c) {
-        if (c != null && c.getId() != null) {
-            return c.getId().toString();
+    protected String getIdAsText(Venta r) {
+        if (r != null && r.getId() != null) {
+            return r.getId().toString();
         }
         return null;
     }
 
     @Override
-    protected Cliente getIdByText(String id) {
+    protected Venta getIdByText(String id) {
         if (id != null && this.model != null && !this.model.getWrappedData().isEmpty()) {
             try {
                 UUID buscado = UUID.fromString(id);
-                return this.model .getWrappedData().stream()
+                return this.model.getWrappedData().stream()
                         .filter(r -> r.getId() != null && r.getId().equals(buscado))
                         .findFirst()
                         .orElse(null);
@@ -85,42 +83,42 @@ public class ClienteFrm extends DefaultFrm<Cliente, UUID> implements Serializabl
     }
 
     @Override
-    protected UUID getId(Cliente entidad) {
+    protected UUID getId(Venta entidad) {
         return entidad.getId();
     }
 
     @Override
-    protected void crear(Cliente entidad) {
-        ClienteDAO.create(entidad);
+    protected void crear(Venta entidad) {
+        taDao.create(entidad);
     }
 
     @Override
-    protected void modificar(Cliente entidad) {
-        ClienteDAO.update(entidad);
+    protected void modificar(Venta entidad) {
+        taDao.update(entidad);
     }
 
     @Override
-    protected void eliminar(Cliente entidad) {
-        ClienteDAO.delete(entidad);
+    protected void eliminar(Venta entidad) {
+        taDao.delete(entidad);
     }
 
     @Override
-    protected Cliente findById(UUID id) {
-        return ClienteDAO.findById(id);
+    protected Venta findById(UUID id) {
+        return taDao.findById(id);
     }
 
     @Override
-    protected List<Cliente> findRange(int first, int pageSize) {
-        return ClienteDAO.findRange(first, pageSize);
+    protected List<Venta> findRange(int first, int pageSize) {
+        return taDao.findRange(first, pageSize);
     }
 
     // ===== GETTERS / SETTERS ESPECÍFICOS =====
-    public List<Cliente> getListaCliente() {
-        return ListaCliente;
+    public List<Venta> getListaTProducton() {
+        return ListaVenta;
     }
 
-    public void setListaCliente(List<Cliente> listaCliente) {
-        this.ListaCliente = ListaCliente;
+    public void setListaProducto(List<Producto> listaProducto) {
+        this.ListaVenta = ListaVenta;
     }
 
 

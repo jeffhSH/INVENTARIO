@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<ui:composition template="template.xhtml">
+
+    <ui:define name="content">
+        <h:form id="frmPrincipal">
+
+            <p:growl id="growl" showDetail="true" life="3000" />
+
+            <!-- Toolbar superior -->
+            <p:toolbar id="toolbar" class="toolbar-gap">
+                <p:toolbarGroup class="toolbar-center">
+                    <span class="toolbar-title">#{compraFrm.nombreBean}</span>
+                </p:toolbarGroup>
+
+                <p:toolbarGroup class="toolbar-group-right">
+                    <p:commandButton value="Nuevo" icon="pi pi-plus"
+                                     action="#{compraFrm.btnNuevoHandler}"
+                                     update=":frmPrincipal:dlg"
+                                     styleClass="p-button p-button-nuevo"
+                                     rendered="#{!compraFrm.pnlDetalle}"
+                                     process="@this" immediate="true"/>
+
+                    <p:commandButton id="btnVOLVER" icon="pi pi-arrow-left"  value="VOLVER"
+                                     rendered="#{compraFrm.pnlDetalle}"
+                                     styleClass="p-button p-button-volver"
+                                     action="#{compraFrm.volver()}"
+                                     update=":frmPrincipal" />
+                </p:toolbarGroup>
+            </p:toolbar>
+
+            <div class="content">
+                <!-- Tabla de compras -->
+                <p:dataTable id="tbl"
+                             value="#{compraFrm.model}" var="r"
+                             lazy="true" paginator="true" rows="10"
+                             rowsPerPageTemplate="10,20,50"
+                             currentPageReportTemplate="Mostrando {startRecord}-{endRecord} de {totalRecords}"
+                             paginatorPosition="bottom"
+                             responsiveLayout="scroll"
+                             rowHover="true"
+                             rendered="#{!compraFrm.pnlDetalle}"
+                             emptyMessage="No hay registros"
+                             styleClass="table-modern"
+                             selectionMode="single"
+                             selection="#{compraFrm.registro}" rowKey="#{r.id}" >
+                    <p:ajax event="rowSelect"
+                            listener="#{compraFrm.selectionHandler}"
+                            update=":frmPrincipal" />
+
+                    <p:ajax event="rowUnselect"
+                            listener="#{compraFrm.rowUnselectHandler}"
+                            update=":frmPrincipal:tbl :frmPrincipal:growl :frmPrincipal:toolbar" />
+
+                    <p:column headerText="ID" sortBy="#{r.id}">
+                        <h:outputText value="#{r.id}" />
+                    </p:column>
+
+                    <p:column headerText="Proveedor ID" sortBy="#{r.proveedor.id}">
+                        <h:outputText value="#{r.proveedor.id}" />
+                    </p:column>
+
+                    <p:column headerText="Proveedor Nombre" sortBy="#{r.proveedor.nombre}">
+                        <h:outputText value="#{r.proveedor.nombre}" />
+                    </p:column>
+
+                    <!-- CORREGIDO: Remover columna duplicada de proveedor -->
+                    <p:column headerText="Fecha" sortBy="#{r.fecha}">
+                        <h:outputText value="#{r.fecha}">
+                            <f:converter converterId="offsetDateTimeConverter" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Estado" sortBy="#{r.estado}">
+                        <h:outputText value="#{r.estado}" />
+                    </p:column>
+                </p:dataTable>
+
+                <!-- Panel de detalle -->
+                <h:panelGroup id="pnlDetalle" rendered="#{compraFrm.pnlDetalle}">
+                    <p:commandButton id="btnModificar" value="Modificar"
+                                     icon="pi pi-pencil"
+                                     action="#{compraFrm.btnEditarHandler}"
+                                     rendered="#{compraFrm.pnlDetalle}"
+                                     update=":frmPrincipal:dlg"
+                                     oncomplete="PF('dlgVar').show()"
+                                     styleClass="p-button p-button-modificar" />
+
+                    <p:commandButton value="Procesar" icon="pi pi-check"
+                                     rendered="#{compraFrm.pnlDetalle}"
+                                     action="#{compraFrm.btnProcesarHandler}"
+                                     update=":frmPrincipal:growl :frmPrincipal:pnlDetalle"
+                                     styleClass="p-button p-button-success" />
+
+                    <p:commandButton value="Cancelar" icon="pi pi-times"
+                                     rendered="#{compraFrm.pnlDetalle}"
+                                     action="#{compraFrm.btnCancelarHandler}"
+                                     update=":frmPrincipal:growl :frmPrincipal:pnlDetalle"
+                                     styleClass="p-button p-button-warning" />
+
+                    <p:commandButton icon="pi pi-trash" value="Eliminar"
+                                     rendered="#{compraFrm.pnlDetalle}"
+                                     oncomplete="PF('confirmDel').show()"
+                                     process="@this"
+                                     styleClass="p-button p-button-eliminar" />
+
+                    <div class="detail-panel">
+                        <h3>Detalle de Compra</h3>
+
+                        <h:panelGrid columns="2" class="grid-container">
+                            <p><strong>ID:</strong> #{compraFrm.registro.id}</p>
+                            <p><strong>Fecha:</strong>
+                                <h:outputText value="#{compraFrm.registro.fecha}">
+                                    <!-- CORREGIDO: Usar f:converter dentro de h:outputText -->
+                                    <f:converter converterId="offsetDateTimeConverter" />
+                                </h:outputText>
+                            </p>
+
+                            <p><strong>Proveedor:</strong> #{compraFrm.registro.proveedor.nombre}</p>
+                            <p><strong>Estado:</strong> #{compraFrm.registro.estado}</p>
+                        </h:panelGrid>
+
+                        <h:panelGrid columns="1" class="form-item">
+                            <p><strong>Observaciones:</strong></p>
+                            <p:inputTextarea value="#{compraFrm.registro.observaciones}" rows="3" cols="50" disabled="true" />
+                        </h:panelGrid>
+                    </div>
+                </h:panelGroup>
+
+                <!-- Diálogo Crear/Editar -->
+                <p:dialog id="dlg"
+                          header="#{compraFrm.editionMode ? 'Editar' : 'Nueva'} Compra"
+                          widgetVar="dlgVar"
+                          modal="true"
+                          resizable="true"
+                          closable="true"
+                          width="500"
+                          visible="#{compraFrm.mostrarFormulario}">
+
+                    <h:panelGrid columns="2" style="width: 100%;" columnClasses="label,component" cellpadding="5">
+
+                        <p:outputLabel for="proveedor" value="Proveedor: *" />
+                        <p:selectOneMenu id="proveedor"
+                                         value="#{compraFrm.registro.proveedor}"
+                                         required="true"
+                                         requiredMessage="El proveedor es obligatorio"
+                                         style="width: 100%">
+                            <f:selectItem itemLabel="-- Seleccione Proveedor --" itemValue="#{null}" />
+                            <f:selectItems value="#{compraFrm.proveedores}"
+                                           var="prov"
+                                           itemLabel="#{prov.nombre}"
+                                           itemValue="#{prov}" />
+                        </p:selectOneMenu>
+
+                        <!-- CORREGIDO: Agregar campo de fecha -->
+                        <p:outputLabel for="fecha" value="Fecha: *" />
+                        <p:calendar id="fecha"
+                                    value="#{compraFrm.registro.fecha}"
+                                    required="true"
+                                    requiredMessage="La fecha es obligatoria"
+                                    pattern="dd/MM/yyyy HH:mm"
+                                    timeZone="GMT-3"
+                                    style="width: 100%"/>
+
+                        <p:outputLabel for="estado" value="Estado: *" />
+                        <p:selectOneMenu id="estado"
+                                         value="#{compraFrm.registro.estado}"
+                                         required="true"
+                                         requiredMessage="El estado es obligatorio"
+                                         style="width: 100%">
+                            <f:selectItem itemLabel="CREADA" itemValue="CREADA" />
+                            <f:selectItem itemLabel="APROBADA" itemValue="APROBADA" />
+                            <f:selectItem itemLabel="RECHAZADA" itemValue="RECHAZADA" />
+                            <f:selectItem itemLabel="ANULADA" itemValue="ANULADA" />
+                        </p:selectOneMenu>
+
+                        <p:outputLabel for="observaciones" value="Observaciones:" />
+                        <p:inputTextarea id="observaciones"
+                                         value="#{compraFrm.registro.observaciones}"
+                                         rows="3"
+                                         placeholder="Observaciones opcionales"
+                                         style="width: 100%"/>
+
+                    </h:panelGrid>
+
+                    <div class="flex justify-end gap-2 mt-3">
+                        <p:commandButton value="Cancelar"
+                                         icon="pi pi-times"
+                                         action="#{compraFrm.btnCancelarHandler}"
+                                         process="@this" immediate="true"
+                                         update=":frmPrincipal"
+                                         oncomplete="PF('dlgVar').hide()"
+                                         styleClass="p-button-text"/>
+
+                        <p:commandButton value="#{compraFrm.editionMode ? 'Guardar' : 'Crear'}"
+                                         icon="pi pi-check"
+                                         action="#{compraFrm.btnGuardarHandler}"
+                                         process=":frmPrincipal:dlg"
+                                         update=":frmPrincipal:growl :frmPrincipal:tbl"
+                                         oncomplete="if (!args.validationFailed) PF('dlgVar').hide();"/>
+                    </div>
+                </p:dialog>
+
+                <!-- Confirmación elegante de borrado -->
+                <p:confirmDialog widgetVar="confirmDel" header="Confirmar eliminación" message="¿Eliminar este registro?"
+                                 icon="pi pi-exclamation-triangle" closable="false"
+                                 styleClass="ui-dialog">
+                    <div class="flex justify-end gap-2">
+                        <p:commandButton value="Cancelar" type="button" styleClass="p-button-text"
+                                         onclick="PF('confirmDel').hide()"/>
+                        <p:commandButton value="Sí, eliminar" icon="pi pi-trash"
+                                         action="#{compraFrm.btnEliminarHandler}"
+                                         update=":frmPrincipal"
+                                         oncomplete="PF('confirmDel').hide();"/>
+                    </div>
+                </p:confirmDialog>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>

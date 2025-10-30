@@ -26,6 +26,9 @@ public class ProveedorFrm extends DefaultFrm<Proveedor, Integer> implements Seri
     protected String getNombreBeanConfig() {
         return "Proveedores";
     }
+    public List<Proveedor> findActivos() {
+        return proveedorDao.findActivos();
+    }
 
     @Override
     protected InventarioDefaultDataAccess<Proveedor> getDao() {

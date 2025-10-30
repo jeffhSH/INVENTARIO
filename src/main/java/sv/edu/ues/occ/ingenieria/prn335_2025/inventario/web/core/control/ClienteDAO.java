@@ -7,8 +7,10 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.Cliente;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.Producto;
+import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.Proveedor;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.UUID;
 
 @Stateless
@@ -33,7 +35,12 @@ public class ClienteDAO extends InventarioDefaultDataAccess<Cliente> implements 
         return em;
     }
 
-
+    public List<Cliente> findActivos() {
+        return em.createQuery(
+                        "SELECT t FROM Cliente t WHERE  t.activo = true ORDER BY t.nombre",
+                        Cliente.class)
+                .getResultList();
+    }
     @Override
     public void create(Cliente registro) throws IllegalArgumentException {
         if (registro == null) {

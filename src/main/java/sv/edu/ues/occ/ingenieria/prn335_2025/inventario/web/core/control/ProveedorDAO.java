@@ -6,7 +6,11 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.Proveedor;
+import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.TipoProducto;
+
 import java.io.Serializable;
+import java.util.List;
+
 @Stateless
 @LocalBean
 public class ProveedorDAO extends InventarioDefaultDataAccess<Proveedor> implements Serializable {
@@ -42,6 +46,13 @@ public class ProveedorDAO extends InventarioDefaultDataAccess<Proveedor> impleme
             return 1;
         }
 
+
+    }
+    public List<Proveedor> findActivos() {
+        return em.createQuery(
+                        "SELECT t FROM Proveedor t WHERE  t.activo = true ORDER BY t.nombre",
+                        Proveedor.class)
+                .getResultList();
     }
 }
 

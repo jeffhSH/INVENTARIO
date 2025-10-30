@@ -11,6 +11,24 @@ import java.util.UUID;
 @Entity
 @Table(name = "cliente", schema = "public")
 public class Cliente {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Cliente)) return false;
+        Cliente other = (Cliente) o;
+        // Igualdad por ID (cuando ya fue asignado)
+        return this.id != null && this.id.equals(other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return (id == null) ? 0 : id.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "Cliente{id=" + id + ", nombre=" + nombre + "}";
+    }
     @Id
     @Column(name = "id_cliente", nullable = false)
     private UUID id;

@@ -223,6 +223,7 @@ public abstract class DefaultFrm<T, K extends Serializable> implements Serializa
     }
 public void volver(){
         this.pnlDetalle=false;
+        cancelarEdicion();
         this.estado = ESTADO_CRUD.NADA;
 
 }

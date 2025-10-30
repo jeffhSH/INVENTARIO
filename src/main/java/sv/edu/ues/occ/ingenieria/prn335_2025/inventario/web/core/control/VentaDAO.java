@@ -5,26 +5,23 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.Producto;
-import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.TipoProducto;
+import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.Venta;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.UUID;
-
 @Stateless
 @LocalBean
-public class ProductoDAO extends InventarioDefaultDataAccess<Producto> implements Serializable {
-
+public class VentaDAO extends InventarioDefaultDataAccess<Venta> implements Serializable {
     @PersistenceContext(unitName = "inventarioPU")
     private EntityManager em;
-  UUID id;
-    public ProductoDAO() {
-        super(Producto.class);
+    UUID id;
+    public VentaDAO() {
+        super(Venta.class);
     }
 
-    // Constructor para testing (Mockito)
-    public ProductoDAO(EntityManager em) {
-        super(Producto.class);
+
+    public VentaDAO(EntityManager em) {
+        super(Venta.class);
         this.em = em;
     }
 
@@ -32,15 +29,9 @@ public class ProductoDAO extends InventarioDefaultDataAccess<Producto> implement
     public EntityManager getEntityManager() {
         return em;
     }
-    public List<Producto> findProductosActivos() {
-        return em.createQuery(
-                        "SELECT t FROM Producto t WHERE t.activo = true ORDER BY t.nombreProducto",
-                        Producto.class)
-                .getResultList();
-    }
 
-     @Override
-    public void create(Producto registro) throws IllegalArgumentException {
+    @Override
+    public void create(Venta registro) throws IllegalArgumentException {
         if (registro == null) {
             throw new IllegalArgumentException("El registro no puede ser nulo");
         }
@@ -62,10 +53,4 @@ public class ProductoDAO extends InventarioDefaultDataAccess<Producto> implement
         }
 
     }
-
-    public UUID getId() {
-        return this.id;
-    }
 }
-
-

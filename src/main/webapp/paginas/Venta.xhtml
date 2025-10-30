@@ -1,0 +1,334 @@
+    <!DOCTYPE html>
+    <html xmlns="http://www.w3.org/1999/xhtml"
+          xmlns:h="http://xmlns.jcp.org/jsf/html"
+          xmlns:f="http://xmlns.jcp.org/jsf/core"
+          xmlns:p="http://primefaces.org/ui"
+          xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+    <ui:composition template="template.xhtml">
+
+        <ui:define name="content">
+            <h:form id="frmPrincipal" update=":frmPrincipal:toolbar">
+
+                <p:growl id="growl" showDetail="true" life="3000" />
+
+                <!-- Toolbar superior -->
+                <p:toolbar id="toolbar" class="toolbar-gap">
+                    <p:toolbarGroup class="toolbar-center">
+                        <span class="toolbar-title">#{ventaFrm.nombreBean}</span>
+                    </p:toolbarGroup>
+
+                    <p:toolbarGroup class="toolbar-group-right">
+                        <p:inputText placeholder="Buscar por estado…" value="#{ventaFrm.registro.estado}" />
+                        <p:commandButton value="Nuevo" icon="pi pi-plus"
+                                         action="#{ventaFrm.btnNuevoHandler(x)}"
+                                         update=":frmPrincipal:dlg"
+                                         styleClass="p-button p-button-nuevo"
+                                         rendered="#{!ventaFrm.pnlDetalle}"
+                                         process="@this" immediate="true"/>
+
+                        <p:commandButton id="btnVOLVER" icon="pi pi-arrow-left"  value="VOLVER"
+                                         rendered="#{ventaFrm.pnlDetalle}"
+                                         styleClass="p-button p-button-volver"
+                                         action="#{ventaFrm.volver()}"
+                                         immediate="true"
+                                         update=":frmPrincipal, :frmPrincipal:toolbar" />
+                    </p:toolbarGroup>
+
+                </p:toolbar>
+
+                <!-- Tabla de Ventas -->
+                <p:dataTable id="tbl"
+                             value="#{ventaFrm.model}" var="r"
+                             lazy="true" paginator="true" rows="10"
+                             rowsPerPageTemplate="10,20,50"
+                             currentPageReportTemplate="Mostrando {startRecord}-{endRecord} de {totalRecords}"
+                             paginatorPosition="bottom"
+                             responsiveLayout="scroll"
+                             rowHover="true"
+                             rendered="#{!ventaFrm.pnlDetalle}"
+                             emptyMessage="No hay registros"
+                             styleClass="table-modern"
+                             selectionMode="single"
+                             selection="#{ventaFrm.registro}" rowKey="#{r.id}" >
+
+                    <p:ajax event="rowSelect"
+                            listener="#{ventaFrm.selectionHandler}"
+                            update="frmPrincipal"/>
+
+                    <p:ajax event="rowUnselect"
+                            listener="#{ventaFrm.rowUnselectHandler}"
+                            update=":frmPrincipal:tbl :frmPrincipal:growl :frmPrincipal:toolbar"  />
+
+                    <p:column headerText="ID Venta" style="width:320px" sortBy="#{r.id}">
+                        <h:outputText value="#{r.id}" />
+                    </p:column>
+
+                    <p:column headerText="ID Cliente" sortBy="#{r.idCliente.id}" filterBy="#{r.idCliente.id}" filterMatchMode="contains">
+                        <h:outputText value="#{r.idCliente != null ? r.idCliente.id : 'N/A'}" />
+                    </p:column>
+
+                    <p:column headerText="Fecha" sortBy="#{r.fecha}" filterBy="#{r.fecha}" filterMatchMode="contains">
+                        <h:outputText value="#{r.fecha}">
+                            <f:converter converterId="offsetDateTimeConverter" />
+                        </h:outputText>
+                    </p:column>
+
+                    <p:column headerText="Estado" sortBy="#{r.estado}" filterBy="#{r.estado}" filterMatchMode="contains">
+                        <h:outputText value="#{r.estado}" />
+                    </p:column>
+
+
+                </p:dataTable>
+
+                <!-- Panel de Detalle -->
+                <h:panelGroup id="pnlDetalle" class="" rendered="#{ventaFrm.pnlDetalle}">
+                    <p:tabView id="tabViewProducto" rendered="#{ventaFrm.pnlDetalle}" cache="false" dynamic="true">
+                        <p:tab title="Información General">
+                    <!-- Botón Modificar -->
+                    <p:commandButton id="btnModificar" value="Modificar"
+                                     icon="pi pi-pencil"
+                                     action="#{ventaFrm.btnEditarHandler(ventaFrm.registro)}"
+                                     rendered="#{ventaFrm.pnlDetalle}"
+                                     update=":frmPrincipal"
+                                     oncomplete="PF('dlgVar').show()"
+                                     styleClass="p-button p-button-modificar" />
+
+                    <p:commandButton icon="pi pi-trash" value="Eliminar"
+                                     rendered="#{ventaFrm.pnlDetalle}"
+                                     oncomplete="PF('confirmDel').show()"
+                                     process="@this"
+                                     styleClass="p-button p-button-eliminar">
+                    </p:commandButton>
+
+                    <h:panelGrid columns="2" class="">
+                        <p><strong>ID Venta:</strong> #{ventaFrm.registro.id}</p>
+                        <p><strong>ID Cliente:</strong> #{ventaFrm.registro.idCliente != null ? ventaFrm.registro.idCliente.id : 'N/A'}</p>
+                    </h:panelGrid>
+
+                    <h:panelGrid columns="2" class="">
+                        <p><strong>Fecha:</strong>
+                            <h:outputText value="#{ventaFrm.registro.fecha}">
+                                <f:converter converterId="offsetDateTimeConverter" />
+                            </h:outputText>
+                        </p>
+                        <p><strong>Estado:</strong> #{ventaFrm.registro.estado}</p>
+                    </h:panelGrid>
+
+                    <h:panelGrid columns="1" class="form-item">
+                        <p><strong>Comentarios:</strong></p>
+                    <p:inputTextarea value="#{ventaFrm.registro.observaciones}" rows="3" cols="30" disabled="true" />
+                    </h:panelGrid>
+                        </p:tab>
+                        <!-- Botón Agregar Detalle -->
+
+                        <p:tab title="DETALLE">
+                            <p:commandButton value="Agregar Detalle" icon="pi pi-plus"
+                                             action="#{ventaDetalleFrm.btnNuevoHandler(q)}"
+                                             update=":frmPrincipal"
+                                             immediate="true"
+                                             styleClass="p-button p-button-nuevo"
+                            >
+
+                            </p:commandButton>
+                            <!--LA TABLA -->
+
+                            <p:dataTable id="tblDetalles"
+                                         value="#{ventaDetalleFrm.findAll(ventaFrm.registro.id)}"
+                                         var="detalle"
+                                         emptyMessage="No hay detalles de venta"
+                                         styleClass="table-modern"
+                                         rendered="#{ventaFrm.registro.id != null}">
+
+                            <p:column headerText="Producto" style="width: 30%">
+                                <h:outputText value="#{detalle.idProducto != null ? detalle.idProducto.nombreProducto : 'N/A'}" />
+                            </p:column>
+
+                            <p:column headerText="Cantidad" style="width: 15%">
+                                <h:outputText value="#{detalle.cantidad}">
+                                    <f:convertNumber maxFractionDigits="2" />
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column headerText="Precio Unitario" style="width: 15%">
+                                <h:outputText value="#{detalle.precio}">
+                                    <f:convertNumber type="currency" currencySymbol="$" />
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column headerText="Subtotal" style="width: 15%">
+                                <h:outputText value="#{ventaDetalleFrm.calcularSubtotal(detalle)}">
+                                    <f:convertNumber type="currency" currencySymbol="$" />
+                                </h:outputText>
+                            </p:column>
+
+                            <p:column headerText="Estado" style="width: 10%">
+                                <h:outputText value="#{detalle.estado}" />
+                            </p:column>
+
+                            </p:dataTable>
+
+                            <!-- Diálogo Crear/Editar Detalle de Venta -->
+                            <p:dialog id="dlgDetalle" header="#{ventaDetalleFrm.editionMode ? 'Editar' : 'Nuevo'} Detalle de Venta"
+                                      widgetVar="dlgDetalleVar" modal="true" resizable="true" closable="true" width="520"
+                                      visible="#{ventaDetalleFrm.mostrarFormulario}"
+                                      styleClass="ui-dialog">
+
+                                <h:panelGrid columns="1" columnClasses="w-full" styleClass="gap-2 w-full">
+                                    <p:messages />
+
+                                    <p:outputLabel for="producto" value="Producto:" />
+                                    <p:selectOneMenu id="producto"
+                                                     value="#{ventaDetalleFrm.registro.idProducto}"
+                                                     converter="productoConverter"
+                                                     style="width: 100%"
+                                                     required="true"
+                                                     requiredMessage="El producto es obligatorio">
+                                        <f:selectItem itemLabel="-- Seleccione --" itemValue="#{null}" />
+                                        <f:selectItems value="#{productoFrm.findProductosActivos()}"
+                                                       var="prod"
+                                                       itemLabel="#{prod.nombreProducto}"
+                                                       itemValue="#{prod}" />
+                                    </p:selectOneMenu>
+
+                                    <p:outputLabel for="cantidad" value="Cantidad:" />
+                                    <p:inputNumber id="cantidad"
+                                                   value="#{ventaDetalleFrm.registro.cantidad}"
+                                                   style="width: 100%"
+                                                   minValue="0.01"
+                                                   maxValue="999999.99"
+                                                   decimalPlaces="2"
+                                                   required="true"
+                                                   requiredMessage="La cantidad es obligatoria" />
+
+                                    <p:outputLabel for="precio" value="Precio Unitario:" />
+                                    <p:inputNumber id="precio"
+                                                   value="#{ventaDetalleFrm.registro.precio}"
+                                                   style="width: 100%"
+                                                   minValue="0.01"
+                                                   maxValue="999999.99"
+                                                   decimalPlaces="2"
+                                                   required="true"
+                                                   requiredMessage="El precio es obligatorio" />
+
+                                    <p:outputLabel for="estadoDetalle" value="Estado:" />
+                                    <p:selectOneMenu id="estadoDetalle"
+                                                     value="#{ventaDetalleFrm.registro.estado}"
+                                                     style="width: 100%"
+
+                                                     >
+                                        <f:selectItem itemLabel="-- Seleccione --" itemValue="#{null}" />
+                                        <f:selectItem itemLabel="Activo" itemValue="ACTIVO" />
+                                        <f:selectItem itemLabel="Cancelado" itemValue="CANCELADO" />
+                                    </p:selectOneMenu>
+
+                                    <!-- Observaciones -->
+                                    <p:inputTextarea value="#{ventaDetalleFrm.registro.observaciones}"
+                                                     placeholder="Observaciones del detalle"
+                                                     rows="4"
+                                                     maxlength="500"
+                                                     autoResize="false"/>
+
+                                    <div class="flex justify-end gap-2 mt-3">
+                                        <p:commandButton value="Cancelar" icon="pi pi-times"
+                                                         actionListener="#{ventaDetalleFrm.btnCancelarHandler}"
+                                                         process="@this"
+                                                         update=":frmPrincipal"
+                                                         styleClass="p-button-text"/>
+                                        <p:commandButton value="#{ventaDetalleFrm.editionMode ? 'Guardar cambios' : 'Crear'}"
+                                                         icon="pi pi-check"
+                                                         actionListener="#{ventaDetalleFrm.btnGuardarHandler}"
+                                                         process=":frmPrincipal"
+                                                         immediate="true"
+                                                         update="frmPrincipal"
+                                                         oncomplete="if (!args.validationFailed) PF('dlgDetalleVar').hide();"/>
+                                    </div>
+                                </h:panelGrid>
+                            </p:dialog>
+
+                        </p:tab>
+                    </p:tabView>
+                </h:panelGroup>
+
+                <!-- Diálogo Crear/Editar -->
+                <p:dialog id="dlg" header="#{ventaFrm.editionMode ? 'Editar' : 'Nueva'} Venta"
+                          widgetVar="dlgVar" modal="true" resizable="true" closable="true" width="520"
+                          visible="#{ventaFrm.mostrarFormulario}"
+                          styleClass="ui-dialog">
+
+                    <h:panelGrid columns="1" columnClasses="w-full" styleClass="gap-2 w-full">
+                        <p:messages />
+
+                        <p:outputLabel for="fechaCreacion" value="Fecha Creación:" />
+                        <p:outputLabel id="fechaCreacion" value="#{ventaFrm.registro.fecha}">
+                            <f:converter converterId="offsetDateTimeConverter" />
+                        </p:outputLabel>
+
+                        <p:outputLabel for="Clientes" value="Cliente:" />
+                        <p:selectOneMenu id="Clientes"
+                                         value="#{ventaFrm.registro.idCliente}"
+                                         converter="clienteConverter"
+                                         style="width: 100%">
+                            <f:selectItem itemLabel="-- Seleccione --"
+                                          itemValue="#{null}" />
+                            <f:selectItems value="#{clienteFrm.findActivos()}"
+                                           var="tipo"
+                                           itemLabel="#{tipo.nombre}"
+                                           itemValue="#{tipo}"  />
+                        </p:selectOneMenu>
+
+                        <p:outputLabel for="estado" value="Estado:" />
+                        <p:selectOneMenu id="estado"
+                                         value="#{ventaFrm.registro.estado}"
+                                         style="width: 100%"
+                                         required="true"
+                                         requiredMessage="El estado es obligatorio">
+                            <f:selectItem itemLabel="-- Seleccione --" itemValue="#{null}" />
+                            <f:selectItem itemLabel="Activo" itemValue="ACTIVO" />
+                            <f:selectItem itemLabel="Pendiente" itemValue="PENDIENTE" />
+                            <f:selectItem itemLabel="Completado" itemValue="COMPLETADO" />
+                            <f:selectItem itemLabel="Cancelado" itemValue="CANCELADO" />
+                        </p:selectOneMenu>
+
+                        <!-- Observaciones -->
+                        <p:inputTextarea value="#{ventaFrm.registro.observaciones}"
+                                         placeholder="Observaciones"
+                                         rows="4"
+                                         maxlength="500"
+
+                                         autoResize="false"/>
+
+                        <div class="flex justify-end gap-2 mt-3">
+                            <p:commandButton value="Cancelar" icon="pi pi-times"
+                                             actionListener="#{ventaFrm.btnCancelarHandler}"
+                                             process="@this"
+                                             update=":frmPrincipal:dlg"
+                                             styleClass="p-button-text"/>
+                            <p:commandButton value="#{ventaFrm.editionMode ? 'Guardar cambios' : 'Crear'}"
+                                             icon="pi pi-check"
+                                             actionListener="#{ventaFrm.btnGuardarHandler}"
+                                             process=":frmPrincipal:dlg"
+                                             update=":frmPrincipal"
+                                             oncomplete="if (!args.validationFailed) PF('dlgVar').hide();"/>
+                        </div>
+                    </h:panelGrid>
+                </p:dialog>
+
+                <!-- Confirmación elegante de borrado -->
+                <p:confirmDialog widgetVar="confirmDel" header="Confirmar eliminación" message="¿Eliminar este registro?"
+                                 icon="pi pi-exclamation-triangle" closable="false"
+                                 styleClass="ui-dialog">
+                    <div class="flex justify-end gap-2">
+                        <p:commandButton value="Cancelar" type="button" styleClass="p-button-text"
+                                         onclick="PF('confirmDel').hide()"/>
+                        <p:commandButton value="Sí, eliminar" icon="pi pi-trash"
+                                         actionListener="#{ventaFrm.btnEliminarHandler(ventaFrm.registro)}"
+                                         update="frmPrincipal"
+                                         oncomplete="PF('confirmDel').hide();"/>
+                    </div>
+                </p:confirmDialog>
+
+            </h:form>
+        </ui:define>
+    </ui:composition>
+    </html>

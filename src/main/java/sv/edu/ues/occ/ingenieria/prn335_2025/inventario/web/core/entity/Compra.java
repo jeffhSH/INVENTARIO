@@ -10,7 +10,7 @@ import java.time.OffsetDateTime;
 public class Compra {
     @Id
     @Column(name = "id_compra", nullable = false)
-    private Long id;
+    private Integer id;
 
     @MapsId
     @OneToOne(fetch = FetchType.LAZY, optional = false)
@@ -31,11 +31,11 @@ public class Compra {
     @Column(name = "observaciones")
     private String observaciones;
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

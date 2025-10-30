@@ -8,6 +8,25 @@ import java.util.UUID;
 @Entity
 @Table(name = "producto", schema = "public")
 public class Producto {
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Producto)) return false;
+        Producto other = (Producto) o;
+        // Igualdad por ID (cuando ya fue asignado)
+        return this.id != null && this.id.equals(other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return (id == null) ? 0 : id.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "Producto{id=" + id + ", nombreProducto=" + nombreProducto + "}";
+    }
     @Id
     @Column(name = "id_producto", nullable = false)
     private UUID id;
