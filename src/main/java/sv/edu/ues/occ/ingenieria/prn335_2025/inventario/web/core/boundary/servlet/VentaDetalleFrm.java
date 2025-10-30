@@ -1,5 +1,6 @@
 package sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.boundary.servlet;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
@@ -35,6 +36,10 @@ public class VentaDetalleFrm extends DefaultFrm<VentaDetalle, UUID> implements S
     @Override
     protected InventarioDefaultDataAccess<VentaDetalle> getDao() {
         return taDao;
+    }
+    @PostConstruct
+    public void init() {
+
     }
 
     @Override

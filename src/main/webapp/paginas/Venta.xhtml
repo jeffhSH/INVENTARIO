@@ -67,6 +67,10 @@
                     <p:column headerText="ID Cliente" sortBy="#{r.idCliente.id}" filterBy="#{r.idCliente.id}" filterMatchMode="contains">
                         <h:outputText value="#{r.idCliente != null ? r.idCliente.id : 'N/A'}" />
                     </p:column>
+                    <p:column headerText="ID Cliente" sortBy="#{r.idCliente.id}" filterBy="#{r.idCliente.id}" filterMatchMode="contains">
+                        <h:outputText value="#{r.idCliente.nombre != null ? r.idCliente.nombre : 'N/A'}" />
+                    </p:column>
+
 
                     <p:column headerText="Fecha" sortBy="#{r.fecha}" filterBy="#{r.fecha}" filterMatchMode="contains">
                         <h:outputText value="#{r.fecha}">
@@ -143,6 +147,7 @@
                             <p:column headerText="Producto" style="width: 30%">
                                 <h:outputText value="#{detalle.idProducto != null ? detalle.idProducto.nombreProducto : 'N/A'}" />
                             </p:column>
+
 
                             <p:column headerText="Cantidad" style="width: 15%">
                                 <h:outputText value="#{detalle.cantidad}">
@@ -239,7 +244,7 @@
                                                          icon="pi pi-check"
                                                          actionListener="#{ventaDetalleFrm.btnGuardarHandler}"
                                                          process=":frmPrincipal"
-                                                         immediate="true"
+
                                                          update="frmPrincipal"
                                                          oncomplete="if (!args.validationFailed) PF('dlgDetalleVar').hide();"/>
                                     </div>
