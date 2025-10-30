@@ -6,8 +6,10 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.TipoAlmacen;
+import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.TipoProducto;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Stateless
 @LocalBean
@@ -30,7 +32,12 @@ public class TipoAlmacenDAO extends InventarioDefaultDataAccess<TipoAlmacen> imp
     public EntityManager getEntityManager() {
         return em;
     }
-
+    public List<TipoAlmacen> findAll() {
+        return em.createQuery(
+                        "SELECT t FROM TipoAlmacen t WHERE  t.activo = true ORDER BY t.nombre",
+                        TipoAlmacen.class)
+                .getResultList();
+    }
 
     public Integer obtenerProximoId() {
         try {

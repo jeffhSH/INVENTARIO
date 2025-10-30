@@ -72,10 +72,10 @@ public class VentaDetalleFrm extends DefaultFrm<VentaDetalle, UUID> implements S
         VentaDetalle detalle = new VentaDetalle();
 
         // Asignar la venta actual del registro principal
-        if (ventaFrm.getRegistro() != null && ventaFrm.getRegistro().getId() != null) {
-            detalle.setIdVenta(ventaFrm.getRegistro());
-            System.out.println("✅ Venta asignada en crearInstanciaVacia: " + ventaFrm.getRegistro().getId());
-        }
+            if (ventaFrm.getRegistro() != null && ventaFrm.getRegistro().getId() != null) {
+                detalle.setIdVenta(ventaFrm.getRegistro());
+                System.out.println("✅ Venta asignada en crearInstanciaVacia: " + ventaFrm.getRegistro().getId());
+            }
 
         // NO crear un nuevo Producto - dejar null para que el usuario seleccione uno
         // detalle.setIdProducto(new Producto()); // ← ESTA LÍNEA CAUSA EL ERROR

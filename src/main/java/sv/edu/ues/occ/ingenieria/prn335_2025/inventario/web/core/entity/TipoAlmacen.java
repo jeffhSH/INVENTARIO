@@ -6,6 +6,24 @@ import jakarta.validation.constraints.Size;
 @Entity
 @Table(name = "tipo_almacen", schema = "public")
 public class TipoAlmacen {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TipoAlmacen)) return false;
+        TipoAlmacen other = (TipoAlmacen) o;
+        // Igualdad por ID (cuando ya fue asignado)
+        return this.id != null && this.id.equals(other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return (id == null) ? 0 : id.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "TipoAlmacen{id=" + id + ", nombre=" + nombre + "}";
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

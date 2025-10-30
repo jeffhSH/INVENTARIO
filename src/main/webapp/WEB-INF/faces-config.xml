@@ -45,6 +45,20 @@
             <from-outcome>Tipos de Unidad de medida</from-outcome>
             <to-view-id>/paginas/ProductoTipoProducto.xhtml</to-view-id>
         </navigation-case>
+        <navigation-case>
+            <from-outcome>Ventas</from-outcome>
+            <to-view-id>/paginas/Venta.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>Almacenes</from-outcome>
+            <to-view-id>/paginas/Almacen.xhtml</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>Caracteristicas</from-outcome>
+            <to-view-id>/paginas/Caracteristica.xhtml</to-view-id>
+        </navigation-case>
+
+
     </navigation-rule>
 
 </faces-config>

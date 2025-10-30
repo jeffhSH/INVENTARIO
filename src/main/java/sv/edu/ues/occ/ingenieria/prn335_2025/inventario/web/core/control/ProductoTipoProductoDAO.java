@@ -5,6 +5,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.ProductoTipoProducto;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -79,7 +80,36 @@ public class ProductoTipoProductoDAO extends InventarioDefaultDataAccess<Product
                 .setParameter("idProducto", idProducto)
                 .getResultList();
     }
+    @Override
+    public void create(ProductoTipoProducto registro) throws IllegalArgumentException {
+        if (registro == null) {
+            throw new IllegalArgumentException("El registro no puede ser nulo");
+        }
+        try {
+            // Generar UUID si no existe
+            if (registro.getId() == null) {
+                registro.setId(UUID.randomUUID());
+            }
 
+            // Asegurar que tenga fecha de creación
+            if (registro.getFechaCreacion() == null) {
+                registro.setFechaCreacion(OffsetDateTime.now());
+            }
+
+            System.out.println("DEBUG DAO - Creando relación: " + registro.getId());
+            System.out.println("DEBUG DAO - Producto: " + (registro.getIdProducto() != null ? registro.getIdProducto().getId() : "null"));
+            System.out.println("DEBUG DAO - Tipo Producto: " + (registro.getIdTipoProducto() != null ? registro.getIdTipoProducto().getId() : "null"));
+
+            em.persist(registro);
+            em.flush(); // Forzar sincronización con la BD
+
+            System.out.println("DEBUG DAO - Relación creada exitosamente");
+
+        } catch (Exception e) {
+            System.out.println("DEBUG DAO - Error al crear: " + e.getMessage());
+            throw new RuntimeException("Error al crear ProductoTipoProducto", e);
+        }
+    }
     /**
      * Busca relaciones activas por tipo de producto
      */

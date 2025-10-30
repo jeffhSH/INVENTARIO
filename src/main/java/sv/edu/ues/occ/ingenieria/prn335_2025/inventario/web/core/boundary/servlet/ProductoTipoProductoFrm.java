@@ -2,6 +2,7 @@ package sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.boundary.servl
 
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
+import jakarta.faces.event.ActionEvent;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control.InventarioDefaultDataAccess;
@@ -20,6 +21,17 @@ import java.util.logging.Level;
 @SessionScoped
 public class ProductoTipoProductoFrm extends DefaultFrm<ProductoTipoProducto, UUID> implements Serializable {
     boolean formularioTipo = false;
+
+    @Override
+    public void btnNuevoHandler(ActionEvent e) {
+        this.formularioTipo = true;
+        super.btnNuevoHandler(e);
+    }
+
+    public void btnCancelarTipoHandler(ActionEvent e) {
+        this.formularioTipo = false;
+        super.btnCancelarHandler(e);
+    }
     @Inject
     private ProductoTipoProductoDAO dao;
 
@@ -49,13 +61,24 @@ public class ProductoTipoProductoFrm extends DefaultFrm<ProductoTipoProducto, UU
     }
 
     @Override
-    protected ProductoTipoProducto crearInstanciaVacia() {
-        ProductoTipoProducto nuevaRelacion = new ProductoTipoProducto();
-        nuevaRelacion.setId(UUID.randomUUID());
-        nuevaRelacion.setFechaCreacion(OffsetDateTime.now());
-        nuevaRelacion.setActivo(true);
-        return nuevaRelacion;
-    }
+        protected ProductoTipoProducto crearInstanciaVacia() {
+            ProductoTipoProducto nuevaRelacion = new ProductoTipoProducto();
+
+            nuevaRelacion.setFechaCreacion(OffsetDateTime.now());
+            nuevaRelacion.setActivo(true);
+            nuevaRelacion.setIdTipoProducto(new TipoProducto());
+            if(productoFrm.getRegistro()!=null){
+                nuevaRelacion.setIdProducto(productoFrm.getRegistro());
+                System.out.println("id del producto asignado a la relacion No vacio "+productoFrm.getRegistro());
+                return nuevaRelacion;
+            }
+            else {
+                System.out.println("VACIO");
+                return nuevaRelacion;
+            }
+
+
+        }
 
     @Override
     protected UUID getId(ProductoTipoProducto entidad) {
@@ -77,13 +100,20 @@ public class ProductoTipoProductoFrm extends DefaultFrm<ProductoTipoProducto, UU
         }
     }
 
-    public boolean mostrarFormularioTipo() {
-        return formularioTipo==true;
+    public boolean isFormularioTipo() {
+        return formularioTipo;
     }
-    public boolean OcultarFormularioTipo() {
-        return formularioTipo==false;
+    public boolean mostrarFormularioTipo() {
+        return formularioTipo;
     }
 
+    public boolean OcultarFormularioTipo() {
+        return !formularioTipo;
+    }
+
+    public void cerrarDialogoTipo() {
+        this.formularioTipo = false;
+    }
     @Override
     protected void crear(ProductoTipoProducto entidad) {
         // Asignar las entidades relacionadas si están seleccionadas
@@ -179,13 +209,7 @@ public class ProductoTipoProductoFrm extends DefaultFrm<ProductoTipoProducto, UU
         return dao.findActivosByProducto(idProducto);
     }
 
-    public List<ProductoTipoProducto> getRelacionesActivasPorTipoProducto(UUID idTipoProducto) {
-        return dao.findActivosByTipoProducto(idTipoProducto);
-    }
 
-    public boolean existeRelacion(UUID idProducto, UUID idTipoProducto) {
-        return dao.existsRelation(idProducto, idTipoProducto);
-    }
 
     // Getters y Setters
     public Producto getProductoSeleccionado() {

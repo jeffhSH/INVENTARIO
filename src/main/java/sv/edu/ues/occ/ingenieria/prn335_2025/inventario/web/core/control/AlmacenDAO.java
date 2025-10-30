@@ -1,5 +1,7 @@
 package sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control;
 
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -9,7 +11,8 @@ import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.Almacen;
 
 import java.io.Serializable;
 import java.util.List;
-
+@Stateless
+@LocalBean
 public class AlmacenDAO extends InventarioDefaultDataAccess<Almacen> implements Serializable {
     @PersistenceContext(unitName = "inventarioPU")
     private EntityManager em;

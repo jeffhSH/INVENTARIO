@@ -8,36 +8,42 @@ import jakarta.inject.Named;
 import java.io.Serializable;
 import java.util.List;
 
+import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control.AlmacenDAO;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control.InventarioDefaultDataAccess;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.control.TipoAlmacenDAO;
+import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.Almacen;
 import sv.edu.ues.occ.ingenieria.prn335_2025.inventario.web.core.entity.TipoAlmacen;
 
 @Named
 @ViewScoped
-public class TipoAlmacenFrm extends DefaultFrm<TipoAlmacen, Integer> implements Serializable {
+public class AlmacenFrm extends DefaultFrm<Almacen, Integer> implements Serializable {
+
     @Inject
     FacesContext facesContext;
-    @Inject
-    TipoAlmacenDAO taDao;
 
-    private List<TipoAlmacen> listaTipoAlmacen;
-    private Integer proximoId;
+    @Inject
+    AlmacenDAO almacenDAO;
+
+    @Inject
+    TipoAlmacenDAO tipoAlmacenDAO;
+
+    private List<TipoAlmacen> listaTiposAlmacen;
 
     @Override
-    protected InventarioDefaultDataAccess<TipoAlmacen> getDao() {
-        return taDao;
+    protected InventarioDefaultDataAccess<Almacen> getDao() {
+        return almacenDAO;
     }
 
     @Override
     protected String getNombreBeanConfig() {
-        return "Tipo de Almacén";
+        return "Almacén";
     }
 
     @Override
     protected void inicializar() {
         try {
-            listaTipoAlmacen = taDao.findRange(0, Integer.MAX_VALUE);
-            calcularProximoId();
+            // Cargar la lista de tipos de almacén para el combo
+            listaTiposAlmacen = tipoAlmacenDAO.findRange(0, Integer.MAX_VALUE);
         } catch (Exception e) {
             e.printStackTrace();
             FacesContext.getCurrentInstance().addMessage(
@@ -47,23 +53,16 @@ public class TipoAlmacenFrm extends DefaultFrm<TipoAlmacen, Integer> implements 
         }
     }
 
-    private void calcularProximoId() {
-        try {
-            Integer id = taDao.obtenerProximoId();
-            proximoId = (id != null && id > 0) ? id : 1;
-        } catch (Exception e) {
-            e.printStackTrace();
-            proximoId = 1;
-        }
-    }
-
     // ===== Implementaciones CRUD =====
     @Override
-    protected TipoAlmacen crearInstanciaVacia() {
-        return new TipoAlmacen();
+    protected Almacen crearInstanciaVacia() {
+        Almacen almacen = new Almacen();
+        almacen.setActivo(true); // Por defecto activo
+        return almacen;
     }
+
     @Override
-    protected String getIdAsText(TipoAlmacen r) {
+    protected String getIdAsText(Almacen r) {
         if (r != null && r.getId() != null) {
             return r.getId().toString();
         }
@@ -71,7 +70,7 @@ public class TipoAlmacenFrm extends DefaultFrm<TipoAlmacen, Integer> implements 
     }
 
     @Override
-    protected TipoAlmacen getIdByText(String id) {
+    protected Almacen getIdByText(String id) {
         if (id != null && this.model != null && !this.model.getWrappedData().isEmpty()) {
             try {
                 Integer buscado = Integer.parseInt(id);
@@ -88,45 +87,41 @@ public class TipoAlmacenFrm extends DefaultFrm<TipoAlmacen, Integer> implements 
     }
 
     @Override
-    protected Integer getId(TipoAlmacen entidad) {
+    protected Integer getId(Almacen entidad) {
         return entidad.getId();
     }
 
     @Override
-    protected void crear(TipoAlmacen entidad) {
-        taDao.create(entidad);
+    protected void crear(Almacen entidad) {
+        almacenDAO.create(entidad);
     }
 
     @Override
-    protected void modificar(TipoAlmacen entidad) {
-        taDao.update(entidad);
+    protected void modificar(Almacen entidad) {
+        almacenDAO.update(entidad);
     }
 
     @Override
-    protected void eliminar(TipoAlmacen entidad) {
-        taDao.delete(entidad);
+    protected void eliminar(Almacen entidad) {
+        almacenDAO.delete(entidad);
     }
 
     @Override
-    protected TipoAlmacen findById(Integer id) {
-        return taDao.findById(id);
+    protected Almacen findById(Integer id) {
+        return almacenDAO.findById(id);
     }
 
     @Override
-    protected List<TipoAlmacen> findRange(int first, int pageSize) {
-        return taDao.findRange(first, pageSize);
+    protected List<Almacen> findRange(int first, int pageSize) {
+        return almacenDAO.findRange(first, pageSize);
     }
 
     // ===== GETTERS / SETTERS ESPECÍFICOS =====
-    public List<TipoAlmacen> getListaTipoAlmacen() {
-        return taDao.findAll();
+    public List<TipoAlmacen> getListaTiposAlmacen() {
+        return listaTiposAlmacen;
     }
 
-    public void setListaTipoAlmacen(List<TipoAlmacen> listaTipoAlmacen) {
-        this.listaTipoAlmacen = listaTipoAlmacen;
-    }
-
-    public Integer getProximoId() {
-        return proximoId;
+    public void setListaTiposAlmacen(List<TipoAlmacen> listaTiposAlmacen) {
+        this.listaTiposAlmacen = listaTiposAlmacen;
     }
 }

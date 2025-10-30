@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<ui:composition template="template.xhtml">
+
+    <ui:define name="content">
+        <h:form id="frmPrincipal" update=":frmPrincipal:toolbar">
+
+            <p:growl id="growl" showDetail="true" life="3000" />
+
+            <!-- Toolbar superior -->
+            <p:toolbar id="toolbar" class="toolbar-gap">
+                <p:toolbarGroup class="toolbar-center">
+                    <span class="toolbar-title">#{almacenFrm.nombreBean}</span>
+                </p:toolbarGroup>
+
+                <p:toolbarGroup class="toolbar-group-right">
+                    <p:inputText placeholder="Buscar por ID…" value="#{almacenFrm.registro.id}" />
+                    <p:commandButton value="Nuevo" icon="pi pi-plus"
+                                     action="#{almacenFrm.btnNuevoHandler(x)}"
+                                     update=":frmPrincipal:dlg"
+                                     styleClass="p-button p-button-nuevo"
+                                     rendered="#{!almacenFrm.pnlDetalle}"
+                                     process="@this" immediate="true"/>
+
+                    <p:commandButton id="btnVOLVER" icon="pi pi-arrow-left"  value="VOLVER"
+                                     rendered="#{almacenFrm.pnlDetalle}"
+                                     styleClass="p-button p-button-volver"
+                                     action="#{almacenFrm.volver()}"
+                                     update=":frmPrincipal, :frmPrincipal:toolbar" />
+                </p:toolbarGroup>
+            </p:toolbar>
+
+            <div class="content">
+                <!-- Tabla de almacenes -->
+                <p:dataTable id="tbl"
+                             value="#{almacenFrm.model}" var="r"
+                             lazy="true" paginator="true" rows="10"
+                             rowsPerPageTemplate="10,20,50"
+                             currentPageReportTemplate="Mostrando {startRecord}-{endRecord} de {totalRecords}"
+                             paginatorPosition="bottom"
+                             responsiveLayout="scroll"
+                             rowHover="true"
+                             rendered="#{!almacenFrm.pnlDetalle}"
+                             emptyMessage="No hay registros"
+                             styleClass="table-modern"
+                             selectionMode="single"
+                             selection="#{almacenFrm.registro}" rowKey="#{r.id}" >
+
+                    <p:ajax event="rowSelect"
+                            listener="#{almacenFrm.selectionHandler}"
+                            update="frmPrincipal" />
+
+                    <p:ajax event="rowUnselect"
+                            listener="#{almacenFrm.rowUnselectHandler}"
+                            update=":frmPrincipal:tbl :frmPrincipal:growl :frmPrincipal:toolbar" />
+
+                    <p:column headerText="ID" style="width:100px" sortBy="#{r.id}">
+                        <h:outputText value="#{r.id}" />
+                    </p:column>
+
+                    <p:column headerText="Tipo Almacén" sortBy="#{r.idTipoAlmacen.nombre}" filterBy="#{r.idTipoAlmacen.nombre}" filterMatchMode="contains">
+                        <h:outputText value="#{r.idTipoAlmacen != null ? r.idTipoAlmacen.nombre : 'N/A'}" />
+                    </p:column>
+
+                    <p:column headerText="Estado" style="width:100px">
+                        <h:outputText value="#{r.activo ? 'Activo' : 'Inactivo'}" />
+                    </p:column>
+
+                    <p:column headerText="Observaciones" sortBy="#{r.observaciones}" filterBy="#{r.observaciones}" filterMatchMode="contains">
+                        <h:outputText value="#{r.observaciones}" />
+                    </p:column>
+                </p:dataTable>
+
+                <!-- Panel de detalle -->
+                <h:panelGroup id="pnlDetalle" rendered="#{almacenFrm.pnlDetalle}">
+                    <!-- Botón Modificar -->
+                    <p:commandButton id="btnModificar" value="Modificar"
+                                     icon="pi pi-pencil"
+                                     action="#{almacenFrm.btnEditarHandler(almacenFrm.registro)}"
+                                     rendered="#{almacenFrm.pnlDetalle}"
+                                     update=":frmPrincipal:dlg"
+                                     oncomplete="PF('dlgVar').show()"
+                                     styleClass="p-button p-button-modificar" />
+
+                    <p:commandButton icon="pi pi-trash" value="Eliminar"
+                                     rendered="#{almacenFrm.pnlDetalle}"
+                                     oncomplete="PF('confirmDel').show()"
+                                     process="@this"
+                                     styleClass="p-button p-button-eliminar" />
+
+                    <div class="detail-panel">
+                        <h3>Detalle de Almacén</h3>
+
+                        <h:panelGrid columns="2" class="">
+                            <p><strong>ID:</strong> #{almacenFrm.registro.id}</p>
+                            <p><strong>Tipo Almacén:</strong> #{almacenFrm.registro.idTipoAlmacen != null ? almacenFrm.registro.idTipoAlmacen.nombre : 'N/A'}</p>
+                        </h:panelGrid>
+
+                        <h:panelGrid columns="2" class="">
+                            <p><strong>Estado:</strong> #{almacenFrm.registro.activo ? 'Activo' : 'Inactivo'}</p>
+                        </h:panelGrid>
+
+                        <h:panelGrid columns="1" class="form-item">
+                            <p><strong>Observaciones:</strong></p>
+                            <p:inputTextarea value="#{almacenFrm.registro.observaciones}" rows="3" cols="50" disabled="true" />
+                        </h:panelGrid>
+                    </div>
+                </h:panelGroup>
+
+                <!-- Diálogo Crear/Editar -->
+                <p:dialog id="dlg" header="#{almacenFrm.editionMode ? 'Editar' : 'Nuevo'} Almacén"
+                          widgetVar="dlgVar" modal="true" resizable="true" closable="true" width="400"
+                          visible="#{almacenFrm.mostrarFormulario}">
+
+                    <h:panelGrid columns="2" style="width: 100%;" columnClasses="label-col, field-col" cellpadding="5">
+
+
+
+
+                        <p:outputLabel for="tipoAlmacen" value="Tipo Almacén:" />
+                        <p:selectOneMenu id="tipoAlmacen"
+                                         value="#{almacenFrm.registro.idTipoAlmacen}"
+                                         converter="tipoAlmacenConverter"
+                                         style="width: 100%"
+                                         required="true"
+                                         requiredMessage="El tipo de almacén es obligatorio">
+                            <f:selectItem itemLabel="-- Seleccione --" itemValue="#{null}" />
+                            <f:selectItems value="#{almacenFrm.listaTiposAlmacen}"
+                                           var="tipo"
+                                           itemLabel="#{tipo.nombre}"
+                                           itemValue="#{tipo}" />
+                        </p:selectOneMenu>
+
+                        <p:outputLabel for="observaciones" value="Observaciones:" />
+                        <p:inputTextarea id="observaciones" value="#{almacenFrm.registro.observaciones}"
+                                         rows="2" placeholder="Observaciones" style="width: 100%"/>
+
+                        <p:outputLabel for="activo" value="Activo:" />
+                        <h:selectBooleanCheckbox id="activo" value="#{almacenFrm.registro.activo}"/>
+
+                    </h:panelGrid>
+
+                    <div class="flex justify-end gap-2 mt-3">
+                        <p:commandButton value="Cancelar" icon="pi pi-times"
+                                         actionListener="#{almacenFrm.btnCancelarHandler}"
+                                         process="@this"
+                                         update=":frmPrincipal"
+                                         styleClass="p-button-text"/>
+                        <p:commandButton value="#{almacenFrm.editionMode ? 'Guardar' : 'Crear'}"
+                                         icon="pi pi-check"
+                                         actionListener="#{almacenFrm.btnGuardarHandler}"
+                                         process=":frmPrincipal:dlg"
+                                         update=":frmPrincipal"
+                                         oncomplete="if (!args.validationFailed) PF('dlgVar').hide();"/>
+                    </div>
+                </p:dialog>
+
+                <!-- Confirmación elegante de borrado -->
+                <p:confirmDialog widgetVar="confirmDel" header="Confirmar eliminación" message="¿Eliminar este registro?"
+                                 icon="pi pi-exclamation-triangle" closable="false"
+                                 styleClass="ui-dialog">
+                    <div class="flex justify-end gap-2">
+                        <p:commandButton value="Cancelar" type="button" styleClass="p-button-text"
+                                         onclick="PF('confirmDel').hide()"/>
+                        <p:commandButton value="Sí, eliminar" icon="pi pi-trash"
+                                         actionListener="#{almacenFrm.btnEliminarHandler(almacenFrm.registro)}"
+                                         update="frmPrincipal"
+                                         immediate="true"
+                                         oncomplete="PF('confirmDel').hide();"/>
+                    </div>
+                </p:confirmDialog>
+            </div>
+        </h:form>
+    </ui:define>
+</ui:composition>
+</html>

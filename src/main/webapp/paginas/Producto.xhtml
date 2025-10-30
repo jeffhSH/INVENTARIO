@@ -126,7 +126,7 @@
                     <p:tab title="Tipos de Producto" closable="false">
 
 
-                        <p:commandButton value="NuevoTipo" icon="pi pi-plus"
+                        <p:commandButton value="NuevoTipo" id="tipo" icon="pi pi-plus"
                                          action="#{productoTipoProductoFrm.btnNuevoHandler(r)}"
                                          update=":frmPrincipal"
                                          styleClass="p-button p-button-nuevo"
@@ -187,17 +187,12 @@
                                   modal="true"
                                   resizable="true"
                                   closable="true"
-                                  width="500"
-                                  visible="#{productoTipoProductoFrm.mostrarFormulario and productoTipoProductoFrm.mostrarFormularioTipo}">
+                                  width="1200"
+                                  visible="#{productoTipoProductoFrm.formularioTipo}">
 
-                            <h:panelGrid columns="2" style="width: 100%;" columnClasses="label,component" cellpadding="5">
+                            <h:panelGrid columns="1" style="width: 100%;" columnClasses="label,component" cellpadding="8">
                                 <!--solo es de imprimirlo en el bakend -->
-                                <p:outputLabel for="idProducro" value="id del Producro: " />
-                                <p:inputText id="idProducro"
-                                             value="#{productoTipoProductoFrm.registro.idProducto}"
-                                             required="true"
-                                             requiredMessage="id obligatorio"
-                                             style="width: 100%"/>
+
 
                                 <p:outputLabel for="idTipoProducto" value="id Tipo producto:" />
                                 <p:selectOneMenu id="idTipoProducto"
@@ -239,11 +234,12 @@
                                                  action="#{tipoProductoFrm.btnCancelarHandler(x)}"
                                                  process="@this" immediate="true"
                                                  update=":frmPrincipal"
+                                                 oncomplete="PF('dlgVarTipo').hide();"
                                                  styleClass="p-button-text"/>
 
-                                <p:commandButton value="#{tipoProductoFrm.editionMode ? 'Guardar' : 'Crear'}"
+                                <p:commandButton value="#{productoTipoProductoFrm.editionMode ? 'Guardar' : 'Crear'}"
                                                  icon="pi pi-check"
-                                                 actionListener="#{tipoProductoFrm.btnGuardarHandler}"
+                                                 actionListener="#{ productoTipoProductoFrm.btnGuardarHandler}"
                                                  process=":frmPrincipal"
                                                  update=":frmPrincipal"
                                                  oncomplete="if (!args.validationFailed) PF('dlgVarTipo').hide();"/>

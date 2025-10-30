@@ -154,7 +154,7 @@
                                    styleClass="p-button-text"/>
                   <p:commandButton value="#{productoTipoProductoFrm.editionMode ? 'Guardar cambios' : 'Crear'}"
                                    icon="pi pi-check"
-                                   actionListener="#{productoTipoProductoFrm.btnGuardarHandler}"
+                                   action="#{productoTipoProductoFrm.btnGuardarHandler}"
                                    process=":frmPrincipal:dlg"
                                    update=":frmPrincipal"
                                    oncomplete="if (!args.validationFailed) PF('dlgVar').hide(); var btn = document.getElementById('frmPrincipal:btnVOLVER'); if(btn) btn.click();"/>
